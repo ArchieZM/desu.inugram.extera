@@ -16,6 +16,8 @@ you can expect:
 
 all that while still allowing users to disable our custom tweaks to (mostly) achieve the stock experience (but why?)
 
+see [FEATURES.md](FEATURES.md) for a non-exhaustive list of what's added/tweaked/fixed (kept in sync as patches land).
+
 ### why should i use this over whatevergram?
 
 i don't know. maybe you shouldn't.
