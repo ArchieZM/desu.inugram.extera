@@ -6,12 +6,15 @@ import android.os.Bundle
 import desu.inugram.helpers.CloudSettingsHelper
 import desu.inugram.helpers.LoginHelper
 import desu.inugram.helpers.MainTabsHelper
+import desu.inugram.helpers.MapsHelper
 import desu.inugram.helpers.MonetHelper
 import desu.inugram.helpers.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController.getString
+import org.telegram.messenger.MessagesController
 import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
+import org.telegram.tgnet.TLObject
 import org.telegram.ui.Components.AnimatedFloat
 import org.telegram.ui.Components.GestureDetector2
 import org.telegram.ui.Components.GestureDetectorFixDoubleTap
@@ -22,7 +25,6 @@ import org.telegram.ui.LaunchActivity
 import org.telegram.ui.LauncherIconController
 import org.telegram.ui.ProfileActivity
 import org.telegram.ui.SettingsActivity
-import org.telegram.tgnet.TLObject
 
 
 object InuHooks {
@@ -32,6 +34,11 @@ object InuHooks {
         syncAnimationSpeed()
         UpdateHelper.clearPendingIfInstalled()
         CloudSettingsHelper.attachAutoSyncListener()
+    }
+
+    @JvmStatic
+    fun onMessagesControllerCreated(messagesController: MessagesController) {
+        MapsHelper.syncMapProvider(messagesController)
     }
 
     @JvmStatic

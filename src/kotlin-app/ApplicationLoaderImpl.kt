@@ -5,10 +5,13 @@ import android.content.Context
 import android.view.ViewGroup
 import desu.inugram.helpers.ApkInstaller
 import desu.inugram.helpers.UpdateHelper
+import desu.inugram.helpers.maplibre.MapLibreMapsProvider
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.BetaUpdate
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.FileLog
+import org.telegram.messenger.GoogleMapsProvider
+import org.telegram.messenger.IMapsProvider
 import org.telegram.messenger.SharedConfig
 import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.TLRPC
@@ -57,5 +60,12 @@ class ApplicationLoaderImpl : org.telegram.messenger.ApplicationLoaderImpl() {
 
     override fun takeUpdateLayout(activity: Activity, sideMenuContainer: ViewGroup): IUpdateLayout {
         return UpdateLayout(activity, sideMenuContainer)
+    }
+
+    override fun onCreateMapsProvider(): IMapsProvider? {
+        return when (InuConfig.MAP_PROVIDER.value) {
+            InuConfig.MapProviderItem.OSM -> MapLibreMapsProvider()
+            else -> GoogleMapsProvider()
+        }
     }
 }

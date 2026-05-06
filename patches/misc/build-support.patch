@@ -4,7 +4,7 @@ Date: Tue, 21 Apr 2026 07:47:50 +0300
 Subject: build support stuff for fork-specific code: - added kotlin - bumped min sdk to 26, removed desugaring - versioning
 
 ---
- TMessagesProj/build.gradle                    | 106 ++++------------
+ TMessagesProj/build.gradle                    | 110 +++++------------
  TMessagesProj/google-services.json            |  76 ++----------
  TMessagesProj/proguard-rules.pro              |  12 ++
  TMessagesProj/src/main/AndroidManifest.xml    |   7 ++
@@ -17,7 +17,7 @@ Subject: build support stuff for fork-specific code: - added kotlin - bumped min
  build.gradle                                  |  12 +-
  gradle.properties                             |   4 +-
  settings.gradle                               |   5 +-
- 13 files changed, 125 insertions(+), 355 deletions(-)
+ 13 files changed, 129 insertions(+), 355 deletions(-)
 
 diff --git a/TMessagesProj/build.gradle b/TMessagesProj/build.gradle
 index 0000000..0000000 100644
@@ -48,7 +48,18 @@ index 0000000..0000000 100644
      implementation 'com.google.mlkit:language-id:17.0.6'
      implementation 'com.android.billingclient:billing:7.1.1'
      implementation 'com.google.code.gson:gson:2.11.0'
-@@ -67,8 +69,6 @@ dependencies {
+@@ -56,6 +58,10 @@ dependencies {
+     implementation "androidx.credentials:credentials:1.6.0-alpha04"
+     implementation "androidx.credentials:credentials-play-services-auth:1.6.0-alpha04"
+ 
++    // inu
++    implementation 'org.maplibre.gl:android-sdk:13.1.0'
++    // end inu
++
+ //    implementation 'com.google.mlkit:translate:17.0.3'
+ 
+     constraints {
+@@ -67,8 +73,6 @@ dependencies {
          }
      }
      implementation 'com.google.android.recaptcha:recaptcha:18.7.1'
@@ -57,7 +68,7 @@ index 0000000..0000000 100644
  }
  
  def isWindows = String.valueOf(DefaultNativePlatform.currentOperatingSystem.toFamilyName() == OperatingSystemFamily.WINDOWS)
-@@ -94,23 +94,28 @@ android {
+@@ -94,23 +98,28 @@ android {
      compileOptions {
          sourceCompatibility JavaVersion.VERSION_1_8
          targetCompatibility JavaVersion.VERSION_1_8
@@ -92,17 +103,21 @@ index 0000000..0000000 100644
              }
          }
      }
-@@ -123,78 +128,14 @@ android {
+@@ -123,78 +132,14 @@ android {
              multiDexEnabled true
              proguardFiles getDefaultProguardFile('proguard-android.txt'), '../TMessagesProj/proguard-rules.pro', '../TMessagesProj/proguard-rules-beta.pro'
              ndk.debugSymbolLevel = 'FULL'
 -            buildConfigField "String", "BUILD_VERSION_STRING", "\"" + APP_VERSION_NAME + "\""
 -            buildConfigField "String", "APP_CENTER_HASH", "\"\""
 -            buildConfigField "String", "BETA_URL", "\"" + getProps("BETA_PRIVATE_URL") + "\""
--            buildConfigField "boolean", "DEBUG_VERSION", "true"
--            buildConfigField "boolean", "DEBUG_PRIVATE_VERSION", "true"
--            buildConfigField "boolean", "BUNDLE", "false"
--            buildConfigField "boolean", "BUILD_HOST_IS_WINDOWS", isWindows
++            buildConfigField "String", "BUILD_VERSION_STRING", "\"" + rootProject.ext.verName + "\""
++            buildConfigField "String", "BUILD_DATE", "\"" + rootProject.ext.buildDate + "\""
++            buildConfigField "String", "INU_BUILD_TYPE", "\"" + (System.getenv('INU_BUILD_TYPE') ?: 'debug') + "\""
++            buildConfigField "int", "STOCK_VERSION_CODE", String.valueOf(rootProject.ext.stockVerCode)
+             buildConfigField "boolean", "DEBUG_VERSION", "true"
+             buildConfigField "boolean", "DEBUG_PRIVATE_VERSION", "true"
+             buildConfigField "boolean", "BUNDLE", "false"
+             buildConfigField "boolean", "BUILD_HOST_IS_WINDOWS", isWindows
 -            buildConfigField "int", "VERSION_NUM", "0"
 -        }
 -
@@ -147,14 +162,10 @@ index 0000000..0000000 100644
 -            buildConfigField "String", "BUILD_VERSION_STRING", "\"" + APP_VERSION_NAME + "\""
 -            buildConfigField "String", "APP_CENTER_HASH", "\"" + getProps("APP_CENTER_HASH_HARDCORE") + "\""
 -            buildConfigField "String", "BETA_URL", "\"" + getProps("BETA_HARDCORE_URL") + "\""
-+            buildConfigField "String", "BUILD_VERSION_STRING", "\"" + rootProject.ext.verName + "\""
-+            buildConfigField "String", "BUILD_DATE", "\"" + rootProject.ext.buildDate + "\""
-+            buildConfigField "String", "INU_BUILD_TYPE", "\"" + (System.getenv('INU_BUILD_TYPE') ?: 'debug') + "\""
-+            buildConfigField "int", "STOCK_VERSION_CODE", String.valueOf(rootProject.ext.stockVerCode)
-             buildConfigField "boolean", "DEBUG_VERSION", "true"
-             buildConfigField "boolean", "DEBUG_PRIVATE_VERSION", "true"
-             buildConfigField "boolean", "BUNDLE", "false"
-             buildConfigField "boolean", "BUILD_HOST_IS_WINDOWS", isWindows
+-            buildConfigField "boolean", "DEBUG_VERSION", "true"
+-            buildConfigField "boolean", "DEBUG_PRIVATE_VERSION", "true"
+-            buildConfigField "boolean", "BUNDLE", "false"
+-            buildConfigField "boolean", "BUILD_HOST_IS_WINDOWS", isWindows
 -            buildConfigField "int", "VERSION_NUM", "5"
 -        }
 -
@@ -175,7 +186,7 @@ index 0000000..0000000 100644
          }
  
          release {
-@@ -204,14 +145,14 @@ android {
+@@ -204,14 +149,14 @@ android {
              multiDexEnabled true
              proguardFiles getDefaultProguardFile('proguard-android.txt'), '../TMessagesProj/proguard-rules.pro'
              ndk.debugSymbolLevel = 'FULL'
@@ -194,7 +205,7 @@ index 0000000..0000000 100644
          }
      }
  
-@@ -229,7 +170,6 @@ def getProps(String propName) {
+@@ -229,7 +174,6 @@ def getProps(String propName) {
          return "";
      }
  }
@@ -202,7 +213,7 @@ index 0000000..0000000 100644
  
  task checkVisibility {
      doFirst {
-@@ -251,4 +191,4 @@ task checkVisibility {
+@@ -251,4 +195,4 @@ task checkVisibility {
      }
  }
  

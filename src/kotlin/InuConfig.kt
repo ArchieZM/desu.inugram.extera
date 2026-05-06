@@ -406,6 +406,29 @@ object InuConfig {
     @JvmField
     val ICON_REPLACEMENT = IconReplacementItem()
 
+    class MapProviderItem : IntItem("map_provider", GOOGLE) {
+        companion object {
+            const val GOOGLE = 0
+            const val OSM = 1
+        }
+    }
+
+    @JvmField
+    val MAP_PROVIDER = MapProviderItem()
+
+    class MapPreviewProviderItem : IntItem("map_preview_provider", DEFAULT) {
+        companion object {
+            const val DEFAULT = 0
+            const val TELEGRAM = 1
+            const val GOOGLE = 2
+            const val YANDEX = 3
+            const val DISABLED = 4
+        }
+    }
+
+    @JvmField
+    val MAP_PREVIEW_PROVIDER = MapPreviewProviderItem()
+
     class UpdateChannelItem : IntItem("update_channel", STABLE, exportable = false) {
         companion object {
             const val DISABLED = 0

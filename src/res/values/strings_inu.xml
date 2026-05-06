@@ -150,6 +150,15 @@
     <string name="InuIconReplacementOff">Default</string>
     <string name="InuIconReplacementSolar">Solar by @Design480</string>
 
+    <string name="InuMapsHeader">Maps</string>
+    <string name="InuMapProvider">Map provider</string>
+    <string name="InuMapProviderGoogle">Google Maps</string>
+    <string name="InuMapProviderOsm">OpenStreetMap</string>
+    <string name="InuMapPreviewProvider">Map preview provider</string>
+    <string name="InuMapPreviewProviderTelegram">Telegram</string>
+    <string name="InuMapPreviewProviderGoogle">Google</string>
+    <string name="InuMapPreviewProviderYandex">Yandex</string>
+
     <string name="InuReplyIn">Reply in…</string>
     <string name="InuMessageDetails">Details</string>
     <string name="InuMsgDetailScheduled">Scheduled</string>

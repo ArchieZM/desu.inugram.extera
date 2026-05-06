@@ -4,6 +4,7 @@ import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.helpers.InuUtils
+import desu.inugram.helpers.MapsHelper
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import org.telegram.ui.Cells.NotificationsCheckCell
@@ -66,6 +67,32 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                 when (InuConfig.ICON_REPLACEMENT.value) {
                     InuConfig.IconReplacementItem.SOLAR -> LocaleController.getString(R.string.InuIconReplacementSolar)
                     else -> LocaleController.getString(R.string.InuIconReplacementOff)
+                }
+            )
+        )
+        items.add(UItem.asShadow(null))
+
+        items.add(UItem.asHeader(LocaleController.getString(R.string.InuMapsHeader)))
+        items.add(
+            UItem.asButton(
+                BUTTON_MAP_PROVIDER,
+                LocaleController.getString(R.string.InuMapProvider),
+                when (InuConfig.MAP_PROVIDER.value) {
+                    InuConfig.MapProviderItem.OSM -> LocaleController.getString(R.string.InuMapProviderOsm)
+                    else -> LocaleController.getString(R.string.InuMapProviderGoogle)
+                }
+            )
+        )
+        items.add(
+            UItem.asButton(
+                BUTTON_MAP_PREVIEW_PROVIDER,
+                LocaleController.getString(R.string.InuMapPreviewProvider),
+                when (InuConfig.MAP_PREVIEW_PROVIDER.value) {
+                    InuConfig.MapPreviewProviderItem.TELEGRAM -> LocaleController.getString(R.string.InuMapPreviewProviderTelegram)
+                    InuConfig.MapPreviewProviderItem.GOOGLE -> LocaleController.getString(R.string.InuMapPreviewProviderGoogle)
+                    InuConfig.MapPreviewProviderItem.YANDEX -> LocaleController.getString(R.string.InuMapPreviewProviderYandex)
+                    InuConfig.MapPreviewProviderItem.DISABLED -> LocaleController.getString(R.string.Disable)
+                    else -> LocaleController.getString(R.string.Default)
                 }
             )
         )
@@ -145,6 +172,45 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                     .create()
             )
 
+            BUTTON_MAP_PROVIDER -> showDialog(
+                RadioDialogBuilder(context, getResourceProvider())
+                    .setTitle(LocaleController.getString(R.string.InuMapProvider))
+                    .setItems(
+                        arrayOf(
+                            LocaleController.getString(R.string.InuMapProviderGoogle),
+                            LocaleController.getString(R.string.InuMapProviderOsm),
+                        ),
+                        InuConfig.MAP_PROVIDER.value,
+                    ) { _, which ->
+                        if (which == InuConfig.MAP_PROVIDER.value) return@setItems
+                        InuConfig.MAP_PROVIDER.value = which
+                        listView.adapter.update(true)
+                        showRestartBulletin()
+                    }
+                    .create()
+            )
+
+            BUTTON_MAP_PREVIEW_PROVIDER -> showDialog(
+                RadioDialogBuilder(context, getResourceProvider())
+                    .setTitle(LocaleController.getString(R.string.InuMapPreviewProvider))
+                    .setItems(
+                        arrayOf(
+                            LocaleController.getString(R.string.Default),
+                            LocaleController.getString(R.string.InuMapPreviewProviderTelegram),
+                            LocaleController.getString(R.string.InuMapPreviewProviderGoogle),
+                            LocaleController.getString(R.string.InuMapPreviewProviderYandex),
+                            LocaleController.getString(R.string.Disable),
+                        ),
+                        InuConfig.MAP_PREVIEW_PROVIDER.value,
+                    ) { _, which ->
+                        if (which == InuConfig.MAP_PREVIEW_PROVIDER.value) return@setItems
+                        InuConfig.MAP_PREVIEW_PROVIDER.value = which
+                        listView.adapter.update(true)
+                        MapsHelper.syncMapProvider(messagesController)
+                    }
+                    .create()
+            )
+
             BUTTON_ICON_REPLACEMENT -> showDialog(
                 RadioDialogBuilder(context, getResourceProvider())
                     .setTitle(LocaleController.getString(R.string.InuIconReplacement))
@@ -213,5 +279,7 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_HIDE_MY_PHONE_NUMBER = InuUtils.generateId()
         private val TOGGLE_DISABLE_SCRIM_BLUR = InuUtils.generateId()
         private val BUTTON_ICON_REPLACEMENT = InuUtils.generateId()
+        private val BUTTON_MAP_PROVIDER = InuUtils.generateId()
+        private val BUTTON_MAP_PREVIEW_PROVIDER = InuUtils.generateId()
     }
 }
