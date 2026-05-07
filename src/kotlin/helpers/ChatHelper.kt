@@ -1,9 +1,11 @@
 package desu.inugram.helpers
 
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import androidx.core.content.edit
 import desu.inugram.InuConfig
 import desu.inugram.ui.MessageDetailsActivity
+import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ChatObject
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.FileLoader
@@ -14,7 +16,10 @@ import org.telegram.messenger.SendMessagesHelper
 import org.telegram.messenger.UserConfig
 import org.telegram.messenger.UserObject
 import org.telegram.tgnet.TLRPC
+import org.telegram.ui.ActionBar.BottomSheet
+import org.telegram.ui.Cells.ChatMessageCell
 import org.telegram.ui.ChatActivity
+import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.UndoView
 import org.telegram.ui.DialogsActivity
 import java.io.File
@@ -271,6 +276,46 @@ object ChatHelper {
             ?: return false
         SettingsBackupHelper.startImportFromFile(activity, file)
         return true
+    }
+
+    @JvmStatic
+    fun maybeHandleInlineButtonLongTap(
+        activity: ChatActivity,
+        cell: ChatMessageCell,
+        button: TLRPC.KeyboardButton,
+    ): Boolean {
+        if (button !is TLRPC.TL_keyboardButtonCallback) return false
+        if (activity.parentActivity == null) return false
+
+        val text = button.text ?: ""
+        val data = button.data?.let { String(it, Charsets.UTF_8) } ?: ""
+        runCatching {
+            cell.performHapticFeedback(
+                HapticFeedbackConstants.LONG_PRESS,
+                HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING,
+            )
+        }
+        val items = arrayOf<CharSequence>(
+            LocaleController.formatString(R.string.InuCopyButtonText, text),
+            LocaleController.getString(R.string.InuCopyCallbackData),
+        )
+        BottomSheet.Builder(activity.parentActivity, false, activity.themeDelegate).apply {
+            setTitle(data)
+            setTitleMultipleLines(true)
+            setItems(items) { _, which ->
+                val (payload, toast) = when (which) {
+                    0 -> text to R.string.TextCopied
+                    else -> data to R.string.InuCallbackDataCopied
+                }
+                AndroidUtilities.addToClipboard(payload)
+                BulletinFactory.of(activity)
+                    .createCopyBulletin(LocaleController.getString(toast))
+                    .show()
+            }
+            activity.showDialog(create())
+        }
+
+        return true;
     }
 
     @JvmStatic

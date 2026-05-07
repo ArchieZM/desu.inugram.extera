@@ -4,8 +4,8 @@ Date: Fri, 10 Apr 2026 05:29:50 +0300
 Subject: hooks into various places inside ChatActivity
 
 ---
- .../src/main/java/org/telegram/ui/ChatActivity.java  | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ .../src/main/java/org/telegram/ui/ChatActivity.java | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
@@ -49,7 +49,15 @@ index 0000000..0000000 100644
          }
          selectedObject = null;
          selectedObjectGroup = null;
-@@ -40250,6 +40254,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -38892,6 +38896,7 @@ public class ChatActivity extends BaseFragment implements
+                     !(button instanceof TLRPC.TL_keyboardButtonUserProfile) && !(button instanceof TLRPC.TL_keyboardButtonCopy)) {
+                 return;
+             }
++            if (ChatHelper.maybeHandleInlineButtonLongTap(ChatActivity.this, cell, button)) return;
+             if (button instanceof TLRPC.TL_keyboardButtonCopy) {
+                 didLongPressCopyButton(((TLRPC.TL_keyboardButtonCopy) button).copy_text);
+                 return;
+@@ -40250,6 +40255,7 @@ public class ChatActivity extends BaseFragment implements
                      presentFragment(fragment);
                  }
              } else if (message.type == MessageObject.TYPE_FILE || message.type == MessageObject.TYPE_TEXT) {
@@ -57,7 +65,7 @@ index 0000000..0000000 100644
                  if (message.getDocumentName().toLowerCase().endsWith("attheme")) {
                      File locFile = null;
                      if (message.messageOwner.attachPath != null && message.messageOwner.attachPath.length() != 0) {
-@@ -44680,6 +44685,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -44680,6 +44686,7 @@ public class ChatActivity extends BaseFragment implements
                      options.add(OPTION_FORWARD);
                      icons.add(R.drawable.msg_forward);
                  }

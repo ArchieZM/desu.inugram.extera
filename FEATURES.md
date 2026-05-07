@@ -69,6 +69,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - read-only chat "admin" page for non-admins
 - split media restriction toggles for stickers / gifs / games / inline
 - show id in profile, show user json
+- long-tap inline callback button to copy text or callback data
 
 ## message input / formatting
 
