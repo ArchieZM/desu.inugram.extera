@@ -65,6 +65,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 web preview refetch from menu
 - 🐶 disable web preview limit on twitter-like websites
 - message details from menu (+ show json)
+- per-message statistics from message menu
 - 🐶 disable custom wallpaper and theme per chat
 - read-only chat "admin" page for non-admins
 - split media restriction toggles for stickers / gifs / games / inline

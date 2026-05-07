@@ -133,6 +133,13 @@ object ChatHelper {
         options.add(OPTION_DETAILS)
         icons.add(R.drawable.msg_info)
 
+        val chatInfo = activity.currentChatInfo
+        if (chatInfo != null && chatInfo.can_view_stats && selectedObject.id > 0 && !selectedObject.isStory) {
+            items.add(LocaleController.getString(R.string.Statistics))
+            options.add(ChatActivity.OPTION_STATISTICS)
+            icons.add(R.drawable.msg_stats)
+        }
+
         if (activity.isFiltered) {
             items.add(LocaleController.getString(R.string.InuShowInChat))
             options.add(OPTION_SHOW_IN_CHAT)
