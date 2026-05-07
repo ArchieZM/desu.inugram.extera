@@ -2,6 +2,7 @@ package desu.inugram.helpers
 
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
+import android.view.View
 import androidx.core.content.edit
 import desu.inugram.InuConfig
 import desu.inugram.ui.MessageDetailsActivity
@@ -16,6 +17,7 @@ import org.telegram.messenger.SendMessagesHelper
 import org.telegram.messenger.UserConfig
 import org.telegram.messenger.UserObject
 import org.telegram.tgnet.TLRPC
+import org.telegram.ui.ActionBar.ActionBarMenu
 import org.telegram.ui.ActionBar.BottomSheet
 import org.telegram.ui.Cells.ChatMessageCell
 import org.telegram.ui.ChatActivity
@@ -32,6 +34,7 @@ object ChatHelper {
     const val OPTION_SHOW_IN_CHAT = 505
     const val ACTION_SHOW_PINNED_PANEL = 506
     const val ACTION_PINNED_UNPIN_ALL = 507
+    const val ACTION_SELECT_RANGE = 1500
 
     private fun removeWallpaperKey(currentAccount: Int, dialogId: Long) = "remove_wallpaper:$currentAccount:$dialogId"
     private fun removeThemeKey(currentAccount: Int, dialogId: Long) = "remove_theme:$currentAccount:$dialogId"
@@ -316,6 +319,140 @@ object ChatHelper {
         }
 
         return true;
+    }
+
+    @JvmStatic
+    fun addActionModeItems(activity: ChatActivity, actionMode: ActionBarMenu, anchorAfterId: Int) {
+        val item = actionMode.addItemWithWidth(
+            ACTION_SELECT_RANGE,
+            R.drawable.msg_select_between_solar,
+            AndroidUtilities.dp(54f),
+            LocaleController.getString(R.string.InuSelectRange),
+        )
+        val anchor = actionMode.getItem(anchorAfterId)
+        if (anchor != null) {
+            val targetIndex = actionMode.indexOfChild(anchor) + 1
+            actionMode.removeView(item)
+            actionMode.addView(item, targetIndex)
+        }
+        activity.actionModeViews.add(item)
+    }
+
+    @JvmStatic
+    fun shouldAnimateEditButton(activity: ChatActivity): Boolean {
+        val item = activity.actionBar?.createActionMode()?.getItem(ACTION_SELECT_RANGE) ?: return true
+        return item.visibility != View.VISIBLE
+    }
+
+    @JvmStatic
+    fun updateActionModeVisibility(activity: ChatActivity) {
+        val actionMode = activity.actionBar?.createActionMode() ?: return
+        actionMode.setItemVisibility(
+            ACTION_SELECT_RANGE,
+            if (hasUnselectedGap(activity)) View.VISIBLE else View.GONE,
+        )
+    }
+
+    @JvmStatic
+    fun handleActionModeClick(id: Int, activity: ChatActivity): Boolean {
+        if (id != ACTION_SELECT_RANGE) return false
+        fillSelectionGaps(activity)
+        return true
+    }
+
+    private data class GapInfo(val targetIndex: Int, val minId: Int, val maxId: Int)
+
+    private fun gapInfo(activity: ChatActivity): GapInfo? {
+        val a = activity.selectedMessagesIds[0].size()
+        val b = activity.selectedMessagesIds[1].size()
+        val targetIndex = when {
+            a >= 2 && b == 0 -> 0
+            b >= 2 && a == 0 -> 1
+            else -> return null
+        }
+        val arr = activity.selectedMessagesIds[targetIndex]
+        var minId = Int.MAX_VALUE
+        var maxId = Int.MIN_VALUE
+        for (i in 0 until arr.size()) {
+            val id = arr.keyAt(i)
+            if (id < minId) minId = id
+            if (id > maxId) maxId = id
+        }
+        if (minId >= maxId) return null
+        return GapInfo(targetIndex, minId, maxId)
+    }
+
+    private inline fun forEachGapMessage(
+        activity: ChatActivity,
+        info: GapInfo,
+        action: (MessageObject) -> Boolean,
+    ) {
+        val arr = activity.selectedMessagesIds[info.targetIndex]
+        val dialogId = activity.dialogId
+        for (msg in activity.messages) {
+            val msgIndex = if (msg.dialogId == dialogId) 0 else 1
+            if (msgIndex != info.targetIndex) continue
+            val id = msg.id
+            if (id <= info.minId || id >= info.maxId) continue
+            if (arr.indexOfKey(id) >= 0) continue
+            if (!action(msg)) return
+        }
+    }
+
+    private fun hasUnselectedGap(activity: ChatActivity): Boolean {
+        if (activity.selectedMessagesIds[0].size() + activity.selectedMessagesIds[1].size() >= 100) return false
+        val info = gapInfo(activity) ?: return false
+        var found = false
+        forEachGapMessage(activity, info) {
+            found = true
+            false
+        }
+        return found
+    }
+
+    private fun fillSelectionGaps(activity: ChatActivity) {
+        val info = gapInfo(activity) ?: return
+        val arr = activity.selectedMessagesIds[info.targetIndex]
+        val candidates = ArrayList<MessageObject>()
+        forEachGapMessage(activity, info) {
+            candidates.add(it)
+            true
+        }
+        if (candidates.isEmpty()) return
+
+        val cap = 100 - arr.size()
+        if (cap <= 0) {
+            showSelectRangeCappedBulletin(activity)
+            return
+        }
+        if (candidates.size <= cap) {
+            for (i in candidates.indices) {
+                activity.addToSelectedMessages(candidates[i], false, i == candidates.size - 1)
+            }
+            activity.updateActionModeTitle()
+            activity.updateVisibleRows()
+            return
+        }
+
+        val edgeIdToRemove = if (candidates[cap].id < candidates[cap - 1].id) info.minId else info.maxId
+        val edgeMsg = arr.get(edgeIdToRemove) ?: run {
+            showSelectRangeCappedBulletin(activity)
+            return
+        }
+        activity.addToSelectedMessages(edgeMsg, false, false)
+        for (i in 0..cap) {
+            activity.addToSelectedMessages(candidates[i], false, i == cap)
+        }
+        activity.updateActionModeTitle()
+        activity.updateVisibleRows()
+        activity.scrollToMessageId(candidates[cap].id, 0, false, 0, true, 0)
+        showSelectRangeCappedBulletin(activity)
+    }
+
+    private fun showSelectRangeCappedBulletin(activity: ChatActivity) {
+        BulletinFactory.of(activity)
+            .createSimpleBulletin(R.raw.error, LocaleController.formatString(R.string.InuSelectRangeLimit, 100))
+            .show()
     }
 
     @JvmStatic
