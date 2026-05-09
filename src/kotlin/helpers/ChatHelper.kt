@@ -22,6 +22,8 @@ import org.telegram.ui.ActionBar.BottomSheet
 import org.telegram.ui.Cells.ChatMessageCell
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.BulletinFactory
+import org.telegram.ui.Components.EditTextCaption
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.UndoView
 import org.telegram.ui.DialogsActivity
 import java.io.File
@@ -512,5 +514,29 @@ object ChatHelper {
     @JvmStatic
     fun onFragmentDestroy(activity: ChatActivity) {
         TranslateHelper.resetForDialog(activity.dialogId)
+    }
+
+    @JvmStatic
+    fun maybeHandleEditDoneLongTap(
+        fragment: ChatActivity?,
+        anchor: View,
+        editTextCaption: EditTextCaption?,
+        messageObject: MessageObject?,
+        groupedMessages: MessageObject.GroupedMessages?,
+    ): Boolean {
+        if (fragment == null || messageObject == null) return false
+        val text = editTextCaption?.text
+        if (!messageObject.isMediaEmpty || groupedMessages != null) return false
+        if (text.isNullOrEmpty()) return false
+        val hasUrl = runCatching { AndroidUtilities.WEB_URL.matcher(text).find() }.getOrDefault(false)
+        if (!hasUrl) return false
+
+        ItemOptions.makeOptions(fragment, anchor, false, false, true)
+            .forceTop(true)
+            .add(R.drawable.msg_retry, LocaleController.getString(R.string.InuRefetchWebPreview)) {
+                fragment.inu_refetchWebPreview()
+            }
+            .show()
+        return true
     }
 }

@@ -4,15 +4,28 @@ Date: Tue, 28 Apr 2026 23:48:18 +0300
 Subject: menu option to refetch web preview in message input
 
 ---
- .../java/org/telegram/ui/ChatActivity.java    | 25 +++++++++++++++++++
- .../ui/Components/ChatActivityEnterView.java  | 18 +++++++++++++
- 2 files changed, 43 insertions(+)
+ .../java/org/telegram/ui/ChatActivity.java    | 34 ++++++++++++++++++-
+ .../ui/Components/ChatActivityEnterView.java  | 21 +++++++++++-
+ 2 files changed, 53 insertions(+), 2 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -14164,6 +14164,31 @@ public class ChatActivity extends BaseFragment implements
+@@ -13982,7 +13982,11 @@ public class ChatActivity extends BaseFragment implements
+     }
+ 
+     public void searchLinks(final CharSequence charSequence, final boolean force) {
+-        if (currentEncryptedChat != null && getMessagesController().secretWebpagePreview == 0 || editingMessageObject != null && (!editingMessageObject.isWebpage() || editingMessageObject.messageOwner.media.webpage instanceof TLRPC.TL_webPagePending)) {
++        searchLinks(charSequence, force, false);
++    }
++
++    public void searchLinks(final CharSequence charSequence, final boolean force, final boolean inu_force) {
++        if (currentEncryptedChat != null && getMessagesController().secretWebpagePreview == 0 || !inu_force && editingMessageObject != null && (!editingMessageObject.isWebpage() || editingMessageObject.messageOwner.media.webpage instanceof TLRPC.TL_webPagePending)) {
+             return;
+         }
+         if (currentChat != null && !ChatObject.canSendEmbed(currentChat)) {
+@@ -14164,6 +14168,34 @@ public class ChatActivity extends BaseFragment implements
  
      private HashMap<String, TLRPC.WebPage> lastLinkPreviewResults;
  
@@ -26,6 +39,9 @@ index 0000000..0000000 100644
 +            lastLinkPreviewResults.clear();
 +        }
 +        chatActivityEnterView.setWebPage(null, true);
++        if (editingMessageObject != null && editingMessageObject.messageOwner != null && editingMessageObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage) {
++            editingMessageObject.messageOwner.media.manual = false;
++        }
 +        String firstUrl = null;
 +        try {
 +            Matcher m = AndroidUtilities.WEB_URL.matcher(text);
@@ -38,7 +54,7 @@ index 0000000..0000000 100644
 +            pendingLinkSearchString = firstUrl;
 +            showFieldPanelForWebPage(true, pending, false);
 +        }
-+        searchLinks(text, true);
++        searchLinks(text, true, true);
 +    }
 +
      private void requestLinkPreviewCached(TL_account.getWebPagePreview req, Utilities.Callback2<Boolean, TLRPC.WebPage> done) {
@@ -73,3 +89,20 @@ index 0000000..0000000 100644
          options.setupSelectors();
          if (sendWhenOnlineButton != null) {
              TLRPC.User user = parentFragment == null ? null : parentFragment.getCurrentUser();
+@@ -9702,6 +9720,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+             }
+ 
+             doneButton.setOnLongClickListener(v -> {
++                if (ChatHelper.maybeHandleEditDoneLongTap(parentFragment, v, messageEditText, messageObject, groupedMessages)) return true;
+                 if (messageObject.isMediaEmpty()) return false;
+                 if (messageEditText == null || TextUtils.isEmpty(messageEditText.getTextToUse())) return false;
+                 if (groupedMessages != null && (!groupedMessages.hasCaption || groupedMessages.isDocuments)) return false;
+@@ -9795,7 +9814,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+                 draftMessage = messageEditText != null && messageEditText.length() > 0 ? messageEditText.getText() : null;
+                 draftSearchWebpage = messageWebPageSearch;
+             }
+-            messageWebPageSearch = !(editingMessageObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage && editingMessageObject.messageOwner.media.manual) && (editingMessageObject.type == MessageObject.TYPE_TEXT || editingMessageObject.type == MessageObject.TYPE_EMOJIS);
++            messageWebPageSearch = !(editingMessageObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage && editingMessageObject.messageOwner.media.manual) && (editingMessageObject.type == MessageObject.TYPE_TEXT || editingMessageObject.type == MessageObject.TYPE_EMOJIS) && editingMessageObject.isWebpage();
+             if (!keyboardVisible) {
+                 final CharSequence textToSetWithKeyboardFinal = textToSetWithKeyboard;
+                 AndroidUtilities.runOnUIThread(setTextFieldRunnable = () -> {
