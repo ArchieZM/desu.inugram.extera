@@ -257,7 +257,7 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
 
             TOGGLE_PROFILE_PHOTO_GRADIENT_FADE -> {
                 val new = InuConfig.PROFILE_PHOTO_GRADIENT_FADE.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
+                (view as? TextCheckCell)?.isChecked = new
             }
 
             TOGGLE_NON_ISLAND_TAB_BARS -> {
