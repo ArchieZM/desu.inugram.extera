@@ -17,10 +17,13 @@ import org.telegram.messenger.R
 import org.telegram.tgnet.ConnectionsManager
 import org.telegram.tgnet.NativeByteBuffer
 import org.telegram.tgnet.TLRPC
+import org.telegram.messenger.UserConfig
+import org.telegram.ui.Cells.TextSelectionHelper
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.ColoredImageSpan
 import org.telegram.ui.Components.TranslateAlert2
+import org.telegram.ui.LaunchActivity
 import org.telegram.ui.RestrictedLanguagesSelectActivity
 import java.util.concurrent.ConcurrentHashMap
 
@@ -79,6 +82,23 @@ object TranslateHelper {
     private fun webPageOf(msg: MessageObject?): TLRPC.TL_webPage? {
         val media = msg?.messageOwner?.media as? TLRPC.TL_messageMediaWebPage ?: return null
         return media.webpage as? TLRPC.TL_webPage
+    }
+
+    @JvmStatic
+    fun installSelectionTranslate(helper: TextSelectionHelper<*>) {
+        helper.setOnTranslate { text, fromLang, toLang, onDismiss ->
+            val account = UserConfig.selectedAccount
+            if (!MessagesController.getInstance(account).translateController.isContextTranslateEnabled) {
+                onDismiss?.run()
+                return@setOnTranslate
+            }
+            val fragment = LaunchActivity.getLastFragment()
+            val context = fragment?.parentActivity ?: LaunchActivity.instance ?: return@setOnTranslate
+            TranslateAlert2.showAlert(
+                context, fragment, account,
+                fromLang, toLang, text, null, false, null, onDismiss,
+            )
+        }
     }
 
     /** @return true if handled in-place; false → caller should fall back to stock TranslateAlert. */

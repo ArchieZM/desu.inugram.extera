@@ -8,9 +8,10 @@ Subject: translator-related features
  .../messenger/TranslateController.java        |  7 +--
  .../java/org/telegram/ui/ArticleViewer.java   | 21 ++++++---
  .../telegram/ui/Cells/ChatMessageCell.java    | 34 +++++++++++---
+ .../ui/Cells/TextSelectionHelper.java         |  1 +
  .../java/org/telegram/ui/ChatActivity.java    | 44 ++++++++++++-------
  .../org/telegram/ui/web/WebActionBar.java     |  3 ++
- 6 files changed, 83 insertions(+), 29 deletions(-)
+ 7 files changed, 84 insertions(+), 29 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
 index 0000000..0000000 100644
@@ -247,6 +248,18 @@ index 0000000..0000000 100644
          if (currentMessageObject.scheduled && currentMessageObject.messageOwner.date == 0x7FFFFFFE || currentMessageObject.notime) {
              timeWidth -= dp(8);
          }
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextSelectionHelper.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextSelectionHelper.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextSelectionHelper.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextSelectionHelper.java
+@@ -310,6 +310,7 @@ public abstract class TextSelectionHelper<Cell extends TextSelectionHelper.Selec
+         touchSlop = ViewConfiguration.get(ApplicationLoader.applicationContext).getScaledTouchSlop();
+         selectionPaint.setPathEffect(new CornerPathEffect(cornerRadius = dp(6)));
+         selectionPath.setRectsUnionDiffDelta(1f);
++        desu.inugram.helpers.TranslateHelper.installSelectionTranslate(this);
+     }
+ 
+     public void setInvalidateParent() {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
