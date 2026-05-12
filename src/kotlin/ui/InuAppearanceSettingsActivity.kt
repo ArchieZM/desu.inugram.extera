@@ -157,7 +157,7 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_HIDE_FADE_VIEW -> {
                 val new = InuConfig.HIDE_FADE_VIEW.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             BUTTON_PROFILE_ID_MODE -> showDialog(
@@ -263,13 +263,13 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_NON_ISLAND_TAB_BARS -> {
                 val new = InuConfig.NON_ISLAND_TAB_BARS.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_NON_ISLAND_GLOBAL_SEARCH -> {
                 val new = InuConfig.NON_ISLAND_GLOBAL_SEARCH.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_NON_ISLAND_CHAT_ELEMENTS -> {

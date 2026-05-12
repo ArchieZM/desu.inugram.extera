@@ -5,11 +5,11 @@ Subject: dialog folders display mode customizations
 
 ---
  .../messenger/MessagesController.java         |  1 +
- .../telegram/messenger/MessagesStorage.java   | 25 ++++++
+ .../telegram/messenger/MessagesStorage.java   | 26 ++++++
  .../ui/Components/FilterTabsView.java         | 86 +++++++++++++------
  .../java/org/telegram/ui/DialogsActivity.java |  9 +-
  .../org/telegram/ui/FilterCreateActivity.java |  4 +
- 5 files changed, 96 insertions(+), 29 deletions(-)
+ 5 files changed, 97 insertions(+), 29 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 index 0000000..0000000 100644
@@ -115,6 +115,14 @@ index 0000000..0000000 100644
                  boolean muted = getMessagesController().isDialogMuted(user.id, 0);
                  Integer folderId = dialogsByFolders.get(user.id);
                  int idx1 = folderId == null || folderId < 0 || folderId > 1 ? 0 : folderId;
+@@ -16894,6 +16919,7 @@ public class MessagesStorage extends BaseController {
+     }
+ 
+     public void resetAllUnreadCounters(boolean muted) {
++        if (muted && FolderHelper.isMuteFilteringActive()) muted = false;
+         for (int a = 0, N = dialogFilters.size(); a < N; a++) {
+             MessagesController.DialogFilter filter = dialogFilters.get(a);
+             if (muted) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/FilterTabsView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/FilterTabsView.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/FilterTabsView.java

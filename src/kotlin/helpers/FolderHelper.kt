@@ -207,6 +207,13 @@ object FolderHelper {
     }
 
     @JvmStatic
+    fun isMuteFilteringActive(): Boolean {
+        val mode = InuConfig.FOLDERS_UNREAD_COUNTER_MODE.value
+        return mode == InuConfig.FoldersUnreadCounterModeItem.EXCLUDE_MUTED ||
+            mode == InuConfig.FoldersUnreadCounterModeItem.EXCLUDE_MUTED_NON_DMS
+    }
+
+    @JvmStatic
     @JvmOverloads
     fun shouldExcludeFromCounter(currentAccount: Int, dialogId: Long, user: TLRPC.User? = null): Boolean {
         val mode = InuConfig.FOLDERS_UNREAD_COUNTER_MODE.value

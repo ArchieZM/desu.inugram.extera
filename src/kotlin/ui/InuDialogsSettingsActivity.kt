@@ -5,7 +5,9 @@ import desu.inugram.InuConfig
 import desu.inugram.helpers.DialogsFabHelper
 import desu.inugram.helpers.InuUtils
 import org.telegram.messenger.LocaleController
+import org.telegram.messenger.MessagesStorage
 import org.telegram.messenger.R
+import org.telegram.messenger.UserConfig
 import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.UItem
@@ -160,7 +162,7 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
                         if (mode == InuConfig.FOLDERS_DISPLAY_MODE.value) return@setItems
                         InuConfig.FOLDERS_DISPLAY_MODE.value = mode
                         listView.adapter.update(true)
-                        showRestartBulletin()
+                        softRebuild()
                     }
                     .create()
             )
@@ -180,7 +182,12 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
                         if (which == InuConfig.FOLDERS_UNREAD_COUNTER_MODE.value) return@setItems
                         InuConfig.FOLDERS_UNREAD_COUNTER_MODE.value = which
                         listView.adapter.update(true)
-                        showRestartBulletin()
+                        // resetAllUnreadCounters dispatches updateInterfaces; DialogsActivity/MainTabsActivity listen.
+                        for (i in 0 until UserConfig.MAX_ACCOUNT_COUNT) {
+                            if (!UserConfig.getInstance(i).isClientActivated) continue
+                            val storage = MessagesStorage.getInstance(i)
+                            storage.storageQueue.postRunnable { storage.resetAllUnreadCounters(false) }
+                        }
                     }
                     .create()
             )
@@ -188,13 +195,13 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_BOT_WEBVIEW_BUTTON -> {
                 val new = InuConfig.HIDE_BOT_WEBVIEW_DIALOGS.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_OLD_MENTION_INDICATOR -> {
                 val new = InuConfig.OLD_MENTION_INDICATOR.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_OPEN_ARCHIVE_ON_PULL -> {
@@ -211,7 +218,7 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
                 val new = InuConfig.BOTTOM_TABS_HIDE.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
                 listView.adapter.update(true)
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_HIDE_CONTACTS_TAB -> {
@@ -223,7 +230,7 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_COMPACT_MODE -> {
                 val new = InuConfig.BOTTOM_TABS_COMPACT_MODE.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             BUTTON_FAB_MAIN_ACTION -> showFabActionDialog(
@@ -239,19 +246,18 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_FAB_HIDE_ON_SCROLL -> {
                 val new = InuConfig.DIALOGS_FAB_HIDE_ON_SCROLL.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
             }
 
             TOGGLE_FAB_OFFSET_FOR_BOTTOM_BAR -> {
                 val new = InuConfig.DIALOGS_FAB_OFFSET_FOR_BOTTOM_BAR.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
 
             TOGGLE_FAB_LEFT_SIDE -> {
                 val new = InuConfig.DIALOGS_FAB_LEFT_SIDE.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-                showRestartBulletin()
+                softRebuild()
             }
         }
     }
@@ -271,7 +277,7 @@ class InuDialogsSettingsActivity : InuSettingsPageActivity() {
                     if (newValue == item.value) return@setItems
                     item.value = newValue
                     listView.adapter.update(true)
-                    showRestartBulletin()
+                    softRebuild()
                 }
                 .create()
         )

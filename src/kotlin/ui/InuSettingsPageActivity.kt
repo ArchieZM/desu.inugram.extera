@@ -24,6 +24,7 @@ import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalFragment
+import org.telegram.ui.LaunchActivity
 import kotlin.system.exitProcess
 
 abstract class InuSettingsPageActivity : UniversalFragment() {
@@ -48,6 +49,11 @@ abstract class InuSettingsPageActivity : UniversalFragment() {
                 NotificationCenter.getInstance(i).postNotificationName(id, *args)
             }
         }
+    }
+
+    // rebuilds views of all fragments below this one — settings page itself stays.
+    protected fun softRebuild() {
+        LaunchActivity.instance?.rebuildAllFragments(false)
     }
 
     protected fun showRestartBulletin() {
