@@ -203,12 +203,6 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
         hideBottomBarGroup.addTo(items) { listView.adapter.update(true) }
         items.add(
-            UItem.asCheck(
-                TOGGLE_DISABLE_CHAT_TITLE_PHONE,
-                LocaleController.getString(R.string.InuDisableChatTitlePhone)
-            ).setChecked(InuConfig.DISABLE_CHAT_TITLE_PHONE.value)
-        )
-        items.add(
             mkTwoLineCheckItem(
                 TOGGLE_SEARCH_FROM_GLOBAL,
                 R.string.InuSearchFromGlobal,
@@ -295,11 +289,6 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
-            TOGGLE_DISABLE_CHAT_TITLE_PHONE -> {
-                val new = InuConfig.DISABLE_CHAT_TITLE_PHONE.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
             TOGGLE_HIDE_REACTION_ENTRY -> {
                 val new = InuConfig.HIDE_REACTIONS_ENTRY.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
@@ -332,7 +321,6 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_BOT_WEBVIEW_BUTTON = InuUtils.generateId()
         private val TOGGLE_REACTION_BAR_BELOW = InuUtils.generateId()
         private val TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION = InuUtils.generateId()
-        private val TOGGLE_DISABLE_CHAT_TITLE_PHONE = InuUtils.generateId()
         private val TOGGLE_HIDE_REACTION_ENTRY = InuUtils.generateId()
         private val TOGGLE_CHAT_VIEWS_BOTTOM = InuUtils.generateId()
         private val BUTTON_PINNED_REACTIONS = InuUtils.generateId()

@@ -56,12 +56,6 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
         )
         items.add(
             UItem.asCheck(
-                TOGGLE_CALL_CONFIRMATION,
-                LocaleController.getString(R.string.InuCallConfirmation),
-            ).setChecked(InuConfig.CALL_CONFIRMATION.value)
-        )
-        items.add(
-            UItem.asCheck(
                 TOGGLE_DISABLE_CHAT_BUBBLES,
                 LocaleController.getString(R.string.InuDisableChatBubbles),
             ).setChecked(InuConfig.DISABLE_CHAT_BUBBLES.value)
@@ -201,11 +195,6 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
-            TOGGLE_CALL_CONFIRMATION -> {
-                val new = InuConfig.CALL_CONFIRMATION.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-
             TOGGLE_DISABLE_CHAT_BUBBLES -> {
                 val new = InuConfig.DISABLE_CHAT_BUBBLES.toggle()
                 (view as? TextCheckCell)?.isChecked = new
@@ -307,7 +296,6 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_DISABLE_SWIPE_TO_UNARCHIVE = InuUtils.generateId()
         private val TOGGLE_CHAT_ALWAYS_SHOW_DOWN = InuUtils.generateId()
         private val TOGGLE_CHAT_REMEMBER_ALL_REPLIES = InuUtils.generateId()
-        private val TOGGLE_CALL_CONFIRMATION = InuUtils.generateId()
         private val TOGGLE_DISABLE_CHAT_BUBBLES = InuUtils.generateId()
         private val BUTTON_WEB_PREVIEW_REPLACEMENTS = InuUtils.generateId()
         private val TOGGLE_DISABLE_INTRO_STICKER = InuUtils.generateId()

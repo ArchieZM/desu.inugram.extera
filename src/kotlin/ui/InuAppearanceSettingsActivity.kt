@@ -22,17 +22,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
     override fun fillItems(items: ArrayList<UItem>, adapter: UniversalAdapter) {
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
         items.add(
-            UItem.asButton(
-                BUTTON_PROFILE_ID_MODE,
-                LocaleController.getString(R.string.InuProfileIdMode),
-                when (InuConfig.PROFILE_ID_MODE.value) {
-                    InuConfig.ProfileIdModeItem.TELEGRAM_ID -> LocaleController.getString(R.string.InuProfileIdModeTelegram)
-                    InuConfig.ProfileIdModeItem.BOT_API_ID -> LocaleController.getString(R.string.InuProfileIdModeBotApi)
-                    else -> LocaleController.getString(R.string.InuProfileIdModeOff)
-                }
-            )
-        )
-        items.add(
             UItem.asCheck(
                 TOGGLE_SHOW_SECONDS,
                 LocaleController.getString(R.string.InuShowSeconds)
@@ -45,12 +34,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                 R.string.InuDisableRoundingInfo,
                 InuConfig.DISABLE_ROUNDING.value
             )
-        )
-        items.add(
-            UItem.asCheck(
-                TOGGLE_HIDE_MY_PHONE_NUMBER,
-                LocaleController.getString(R.string.InuHideMyPhoneNumber)
-            ).setChecked(InuConfig.HIDE_MY_PHONE_NUMBER.value)
         )
         items.add(
             mkTwoLineCheckItem(
@@ -67,12 +50,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                 R.string.InuDisableScrimBlurInfo,
                 InuConfig.DISABLE_SCRIM_BLUR.value
             )
-        )
-        items.add(
-            UItem.asCheck(
-                TOGGLE_PROFILE_PHOTO_GRADIENT_FADE,
-                LocaleController.getString(R.string.InuProfilePhotoGradientFade)
-            ).setChecked(InuConfig.PROFILE_PHOTO_GRADIENT_FADE.value)
         )
         items.add(
             UItem.asButton(
@@ -168,18 +145,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                 softRebuild()
             }
 
-            BUTTON_PROFILE_ID_MODE -> RadioItemOptions.show(
-                this, view,
-                listOf(
-                    LocaleController.getString(R.string.InuProfileIdModeOff),
-                    LocaleController.getString(R.string.InuProfileIdModeTelegram),
-                    LocaleController.getString(R.string.InuProfileIdModeBotApi),
-                ),
-                InuConfig.PROFILE_ID_MODE.value,
-            ) { which ->
-                InuConfig.PROFILE_ID_MODE.value = which
-            }
-
             BUTTON_MAP_PROVIDER -> RadioItemOptions.show(
                 this, view,
                 listOf(
@@ -229,11 +194,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
                 (view as? NotificationsCheckCell)?.isChecked = new
             }
 
-            TOGGLE_HIDE_MY_PHONE_NUMBER -> {
-                val new = InuConfig.HIDE_MY_PHONE_NUMBER.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-
             TOGGLE_USE_SYSTEM_FONT -> {
                 val new = InuConfig.USE_SYSTEM_FONT.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
@@ -243,11 +203,6 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_DISABLE_SCRIM_BLUR -> {
                 val new = InuConfig.DISABLE_SCRIM_BLUR.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_PROFILE_PHOTO_GRADIENT_FADE -> {
-                val new = InuConfig.PROFILE_PHOTO_GRADIENT_FADE.toggle()
-                (view as? TextCheckCell)?.isChecked = new
             }
 
             TOGGLE_NON_ISLAND_TAB_BARS -> {
@@ -270,17 +225,14 @@ class InuAppearanceSettingsActivity : InuSettingsPageActivity() {
     }
 
     companion object {
-        private val BUTTON_PROFILE_ID_MODE = InuUtils.generateId()
         private val TOGGLE_HIDE_FADE_VIEW = InuUtils.generateId()
         private val TOGGLE_NON_ISLAND_TAB_BARS = InuUtils.generateId()
         private val TOGGLE_NON_ISLAND_GLOBAL_SEARCH = InuUtils.generateId()
         private val TOGGLE_NON_ISLAND_CHAT_ELEMENTS = InuUtils.generateId()
         private val TOGGLE_SHOW_SECONDS = InuUtils.generateId()
         private val TOGGLE_DISABLE_ROUNDING = InuUtils.generateId()
-        private val TOGGLE_HIDE_MY_PHONE_NUMBER = InuUtils.generateId()
         private val TOGGLE_USE_SYSTEM_FONT = InuUtils.generateId()
         private val TOGGLE_DISABLE_SCRIM_BLUR = InuUtils.generateId()
-        private val TOGGLE_PROFILE_PHOTO_GRADIENT_FADE = InuUtils.generateId()
         private val BUTTON_ICON_REPLACEMENT = InuUtils.generateId()
         private val BUTTON_MAP_PROVIDER = InuUtils.generateId()
         private val BUTTON_MAP_PREVIEW_PROVIDER = InuUtils.generateId()

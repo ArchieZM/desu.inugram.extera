@@ -10,7 +10,10 @@
     <string name="InuBehavior">Behavior</string>
     <string name="InuAnnoyances">Annoyances</string>
     <string name="InuOther">Other</string>
-    <string name="InuMainPage">Main page</string>
+    <string name="InuMainPage">Dialogs list</string>
+    <string name="InuUserProfile">User profile</string>
+    <string name="InuUserProfileHeader">Header</string>
+    <string name="InuUserProfileInformation">Information</string>
     <string name="InuChatList">Chat list</string>
     <string name="InuOpenArchiveOnPull">Open archive on pull</string>
     <string name="InuDoubleTapActions">Double tap actions</string>
