@@ -36,6 +36,14 @@ class InuUserProfileSettingsActivity : InuSettingsPageActivity() {
                 InuConfig.DISABLE_PROFILE_SCROLL_SNAP.value
             )
         )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_PROFILE_PREFER_MEDIA_TAB,
+                R.string.InuProfilePreferMediaTab,
+                R.string.InuProfilePreferMediaTabInfo,
+                InuConfig.PROFILE_PREFER_MEDIA_TAB.value
+            )
+        )
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuUserProfileInformation)))
@@ -89,6 +97,11 @@ class InuUserProfileSettingsActivity : InuSettingsPageActivity() {
                 (view as? NotificationsCheckCell)?.isChecked = new
             }
 
+            TOGGLE_PROFILE_PREFER_MEDIA_TAB -> {
+                val new = InuConfig.PROFILE_PREFER_MEDIA_TAB.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             BUTTON_PROFILE_ID_MODE -> RadioItemOptions.show(
                 this, view,
                 listOf(
@@ -122,6 +135,7 @@ class InuUserProfileSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_PROFILE_PHOTO_GRADIENT_FADE = InuUtils.generateId()
         private val TOGGLE_REDUCE_PROFILE_MOTION = InuUtils.generateId()
         private val TOGGLE_DISABLE_PROFILE_SCROLL_SNAP = InuUtils.generateId()
+        private val TOGGLE_PROFILE_PREFER_MEDIA_TAB = InuUtils.generateId()
         private val BUTTON_PROFILE_ID_MODE = InuUtils.generateId()
         private val TOGGLE_HIDE_MY_PHONE_NUMBER = InuUtils.generateId()
         private val TOGGLE_DISABLE_CHAT_TITLE_PHONE = InuUtils.generateId()

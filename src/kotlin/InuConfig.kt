@@ -209,6 +209,9 @@ object InuConfig {
     val REDUCE_PROFILE_MOTION = BoolItem("reduce_profile_motion", true)
 
     @JvmField
+    val PROFILE_PREFER_MEDIA_TAB = BoolItem("profile_prefer_media_tab", true)
+
+    @JvmField
     val OPT_IN_MOTION_PHOTOS = BoolItem("opt_in_motion_photos", true)
 
     @JvmField

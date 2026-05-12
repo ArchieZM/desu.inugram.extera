@@ -123,6 +123,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 disable wallpaper parallax
 - 🐶 disable scroll-snap in profile
 - 🐶 reduce profile motion (skip gifts/gradient/pattern/gooey/action enter anims, defaults to OS animation scale)
+- 🐶 prefer "Media" tab in profile over Gifts/Posts
 - 🐶 recyclerlistview instant-tap
 - ios-style menu gesture (release-to-commit) in bottom menu tabs
 
