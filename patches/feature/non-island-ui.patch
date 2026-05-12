@@ -5,7 +5,7 @@ Subject: non-island ui in various parts of the app
 
 ---
  .../ui/Cells/SharedPhotoVideoCell2.java       |   4 +-
- .../java/org/telegram/ui/ChatActivity.java    |  73 ++++++----
+ .../java/org/telegram/ui/ChatActivity.java    |  79 +++++++----
  .../ui/Components/ChatActivityEnterView.java  |   4 +-
  .../ChatActivityTopPanelLayout.java           |  16 ++-
  .../ui/Components/ChatAttachAlert.java        |  16 +++
@@ -30,7 +30,7 @@ Subject: non-island ui in various parts of the app
  .../java/org/telegram/ui/bots/BotAdView.java  |   2 +-
  .../ui/bots/BotCommandsMenuContainer.java     |   4 +-
  .../bots/ChatAttachAlertBotWebViewLayout.java |   5 +-
- 26 files changed, 334 insertions(+), 155 deletions(-)
+ 26 files changed, 337 insertions(+), 158 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java
 index 0000000..0000000 100644
@@ -97,7 +97,7 @@ index 0000000..0000000 100644
          chatActivityEnterView.setViewParentForEmoji(chatInputInAppContainer);
  
 -        chatInputBubbleContainer.addView(chatActivityEnterView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, 7, 0, 7, 0));
-+        chatInputBubbleContainer.addView(chatActivityEnterView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, NonIslandHelper.chatElements() ? 0 : 7, 0, NonIslandHelper.chatElements() ? 0 : 7, NonIslandHelper.chatElements() ? -7 : 0));
++        chatInputBubbleContainer.addView(chatActivityEnterView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, NonIslandHelper.chatElements() ? 0 : 7, 0, NonIslandHelper.chatElements() ? 0 : 7, NonIslandHelper.chatElements() ? -9 : 0));
  
          int chatListIndex = contentView.indexOfChild(chatListView);
          chatListIndex = chatListIndex < 0 ? contentView.getChildCount() : (chatListIndex + 1);
@@ -106,7 +106,7 @@ index 0000000..0000000 100644
          actionsButtonsLayout.setPadding(0, dp(56), 0, 0);
          actionsButtonsLayout.setClipToPadding(false);
 -        chatInputBubbleContainer.addView(actionsButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 106, Gravity.BOTTOM));
-+        chatInputBubbleContainer.addView(actionsButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 106, Gravity.BOTTOM, 0, 0, 0, NonIslandHelper.chatElements() ? -7 : 0));
++        chatInputBubbleContainer.addView(actionsButtonsLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 106, Gravity.BOTTOM, 0, 0, 0, NonIslandHelper.chatElements() ? -9 : 0));
          chatActivityEnterView.setSuggestionButtonVisible(ChatObject.isMonoForum(currentChat), false);
  
          chatActivityEnterTopView = new ChatActivityEnterTopView(context) {
@@ -186,7 +186,7 @@ index 0000000..0000000 100644
          searchCountText.setGravity(Gravity.LEFT);
          searchContainer.addView(searchCountText, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 30, Gravity.CENTER_VERTICAL, 0, -1, 97.33f, 0));
 -        chatInputBubbleContainer.addView(searchContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, searchContainerHeight, Gravity.BOTTOM, 7, 0, 7, 0));
-+        chatInputBubbleContainer.addView(searchContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, searchContainerHeight, Gravity.BOTTOM, NonIslandHelper.chatElements() ? 0 : 7, 0, NonIslandHelper.chatElements() ? 0 : 7, NonIslandHelper.chatElements() ? -7 : 0));
++        chatInputBubbleContainer.addView(searchContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, searchContainerHeight, Gravity.BOTTOM, NonIslandHelper.chatElements() ? 0 : 7, 0, NonIslandHelper.chatElements() ? 0 : 7, NonIslandHelper.chatElements() ? -9 : 0));
          if (hashtagHistoryView != null) {
              hashtagHistoryView.bringToFront();
          }
@@ -233,7 +233,7 @@ index 0000000..0000000 100644
              float canvasOffsetY = chatListView.getY() + cell.getY() + cell.getPaddingTop();
              float alpha = cell.shouldDrawAlphaLayer() ? cell.getAlpha() : 1f;
 -            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - windowInsetsStateHolder.getCurrentMaxBottomInset() - inputIslandHeightCurrent - dp(9));
-+            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - windowInsetsStateHolder.getCurrentMaxBottomInset() - inputIslandHeightCurrent - dp(NonIslandHelper.chatElements() ? 2 : 9));
++            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - windowInsetsStateHolder.getCurrentMaxBottomInset() - inputIslandHeightCurrent - dp(NonIslandHelper.chatElements() ? 0 : 9));
              canvas.translate(canvasOffsetX, canvasOffsetY);
              cell.setInvalidatesParent(true);
              if (type == 0) {
@@ -242,7 +242,7 @@ index 0000000..0000000 100644
                                      - windowInsetsStateHolder.getCurrentMaxBottomInset()
                                      - inputIslandHeightCurrent
 -                                    - dp(9)
-+                                    - dp(NonIslandHelper.chatElements() ? 2 : 9)
++                                    - dp(NonIslandHelper.chatElements() ? 0 : 9)
                                      - (mentionContainer != null ? mentionContainer.clipBottom() : 0);
  
                              canvas.clipRect(0, listTop + (mentionContainer != null ? mentionContainer.clipTop() : 0), getMeasuredWidth(), viewClipBottom2);
@@ -251,7 +251,7 @@ index 0000000..0000000 100644
                              - windowInsetsStateHolder.getCurrentMaxBottomInset()
                              - inputIslandHeightCurrent
 -                            - dp(9);
-+                            - dp(NonIslandHelper.chatElements() ? 2 : 9);
++                            - dp(NonIslandHelper.chatElements() ? 0 : 9);
  
                          float clipTop = 0, clipBottom = 0;
                          if (mentionContainer != null) {
@@ -264,12 +264,20 @@ index 0000000..0000000 100644
                              - windowInsetsStateHolder.getCurrentNavigationBarInset(),
                          View.MeasureSpec.EXACTLY);
                      child.measure(contentWidthSpec, contentHeightSpec);
-@@ -18339,7 +18357,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -18334,12 +18352,12 @@ public class ChatActivity extends BaseFragment implements
+                         childTop = chatActivityEnterView.getBottom();
+                     }
+                 } else if (chatActivityEnterView != null && chatActivityEnterView.isRecordCircleOrControlsView(child)) {
+-                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(7);
+-                    childLeft -= dp(3);
++                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? -2 : 7);
++                    childLeft -= dp(NonIslandHelper.chatElements() ? -4 : 3);
                  } else if (child == emojiButtonRed) {
-                     childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(7);
+-                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(7);
++                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? -2 : 7);
                  } else if (chatActivityEnterView != null && child == chatActivityEnterView.recordedAudioPanel) {
 -                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(9);
-+                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 2 : 9);
++                    childTop -= windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 0 : 9);
                  } else if (child == gifHintTextView || child == voiceHintTextView || child == mediaBanTooltip || child == emojiHintTextView) {
                      childTop -= inputFieldHeight;
                  } else if (child == chatListView || child == chatListThanosEffect || child == floatingDateView || child == floatingTopicSeparator || child == infoTopView) {
@@ -278,7 +286,7 @@ index 0000000..0000000 100644
  
          final float margin = windowInsetsStateHolder.getAnimatedMaxBottomInset() +
 -                (chatInputViewsContainer.getInputBubbleHeight() + dp(9));
-+                (chatInputViewsContainer.getInputBubbleHeight() + dp(9 - (NonIslandHelper.chatElements() ? 7 : 0)));
++                (chatInputViewsContainer.getInputBubbleHeight() + dp(9 - (NonIslandHelper.chatElements() ? 9 : 0)));
  
          topicsTabs.setSideMenuBackgroundMarginBottom(margin);
      }
@@ -287,7 +295,7 @@ index 0000000..0000000 100644
          final float margin = windowInsetsStateHolder.getAnimatedMaxBottomInset()
              + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
 -            + (chatInputViewsContainer.getInputBubbleHeight() + dp(9 + 6));
-+            + (chatInputViewsContainer.getInputBubbleHeight() + dp(9 + 6 - (NonIslandHelper.chatElements() ? 14 : 0)));
++            + (chatInputViewsContainer.getInputBubbleHeight() + dp(9 + 6 - (NonIslandHelper.chatElements() ? 16 : 0)));
  
          if (chatActivityEnterView != null && chatActivityEnterView.botCommandsMenuContainer != null) {
              chatActivityEnterView.botCommandsMenuContainer.setTranslationY(-margin);
@@ -1106,7 +1114,7 @@ index 0000000..0000000 100644
          tmpRect.inset(0, -dp(7));
          tmpRect.offset(0, blurTop + (int) bubbleInputTranlationY);
 +        if (desu.inugram.helpers.NonIslandHelper.chatElements()) {
-+            tmpRect.top += dp(14);
++            tmpRect.top += dp(16);
 +            tmpRect.bottom = getMeasuredHeight();
 +            tmpRect.left = 0;
 +            tmpRect.right = getMeasuredWidth();
