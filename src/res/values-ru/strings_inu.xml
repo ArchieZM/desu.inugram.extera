@@ -11,13 +11,16 @@
     <string name="InuAnnoyances">Раздражители</string>
     <string name="InuOther">Другое</string>
     <string name="InuMainPage">Главный экран</string>
+    <string name="InuUserProfile">Профиль пользователя</string>
+    <string name="InuUserProfileHeader">Шапка</string>
+    <string name="InuUserProfileInformation">Информация</string>
     <string name="InuChatList">Список чатов</string>
     <string name="InuOpenArchiveOnPull">Открывать архив при вытягивании</string>
-    <string name="InuDoubleTapActions">Действия двойного касания</string>
-    <string name="InuDoubleTapDelay">Задержка двойного касания</string>
+    <string name="InuDoubleTapActions">Действия на двойной тап</string>
+    <string name="InuDoubleTapDelay">Задержка двойного тапа</string>
     <string name="InuIncomingMessages">Входящие сообщения</string>
     <string name="InuOutgoingMessages">Исходящие сообщения</string>
-    <string name="InuDoubleTapInfo">Из-за того, как Telegram обрабатывает двойные касания, включение действия по двойному касанию приводит к задержке обычных касаний на указанное выше время, отчего приложение ощущается менее отзывчивым.\nВы можете настроить длительность, но полностью избавиться от задержки можно только отключив действия.</string>
+    <string name="InuDoubleTapInfo">Из-за того, как Telegram обрабатывает двойные тапы, включение действия по двойному тапу приводит к задержке обычных тапов на указанное выше время, отчего приложение ощущается менее отзывчивым.\nВы можете настроить длительность, но полностью избавиться от задержки можно только отключив действия.</string>
     <string name="InuQuickReaction">Быстрая реакция</string>
     <string name="InuShowReactions">Показать реакции</string>
     <string name="InuHideStories">Скрыть истории</string>
@@ -35,10 +38,10 @@
     <string name="InuDisableChatBackgrounds">Отключить пользовательские фоны чатов</string>
     <string name="InuDisableChatThemes">Отключить пользовательские темы чатов</string>
     <string name="InuDisableBgParallax">Отключить параллакс фона</string>
-    <string name="InuHideCustomWallpaper">Скрыть пользовательские обои</string>
-    <string name="InuShowCustomWallpaper">Показать пользовательские обои</string>
-    <string name="InuHideCustomTheme">Скрыть пользовательскую тему</string>
-    <string name="InuShowCustomTheme">Показать пользовательскую тему</string>
+    <string name="InuHideCustomWallpaper">Скрыть обои</string>
+    <string name="InuShowCustomWallpaper">Показать обои</string>
+    <string name="InuHideCustomTheme">Отключить кастомную тему</string>
+    <string name="InuShowCustomTheme">Включить кастомную тему</string>
     <string name="InuDisableSwipeToUnarchive">Отключить свайп для разархивирования</string>
     <string name="InuResetStorage">Сбросить хранилище</string>
     <string name="InuResetStorageConfirm">Это удалит локальные ключи авторизации и кэши, чтобы сбросить ожидающую авторизацию. Вы уверены?</string>
@@ -72,9 +75,9 @@
     <string name="InuDialogsFabActionSavedMessages">Избранное</string>
     <string name="InuDisablePredictiveBack">Отключить жест «назад»</string>
     <string name="InuDisablePredictiveBackInfo">Отключает анимации предиктивного жеста «назад» Android 14+. Требуется перезапуск приложения.</string>
-    <string name="InuHideAiFeatures">Скрыть функции ИИ</string>
+    <string name="InuHideAiFeatures">Скрыть ИИ функции</string>
     <string name="InuHideAiEditor">Кнопка ИИ-редактора</string>
-    <string name="InuHideMessageSummary">Кнопка краткого пересказа сообщения</string>
+    <string name="InuHideMessageSummary">Кнопка пересказа сообщения</string>
     <string name="InuHideIvSummary">Краткий пересказ Instant View</string>
     <string name="InuClearHints">Сбросить все подсказки</string>
     <string name="InuClearHintsDone">Все подсказки сброшены</string>
@@ -84,18 +87,21 @@
     <string name="InuStickerSize">Размер стикеров</string>
     <string name="InuStickerTimeMode">Время поверх стикера</string>
     <string name="InuStickerTimeModeShow">Показывать</string>
-    <string name="InuStickerTimeModeHideTime">Скрывать только время</string>
-    <string name="InuStickerTimeModeHideIncoming">Скрывать только для входящих</string>
-    <string name="InuStickerTimeModeHideCompletely">Скрывать полностью</string>
+    <string name="InuStickerTimeModeHideTime">Скрыть только время</string>
+    <string name="InuStickerTimeModeHideIncoming">Скрыть только для входящих</string>
+    <string name="InuStickerTimeModeHideCompletely">Скрыть полностью</string>
     <string name="InuStickerSizeDialogMessage">хороший щеночек!</string>
     <string name="InuDeleteForBoth">«Удалить у всех» по умолчанию</string>
-    <string name="InuDeleteForBothMessages">Сообщения</string>
-    <string name="InuDeleteForBothDms">Личные сообщения</string>
+    <string name="InuDeleteForBothMessages">Отдельные сообщения</string>
+    <string name="InuDeleteForBothDms">Переписки</string>
     <string name="InuDeleteForBothGroups">Групповые чаты</string>
     <string name="InuSimpleAttachPopupAnimation">Простая анимация панели вложений</string>
     <string name="InuHidePaidReactionUpsell">Скрыть продвижение платных реакций</string>
     <string name="InuDisableProfileScrollSnap">Отключить прилипание прокрутки профиля</string>
     <string name="InuDisableProfileScrollSnapInfo">Не привязывать шапку профиля к фиксированным позициям при прокрутке</string>
+    <string name="InuReduceProfileMotion">Уменьшить анимацию профиля</string>
+    <string name="InuProfilePreferMediaTab">Открывать вкладку «Медиа»</string>
+    <string name="InuProfilePreferMediaTabInfo">…вместо вкладок «Подарки» и «Истории»</string>
     <string name="InuOptInMotionPhotos">Живые фото по запросу</string>
     <string name="InuOptInMotionPhotosInfo">Не отправлять фото как «живые» по умолчанию</string>
     <string name="InuChatAlwaysShowDown">Всегда показывать кнопку «вниз»</string>
@@ -108,7 +114,7 @@
     <string name="InuHideSuggestionPassword">Напоминание о пароле</string>
     <string name="InuHideSuggestionPhone">Напоминание о номере телефона</string>
     <string name="InuHideSuggestionPremium">Продвижение Premium</string>
-    <string name="InuHideSuggestionCustom">Серверные подсказки</string>
+    <string name="InuHideSuggestionCustom">Серверные кастомные подсказки</string>
     <string name="InuFolders">Папки</string>
     <string name="InuFoldersDisplayMode">Режим отображения</string>
     <string name="InuFoldersDisplayModeTitles">Только названия</string>
@@ -117,8 +123,8 @@
     <string name="InuFoldersUnreadCounter">Счётчик непрочитанных</string>
     <string name="InuFoldersUnreadCounterHide">Скрыть</string>
     <string name="InuFoldersUnreadCounterRegular">Обычный</string>
-    <string name="InuFoldersUnreadCounterExcludeMuted">Без отключённых</string>
-    <string name="InuFoldersUnreadCounterExcludeMutedNonDms">Без отключённых не из ЛС</string>
+    <string name="InuFoldersUnreadCounterExcludeMuted">Кроме мутов</string>
+    <string name="InuFoldersUnreadCounterExcludeMutedNonDms">Кроме мутов и не из ЛС</string>
     <string name="InuCopyPhoto">Копировать фото</string>
     <string name="InuPhotoCopied">Фото скопировано в буфер обмена</string>
     <string name="InuCopyFrame">Копировать кадр</string>
@@ -150,7 +156,8 @@
     <string name="InuDisableChatPreviewExpand">Интерактивное превью чата</string>
     <string name="InuDisableChatPreviewExpandInfo">Отключить разворачивание по нажатию и сделать пузыри интерактивными</string>
     <string name="InuHideMyPhoneNumber">Скрыть мой номер телефона</string>
-    <string name="InuFullWidthChannelBubbles">Пузыри каналов во всю ширину</string>
+    <string name="InuUseSystemFont">Системный шрифт</string>
+    <string name="InuUseSystemFontInfo">Заменить встроенный Roboto на системный шрифт</string>
     <string name="InuProfileIdMode">Показывать ID в профиле</string>
     <string name="InuProfileIdModeOff">Выкл.</string>
     <string name="InuProfileIdModeTelegram">Telegram ID</string>
@@ -200,7 +207,7 @@
     <string name="InuDisableIntroSticker">Не отправлять приветственный стикер</string>
     <string name="InuDisableIntroStickerInfo">…и скрывать предложения приветственных стикеров</string>
 
-    <string name="InuRoundDefaultCamera">Камера для кружочков по умолчанию</string>
+    <string name="InuRoundDefaultCamera">Камера для кружочков</string>
     <string name="InuRoundCameraFront">Фронтальная</string>
     <string name="InuRoundCameraRear">Основная</string>
     <string name="InuRoundCameraAsk">Спрашивать</string>
@@ -257,6 +264,9 @@
     <string name="InuTextClassifierModeImprovedInfo">Обрабатывать только часть сущностей, чтобы уменьшить ложные срабатывания</string>
     <string name="InuTextClassifierModeOff">Выкл.</string>
     <string name="InuTextClassifierModeOffInfo">Отключение классификатора улучшает отзывчивость выделения текста</string>
+
+    <string name="InuSuggestCustomEmojiAfter">Кастомные эмодзи после обычных</string>
+    <string name="InuSuggestCustomEmojiAfterInfo">В подсказке «:shortcode» показывать анимированные/кастомные эмодзи после обычных, а не до</string>
 
     <string name="InuFormattingPopup">Своё меню форматирования</string>
     <string name="InuFormattingPopupInfo">Заменяет стандартное меню форматирования на интерактивное всплывающее.\nНажмите, чтобы настроить…</string>
@@ -355,5 +365,5 @@
     <string name="InuLiveDraftModeEmpty">Пустой</string>
     <string name="InuLiveDraftModeSizeOnly">Только размер</string>
     <string name="InuLiveDraftModeFull">Полный текст</string>
-    <string name="InuLiveDraftFooter">(Экспериментально!) Стримит черновик прямо во время набора через **Live response streaming API** — на потеху</string>
+    <string name="InuLiveDraftFooter">(Экспериментально!) Стримит черновик прямо во время набора через **Live response streaming API** — ради прикола</string>
 </resources>

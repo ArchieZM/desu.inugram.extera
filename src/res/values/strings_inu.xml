@@ -100,7 +100,7 @@
     <string name="InuDisableProfileScrollSnap">Disable profile scroll snap</string>
     <string name="InuDisableProfileScrollSnapInfo">Don\'t snap the profile header to fixed positions when scrolling</string>
     <string name="InuReduceProfileMotion">Reduce profile motion</string>
-    <string name="InuProfilePreferMediaTab">Prefer "Media" tab</string>
+    <string name="InuProfilePreferMediaTab">Prefer \"Media\" tab</string>
     <string name="InuProfilePreferMediaTabInfo">…over Gifts and Posts tabs</string>
     <string name="InuOptInMotionPhotos">Opt-in motion photos</string>
     <string name="InuOptInMotionPhotosInfo">Disable sending photos as "live" by default</string>
@@ -158,7 +158,6 @@
     <string name="InuHideMyPhoneNumber">Hide my phone number</string>
     <string name="InuUseSystemFont">Use system font</string>
     <string name="InuUseSystemFontInfo">Replace bundled Roboto faces with the system font</string>
-    <string name="InuFullWidthChannelBubbles">Full-width channel bubbles</string>
     <string name="InuProfileIdMode">Show ID in profile</string>
     <string name="InuProfileIdModeOff">Off</string>
     <string name="InuProfileIdModeTelegram">Telegram ID</string>
