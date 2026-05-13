@@ -54,6 +54,8 @@
     <string name="InuHideBotSlashGroups">В групповых чатах</string>
     <string name="InuHideBotSlashBots">В чатах с ботами</string>
     <string name="InuHideBotWebView">Скрыть веб-приложения ботов</string>
+    <string name="InuHideSendAsPicker">Скрыть выбор отправителя</string>
+    <string name="InuHideSendAsPickerInfo">Долгое нажатие на кнопку эмодзи временно показывает его</string>
     <string name="InuHideRepostToStory">Скрыть «Опубликовать в истории»</string>
     <string name="InuHideTrendingStickers">Скрыть популярные стикеры</string>
     <string name="InuBottomTabs">Нижние вкладки</string>

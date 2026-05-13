@@ -146,6 +146,14 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
             UItem.asCheck(TOGGLE_BOT_WEBVIEW_BUTTON, LocaleController.getString(R.string.InuHideBotWebView))
                 .setChecked(InuConfig.HIDE_BOT_WEBVIEW_INPUT.value)
         )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_HIDE_SEND_AS_PICKER,
+                R.string.InuHideSendAsPicker,
+                R.string.InuHideSendAsPickerInfo,
+                InuConfig.HIDE_SEND_AS_PICKER.value
+            )
+        )
         items.add(UItem.asShadow(null))
         // end message input section
 
@@ -264,6 +272,11 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
+            TOGGLE_HIDE_SEND_AS_PICKER -> {
+                val new = InuConfig.HIDE_SEND_AS_PICKER.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             BUTTON_FORMATTING_POPUP -> {
                 val isSwitch = if (LocaleController.isRTL)
                     x < AndroidUtilities.dp(76f)
@@ -319,6 +332,7 @@ class InuChatsSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_CHAT_VOICE_IN_ATTACH = InuUtils.generateId()
         private val BUTTON_FORMATTING_POPUP = InuUtils.generateId()
         private val TOGGLE_BOT_WEBVIEW_BUTTON = InuUtils.generateId()
+        private val TOGGLE_HIDE_SEND_AS_PICKER = InuUtils.generateId()
         private val TOGGLE_REACTION_BAR_BELOW = InuUtils.generateId()
         private val TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION = InuUtils.generateId()
         private val TOGGLE_HIDE_REACTION_ENTRY = InuUtils.generateId()

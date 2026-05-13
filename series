@@ -126,3 +126,4 @@ feature/profile-reduce-motion.patch
 bugfix/profile-black-bar.patch
 feature/prefer-media-tab.patch
 bugfix/ignore-xmp-errors.patch
+feature/hide-send-as.patch

@@ -185,6 +185,9 @@ object InuConfig {
     val HIDE_BOT_WEBVIEW_INPUT = BoolItem("hide_bot_webview_input", false)
 
     @JvmField
+    val HIDE_SEND_AS_PICKER = BoolItem("hide_send_as_picker", false)
+
+    @JvmField
     val HIDE_BOT_WEBVIEW_DIALOGS = BoolItem("hide_bot_webview_dialogs", true)
 
     @JvmField

@@ -89,6 +89,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 customizable text classifier (native / improved / off) - reduces false positive expansions
 - show custom emoji *after* regular ones in `:smile` emoji suggestion popup
 - "delete for both/all" default checkbox state
+- hide "send as" picker (long-tap stickers button to reveal)
 
 ## photo viewer
 
