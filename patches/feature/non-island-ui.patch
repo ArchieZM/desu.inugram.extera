@@ -5,8 +5,8 @@ Subject: non-island ui in various parts of the app
 
 ---
  .../ui/Cells/SharedPhotoVideoCell2.java       |   4 +-
- .../java/org/telegram/ui/ChatActivity.java    |  79 +++++++----
- .../ui/Components/ChatActivityEnterView.java  |   4 +-
+ .../java/org/telegram/ui/ChatActivity.java    |  85 ++++++++----
+ .../ui/Components/ChatActivityEnterView.java  |  12 +-
  .../ChatActivityTopPanelLayout.java           |  16 ++-
  .../ui/Components/ChatAttachAlert.java        |  16 +++
  .../DialogsActivityTopPanelLayout.java        |   9 +-
@@ -30,7 +30,7 @@ Subject: non-island ui in various parts of the app
  .../java/org/telegram/ui/bots/BotAdView.java  |   2 +-
  .../ui/bots/BotCommandsMenuContainer.java     |   4 +-
  .../bots/ChatAttachAlertBotWebViewLayout.java |   5 +-
- 26 files changed, 337 insertions(+), 158 deletions(-)
+ 26 files changed, 344 insertions(+), 165 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java
 index 0000000..0000000 100644
@@ -92,6 +92,33 @@ index 0000000..0000000 100644
  
          messagesSearchListContainer.setBackground(searchContainerDrawable);
          messagesSearchListContainer.setClipToOutline(true);
+@@ -7779,7 +7783,7 @@ public class ChatActivity extends BaseFragment implements
+                         }
+ 
+                         // chatListView.setTranslationY(dy);
+-                        if (topView != null && topView.getVisibility() == View.VISIBLE) {
++                        if (!NonIslandHelper.chatElements() && topView != null && topView.getVisibility() == View.VISIBLE) {
+                             topView.setTranslationY(animatedTop + (1f - getTopViewEnterProgress()) * topView.getLayoutParams().height);
+                         }
+ 
+@@ -7787,7 +7791,7 @@ public class ChatActivity extends BaseFragment implements
+                         changeBoundAnimator.addUpdateListener(a -> {
+                             float top = (float) a.getAnimatedValue();
+                             setAnimatedTop((int) top);
+-                            if (topView != null && topView.getVisibility() == View.VISIBLE) {
++                            if (!NonIslandHelper.chatElements() && topView != null && topView.getVisibility() == View.VISIBLE) {
+                                 topView.setTranslationY(top + (1f - getTopViewEnterProgress()) * topView.getLayoutParams().height);
+                             } else {
+                                 invalidateChatListViewTopPadding();
+@@ -7800,7 +7804,7 @@ public class ChatActivity extends BaseFragment implements
+                             @Override
+                             public void onAnimationEnd(Animator animation) {
+                                 setAnimatedTop(0);
+-                                if (topView != null && topView.getVisibility() == View.VISIBLE) {
++                                if (!NonIslandHelper.chatElements() && topView != null && topView.getVisibility() == View.VISIBLE) {
+                                     topView.setTranslationY(animatedTop + (1f - getTopViewEnterProgress()) * topView.getLayoutParams().height);
+                                 }
+                                 changeBoundAnimator = null;
 @@ -7964,7 +7968,7 @@ public class ChatActivity extends BaseFragment implements
  
          chatActivityEnterView.setViewParentForEmoji(chatInputInAppContainer);
@@ -346,6 +373,15 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivity
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
+@@ -6227,7 +6227,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+ 
+         LayoutParams layoutParams = (LayoutParams) textFieldContainer.getLayoutParams();
+         layoutParams.topMargin = (show ? topView.getLayoutParams().height : 0);
+-        layoutParams.topMargin += dp(9); // for prevent clipping
++        layoutParams.topMargin += dp(desu.inugram.helpers.NonIslandHelper.chatElements() ? 0 : 9); // for prevent clipping
+         textFieldContainer.setLayoutParams(layoutParams);
+ 
+         resizeForTopViewLastShow = show;
 @@ -8917,8 +8917,8 @@ public class ChatActivityEnterView extends FrameLayout implements
  
                      FrameLayout.LayoutParams newLayoutParams = new FrameLayout.LayoutParams(parent.getMeasuredWidth() - (editingMessageObject == null ? Math.max(0, sendButton.width() - dp(DEFAULT_HEIGHT)) : 0), dp(DEFAULT_HEIGHT));
@@ -357,6 +393,19 @@ index 0000000..0000000 100644
                      sizeNotifierLayout.addView(recordedAudioPanel, newLayoutParams);
                      videoTimelineView.setVisibility(GONE);
                  } else {
+@@ -14724,9 +14724,9 @@ public class ChatActivityEnterView extends FrameLayout implements
+         final float visibility = animatorTopViewVisibility.getFloatValue();
+ 
+         if (topView != null) {
+-            final float y = getMeasuredHeight() - animatorInputFieldHeight.getFactor();
+-
+-            topView.setTranslationY(y - topView.getMeasuredHeight() * visibility);
++            final float topH = topView.getLayoutParams().height;
++            final float y = topH + dp(desu.inugram.helpers.NonIslandHelper.chatElements() ? 0 : 9) + textFieldContainer.getPaddingTop();
++            topView.setTranslationY(y - topH * visibility);
+             topView.setVisibility(visibility > 0 ? VISIBLE : GONE);
+         }
+ 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityTopPanelLayout.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityTopPanelLayout.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityTopPanelLayout.java
