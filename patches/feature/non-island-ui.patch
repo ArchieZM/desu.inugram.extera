@@ -6,7 +6,7 @@ Subject: non-island ui in various parts of the app
 ---
  .../ui/Cells/SharedPhotoVideoCell2.java       |   4 +-
  .../java/org/telegram/ui/ChatActivity.java    |  85 ++++++++----
- .../ui/Components/ChatActivityEnterView.java  |  12 +-
+ .../ui/Components/ChatActivityEnterView.java  |  17 ++-
  .../ChatActivityTopPanelLayout.java           |  16 ++-
  .../ui/Components/ChatAttachAlert.java        |  16 +++
  .../DialogsActivityTopPanelLayout.java        |   9 +-
@@ -30,7 +30,7 @@ Subject: non-island ui in various parts of the app
  .../java/org/telegram/ui/bots/BotAdView.java  |   2 +-
  .../ui/bots/BotCommandsMenuContainer.java     |   4 +-
  .../bots/ChatAttachAlertBotWebViewLayout.java |   5 +-
- 26 files changed, 344 insertions(+), 165 deletions(-)
+ 26 files changed, 348 insertions(+), 166 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/SharedPhotoVideoCell2.java
 index 0000000..0000000 100644
@@ -373,7 +373,17 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivity
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
-@@ -6227,7 +6227,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+@@ -4557,7 +4557,8 @@ public class ChatActivityEnterView extends FrameLayout implements
+                 canvas.clipRect(0, separatorY, getMeasuredWidth(), getMeasuredHeight());
+             }
+             if (child == topView) {
+-                canvas.clipRect(0, 0, getMeasuredWidth(), separatorY);
++                final float top = desu.inugram.helpers.NonIslandHelper.chatElements() ? Integer.MIN_VALUE : 0;
++                canvas.clipRect(0, top, getMeasuredWidth(), separatorY);
+             }
+         }
+         boolean result = super.drawChild(canvas, child, drawingTime);
+@@ -6227,7 +6228,7 @@ public class ChatActivityEnterView extends FrameLayout implements
  
          LayoutParams layoutParams = (LayoutParams) textFieldContainer.getLayoutParams();
          layoutParams.topMargin = (show ? topView.getLayoutParams().height : 0);
@@ -382,7 +392,7 @@ index 0000000..0000000 100644
          textFieldContainer.setLayoutParams(layoutParams);
  
          resizeForTopViewLastShow = show;
-@@ -8917,8 +8917,8 @@ public class ChatActivityEnterView extends FrameLayout implements
+@@ -8917,8 +8918,8 @@ public class ChatActivityEnterView extends FrameLayout implements
  
                      FrameLayout.LayoutParams newLayoutParams = new FrameLayout.LayoutParams(parent.getMeasuredWidth() - (editingMessageObject == null ? Math.max(0, sendButton.width() - dp(DEFAULT_HEIGHT)) : 0), dp(DEFAULT_HEIGHT));
                      newLayoutParams.gravity = Gravity.BOTTOM;
@@ -393,7 +403,7 @@ index 0000000..0000000 100644
                      sizeNotifierLayout.addView(recordedAudioPanel, newLayoutParams);
                      videoTimelineView.setVisibility(GONE);
                  } else {
-@@ -14724,9 +14724,9 @@ public class ChatActivityEnterView extends FrameLayout implements
+@@ -14724,9 +14725,11 @@ public class ChatActivityEnterView extends FrameLayout implements
          final float visibility = animatorTopViewVisibility.getFloatValue();
  
          if (topView != null) {
@@ -401,8 +411,10 @@ index 0000000..0000000 100644
 -
 -            topView.setTranslationY(y - topView.getMeasuredHeight() * visibility);
 +            final float topH = topView.getLayoutParams().height;
-+            final float y = topH + dp(desu.inugram.helpers.NonIslandHelper.chatElements() ? 0 : 9) + textFieldContainer.getPaddingTop();
-+            topView.setTranslationY(y - topH * visibility);
++            final float topMargin = visibility > 0 ? (topH + dp(desu.inugram.helpers.NonIslandHelper.chatElements() ? 0 : 9)) : 0;
++            final float fieldDelta = animatorInputFieldHeight.getToFactor() - animatorInputFieldHeight.getFactor();
++            final float baseY = topMargin + textFieldContainer.getPaddingTop() + fieldDelta;
++            topView.setTranslationY(baseY - topH * visibility);
              topView.setVisibility(visibility > 0 ? VISIBLE : GONE);
          }
  
