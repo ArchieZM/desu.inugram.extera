@@ -5,10 +5,11 @@ Subject: reduce motion in profile
 
 ---
  .../ui/Components/ProfileActionsView.java     |  4 +++
+ .../ui/Components/SharedMediaLayout.java      |  3 ++
  .../java/org/telegram/ui/Gifts/GiftSheet.java |  4 +++
  .../java/org/telegram/ui/ProfileActivity.java | 28 ++++++++++++-------
  .../telegram/ui/Stars/ProfileGiftsView.java   |  8 ++++--
- 4 files changed, 31 insertions(+), 13 deletions(-)
+ 5 files changed, 34 insertions(+), 13 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileActionsView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileActionsView.java
 index 0000000..0000000 100644
@@ -25,6 +26,20 @@ index 0000000..0000000 100644
          if (alphaFraction1 <= 0f) {
              return;
          }
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/SharedMediaLayout.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/SharedMediaLayout.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/SharedMediaLayout.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/SharedMediaLayout.java
+@@ -6792,6 +6792,9 @@ public class SharedMediaLayout extends FrameLayout implements NotificationCenter
+         if (!delegate.isFragmentOpened()) {
+             animated = false;
+         }
++        if (desu.inugram.helpers.ProfileHelper.reduceMotion()) {
++            animated = false;
++        }
+         boolean hasRecommendations = false;
+         boolean hasSavedDialogs = false;
+         boolean hasSavedMessages = savedMessagesContainer != null && sharedMediaPreloader != null && sharedMediaPreloader.hasSavedMessages;
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Gifts/GiftSheet.java b/TMessagesProj/src/main/java/org/telegram/ui/Gifts/GiftSheet.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Gifts/GiftSheet.java
