@@ -65,6 +65,7 @@ feature/non-island-ui.patch
 bugfix/reaction-counter-jump.patch
 feature/customize-text-classifier.patch
 bugfix/message-send-ime-jump.patch
+hooks/popup-swipeback.patch
 feature/seen-view-below.patch
 bugfix/formatting-regular.patch
 feature/custom-formatting-ui.patch
@@ -130,3 +131,4 @@ feature/hide-send-as.patch
 feature/hide-call-action.patch
 bugfix/top-peers-unread-counter.patch
 bugfix/stale-unread-mention.patch
+feature/forward-options.patch
