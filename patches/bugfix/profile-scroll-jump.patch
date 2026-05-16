@@ -4,9 +4,22 @@ Date: Tue, 5 May 2026 15:32:29 +0200
 Subject: fix profile scroll position jumping when opening uncached user
 
 ---
- .../java/org/telegram/ui/ProfileActivity.java | 42 ++++++++++++++++---
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ .../ui/Components/ProfileGalleryBlurView.java |  1 +
+ .../java/org/telegram/ui/ProfileActivity.java | 62 +++++++++++++++++--
+ 2 files changed, 57 insertions(+), 6 deletions(-)
 
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileGalleryBlurView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileGalleryBlurView.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileGalleryBlurView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ProfileGalleryBlurView.java
+@@ -191,6 +191,7 @@ public class ProfileGalleryBlurView extends View {
+     public void setSize(int size) {
+         if (this.actionSize != size) {
+             invalidate();
++            requestLayout();
+         }
+         this.actionSize = size;
+         this.size = (int) (dp(64) * 1.5f);
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java
@@ -22,20 +35,32 @@ index 0000000..0000000 100644
              invalidate();
          }
  
-@@ -3195,9 +3199,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
+@@ -3195,12 +3199,21 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                          layout = true;
                      } else if (invalidateScroll || currentPaddingTop != paddingTop) {
                          if (savedScrollPosition >= 0) {
 -                            layoutManager.scrollToPositionWithOffset(savedScrollPosition, savedScrollOffset - paddingTop);
 +                            int headerExtraDelta = (savedScrollPosition == 0 && !allowPullingDown) ? (getHeaderExtraHeight() - savedScrollHeaderExtra) : 0;
-+                            layoutManager.scrollToPositionWithOffset(savedScrollPosition, savedScrollOffset + headerExtraDelta - paddingTop);
++                            int savedOffset = savedScrollOffset + headerExtraDelta - paddingTop;
++                            if (savedScrollPosition == 0 && allowPullingDown && currentExpandAnimatorValue >= 1f) {
++                                savedOffset = -actionBarHeight;
++                            }
++                            layoutManager.scrollToPositionWithOffset(savedScrollPosition, savedOffset);
                          } else if ((!changed || !allowPullingDown) && view != null) {
 -                            if (pos == 0 && !allowPullingDown && top > getHeaderExtraHeight()) {
 +                            if (pos == 0 && !allowPullingDown && top > 0 && top != getHeaderExtraHeight()) {
                                  top = getHeaderExtraHeight();
                              }
-                             layoutManager.scrollToPositionWithOffset(pos, top - paddingTop);
-@@ -10864,6 +10869,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
+-                            layoutManager.scrollToPositionWithOffset(pos, top - paddingTop);
++                            int scrollOffset = top - paddingTop;
++                            if (pos == 0 && allowPullingDown && currentExpandAnimatorValue >= 1f) {
++                                scrollOffset = -actionBarHeight;
++                            }
++                            layoutManager.scrollToPositionWithOffset(pos, scrollOffset);
+                             layout = true;
+                         } else {
+                             layoutManager.scrollToPositionWithOffset(0, getHeaderExtraHeight() - paddingTop);
+@@ -10864,6 +10877,22 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
              }
              musicView.setVisibility(hasMusic ? View.VISIBLE : View.GONE);
          }
@@ -45,10 +70,20 @@ index 0000000..0000000 100644
 +        if (avatarsViewPager != null) {
 +            avatarsViewPager.setPadding(0, 0, 0, getActionsExtraHeight());
 +        }
++        if (isPulledDown && listView != null) {
++            final int abh = ActionBar.getCurrentActionBarHeight() + (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0);
++            final int target = listView.getMeasuredWidth() + getActionsExtraHeight() - abh;
++            if (target > 0 && extraHeight != target) {
++                extraHeight = target;
++                initialAnimationExtraHeight = target;
++                if (topView != null) topView.invalidate();
++                needLayout(false);
++            }
++        }
      }
  
      private Drawable getScamDrawable(int type) {
-@@ -15226,34 +15237,55 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
+@@ -15226,34 +15255,55 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
              listAdapter.notifyDataSetChanged();
          }
          if (savedScrollPosition >= 0) {
