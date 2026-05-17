@@ -122,7 +122,7 @@ feature/forwarded-time-inline.patch
 debloat/profile-photo-blur.patch
 bugfix/reaction-sending-race.patch
 feature/custom-emoji-after-regular.patch
-feature/force-system-font.patch
+feature/custom-font.patch
 feature/profile-reduce-motion.patch
 bugfix/profile-black-bar.patch
 feature/prefer-media-tab.patch
