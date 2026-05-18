@@ -6,11 +6,16 @@ import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.helpers.DoubleTapAction
 import desu.inugram.helpers.InuUtils
+import desu.inugram.helpers.UrlCleanerHelper
 import desu.inugram.helpers.WebPreviewHelper
+import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
+import org.telegram.messenger.Utilities
 import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Cells.TextCheckCell
+import org.telegram.ui.Components.BulletinFactory
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
 
@@ -135,6 +140,7 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
                     LocaleController.getString(R.string.SlowmodeOff),
             )
         )
+        items.add(stripTrackingParamsItem())
         items.add(UItem.asShadow(null))
 
         items.add(
@@ -241,6 +247,12 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
             BUTTON_ROUND_DEFAULT_CAMERA -> showRoundCameraSelector(view)
             BUTTON_TEXT_CLASSIFIER_MODE -> showTextClassifierModeSelector()
             BUTTON_WEB_PREVIEW_REPLACEMENTS -> presentFragment(InuWebPreviewReplacementsActivity())
+
+            TOGGLE_STRIP_TRACKING_PARAMS -> {
+                val new = InuConfig.STRIP_TRACKING_PARAMS.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             BUTTON_DOUBLE_TAP_INCOMING -> showDoubleTapSelector(view, false)
             BUTTON_DOUBLE_TAP_OUTGOING -> showDoubleTapSelector(view, true)
 
@@ -252,6 +264,73 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
             TOGGLE_FASTER_UPLOADS -> {
                 val new = InuConfig.FASTER_UPLOADS.toggle()
                 (view as? TextCheckCell)?.isChecked = new
+            }
+        }
+    }
+
+    private fun stripTrackingParamsItem(): UItem {
+        val title = LocaleController.getString(R.string.InuStripTrackingParams)
+        val subtitle = LocaleController.formatString(
+            R.string.InuStripTrackingParamsSource, UrlCleanerHelper.lastUpdated ?: "?",
+        )
+        val checked = InuConfig.STRIP_TRACKING_PARAMS.value
+        return UItem.asButtonCheck(TOGGLE_STRIP_TRACKING_PARAMS, title, subtitle).also {
+            it.checked = checked
+            it.bind = Utilities.Callback { view ->
+                (view as? NotificationsCheckCell)?.apply {
+                    setTextAndValueAndCheck(title, subtitle, checked, 0, true, true)
+                    setDrawLine(false)
+                }
+            }
+        }
+    }
+
+    override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean {
+        if (item.id == TOGGLE_STRIP_TRACKING_PARAMS) {
+            showStripTrackingParamsOptions(view)
+            return true
+        }
+        return super.onLongClick(item, view, position, x, y)
+    }
+
+    private fun showStripTrackingParamsOptions(anchor: View) {
+        val opts = ItemOptions.makeOptions(this, anchor)
+            .add(R.drawable.msg_download, LocaleController.getString(R.string.InuStripTrackingParamsUpdate)) {
+                fetchLatestStripTrackingParams()
+            }
+        if (UrlCleanerHelper.isUsingOverride) {
+            opts.add(R.drawable.msg_delete, LocaleController.getString(R.string.InuStripTrackingParamsRevert)) {
+                UrlCleanerHelper.resetToBundled()
+                Utilities.globalQueue.postRunnable {
+                    UrlCleanerHelper.preload()
+                    AndroidUtilities.runOnUIThread { listView?.adapter?.update(true) }
+                }
+            }
+        }
+        opts.show()
+    }
+
+    private fun fetchLatestStripTrackingParams() {
+        Utilities.globalQueue.postRunnable {
+            val result = runCatching { UrlCleanerHelper.fetchLatest() }
+            UrlCleanerHelper.preload()
+            AndroidUtilities.runOnUIThread {
+                listView?.adapter?.update(true)
+                val bulletin = BulletinFactory.of(this)
+                result.fold(
+                    onSuccess = { updated ->
+                        val msg = if (updated) R.string.InuStripTrackingParamsUpdated
+                        else R.string.InuStripTrackingParamsAlreadyLatest
+                        bulletin.createSimpleBulletin(R.raw.contact_check, LocaleController.getString(msg)).show()
+                    },
+                    onFailure = { err ->
+                        bulletin.createSimpleBulletin(
+                            R.raw.error,
+                            LocaleController.getString(R.string.InuStripTrackingParamsUpdateFailed),
+                            err.message ?: "",
+                        ).show()
+                    },
+                )
             }
         }
     }
@@ -325,6 +404,7 @@ class InuBehaviorSettingsActivity : InuSettingsPageActivity() {
         private val TOGGLE_CHAT_REMEMBER_ALL_REPLIES = InuUtils.generateId()
         private val TOGGLE_DISABLE_CHAT_BUBBLES = InuUtils.generateId()
         private val BUTTON_WEB_PREVIEW_REPLACEMENTS = InuUtils.generateId()
+        private val TOGGLE_STRIP_TRACKING_PARAMS = InuUtils.generateId()
         private val TOGGLE_DISABLE_INTRO_STICKER = InuUtils.generateId()
         private val TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER = InuUtils.generateId()
         private val TOGGLE_DISABLE_DRAFT_UPLOAD = InuUtils.generateId()

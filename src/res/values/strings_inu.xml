@@ -236,6 +236,14 @@
 
     <string name="InuHideFadeView">Hide fade views</string>
 
+    <string name="InuStripTrackingParams">Strip tracking parameters</string>
+    <string name="InuStripTrackingParamsSource">AdGuard URL Tracking filter, updated %1$s</string>
+    <string name="InuStripTrackingParamsUpdate">Update rules from AdGuard</string>
+    <string name="InuStripTrackingParamsRevert">Revert to bundled rules</string>
+    <string name="InuStripTrackingParamsUpdated">Rules updated</string>
+    <string name="InuStripTrackingParamsAlreadyLatest">Already on the latest ruleset</string>
+    <string name="InuStripTrackingParamsUpdateFailed">Failed to update rules</string>
+
     <string name="InuWebPreviewReplacements">Web preview replacements</string>
     <string name="InuWebPreviewEnabled">Enable replacements</string>
     <string name="InuWebPreviewReplacementsInfo">Regex replacements applied to URLs when fetching web previews. Long-press to delete.</string>

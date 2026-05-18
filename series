@@ -140,3 +140,4 @@ feature/long-tap-mention-name.patch
 bugfix/search-emoji-size.patch
 feature/passcode.patch
 bugfix/motion-photo-with-caption.patch
+feature/strip-tracking.patch

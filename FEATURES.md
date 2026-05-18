@@ -67,6 +67,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - hide keyboard on scroll
 - always show go-to-bottom button (don't hide on scroll-down)
 - web preview: replacements (e.g. twitter→fixupx)
+- 🐶 strip tracking params (utm_*, fbclid, si, erid, …) from links before opening — *rules from AdGuard URL Tracking filter*
 - 🐶 web preview refetch from menu
 - 🐶 disable web preview limit on twitter-like websites
 - message details from menu (+ show json)
