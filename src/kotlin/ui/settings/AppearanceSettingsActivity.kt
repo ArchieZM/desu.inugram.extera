@@ -3,6 +3,7 @@ package desu.inugram.ui.settings
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
@@ -126,6 +127,17 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuAnimationSpeed)))
         items.add(UItem.asCustom(animationSpeedSlider))
         items.add(UItem.asShadow(LocaleController.getString(R.string.InuAnimationSpeedInfo)))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            items.add(
+                UItem.asButton(
+                    BUTTON_PREDICTIVE_BACK_MODE,
+                    LocaleController.getString(R.string.InuPredictiveBack),
+                    predictiveBackModeLabel(InuConfig.PREDICTIVE_BACK_MODE.value),
+                )
+            )
+            items.add(UItem.asShadow(LocaleController.getString(R.string.InuPredictiveBackInfo)))
+        }
 
         items.add(
             UItem.asHeader(addExperimentalSpan(LocaleController.getString(R.string.InuNonIslandUI)))
@@ -268,6 +280,20 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 val new = InuConfig.NON_ISLAND_CHAT_ELEMENTS.toggle()
                 (view as? TextCheckCell)?.isChecked = new
             }
+
+            BUTTON_PREDICTIVE_BACK_MODE -> RadioItemOptions.show(
+                this, view,
+                listOf(
+                    LocaleController.getString(R.string.InuPredictiveBackOff),
+                    LocaleController.getString(R.string.InuPredictiveBackStock),
+                    LocaleController.getString(R.string.InuPredictiveBackMaterial3),
+                ),
+                InuConfig.PREDICTIVE_BACK_MODE.value,
+            ) { which ->
+                if (InuConfig.PREDICTIVE_BACK_MODE.value == which) return@show
+                InuConfig.PREDICTIVE_BACK_MODE.value = which
+                showRestartBulletin()
+            }
         }
     }
 
@@ -340,6 +366,13 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         private val BUTTON_ICON_REPLACEMENT = InuUtils.generateId()
         private val BUTTON_MAP_PROVIDER = InuUtils.generateId()
         private val BUTTON_MAP_PREVIEW_PROVIDER = InuUtils.generateId()
+        private val BUTTON_PREDICTIVE_BACK_MODE = InuUtils.generateId()
+
+        private fun predictiveBackModeLabel(value: Int): String = when (value) {
+            InuConfig.PredictiveBackModeItem.OFF -> LocaleController.getString(R.string.InuPredictiveBackOff)
+            InuConfig.PredictiveBackModeItem.STOCK -> LocaleController.getString(R.string.InuPredictiveBackStock)
+            else -> LocaleController.getString(R.string.InuPredictiveBackMaterial3)
+        }
 
         @JvmField val PAGE = SearchRegistry.Page(
             slug = "appearance",
@@ -355,6 +388,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("font", R.string.InuFont, BUTTON_FONT_MODE),
                 SearchRegistry.Entry("map-provider", R.string.InuMapProvider, BUTTON_MAP_PROVIDER),
                 SearchRegistry.Entry("map-preview-provider", R.string.InuMapPreviewProvider, BUTTON_MAP_PREVIEW_PROVIDER),
+                SearchRegistry.Entry("predictive-back-mode", R.string.InuPredictiveBack, BUTTON_PREDICTIVE_BACK_MODE),
                 SearchRegistry.Entry("non-island-tab-bars", R.string.InuNonIslandTabBars, TOGGLE_NON_ISLAND_TAB_BARS),
                 SearchRegistry.Entry("non-island-global-search", R.string.InuNonIslandGlobalSearch, TOGGLE_NON_ISLAND_GLOBAL_SEARCH),
                 SearchRegistry.Entry("non-island-chat-elements", R.string.InuNonIslandChatElements, TOGGLE_NON_ISLAND_CHAT_ELEMENTS),

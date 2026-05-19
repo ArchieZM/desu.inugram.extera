@@ -76,8 +76,11 @@
     <string name="InuDialogsFabActionNewStory">New story</string>
     <string name="InuDialogsFabActionOpenSearch">Open search</string>
     <string name="InuDialogsFabActionSavedMessages">Saved messages</string>
-    <string name="InuDisablePredictiveBack">Disable predictive back</string>
-    <string name="InuDisablePredictiveBackInfo">Disables the Android 14+ predictive back gesture animations. Requires app restart.</string>
+    <string name="InuPredictiveBack">Predictive back</string>
+    <string name="InuPredictiveBackInfo">Animation shown while swiping back or pressing the back button. Android 14+. Requires app restart.</string>
+    <string name="InuPredictiveBackOff">Off</string>
+    <string name="InuPredictiveBackStock">Stock</string>
+    <string name="InuPredictiveBackMaterial3">Material 3</string>
     <string name="InuHideAiFeatures">Hide AI features</string>
     <string name="InuHideAiEditor">AI editor button</string>
     <string name="InuHideMessageSummary">Message summary button</string>

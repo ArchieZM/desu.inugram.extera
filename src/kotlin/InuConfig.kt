@@ -98,8 +98,16 @@ object InuConfig {
     @JvmField
     val DISABLE_ROUNDING = BoolItem("disable_rounding", false)
 
+    class PredictiveBackModeItem : IntItem("predictive_back_mode", OFF) {
+        companion object {
+            const val OFF = 0
+            const val STOCK = 1
+            const val MATERIAL3 = 2
+        }
+    }
+
     @JvmField
-    val DISABLE_PREDICTIVE_BACK = BoolItem("disable_predictive_back", true)
+    val PREDICTIVE_BACK_MODE = PredictiveBackModeItem()
 
     @JvmField
     val DISABLE_INSTANT_CAMERA = BoolItem("disable_instant_camera", true)

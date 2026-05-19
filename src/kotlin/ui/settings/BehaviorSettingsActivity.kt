@@ -44,14 +44,6 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
                 LocaleController.getString(R.string.InuDisableChatBubbles),
             ).setChecked(InuConfig.DISABLE_CHAT_BUBBLES.value)
         )
-        items.add(
-            mkTwoLineCheckItem(
-                TOGGLE_DISABLE_PREDICTIVE_BACK,
-                R.string.InuDisablePredictiveBack,
-                R.string.InuDisablePredictiveBackInfo,
-                InuConfig.DISABLE_PREDICTIVE_BACK.value
-            )
-        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             items.add(
                 UItem.asButton(
@@ -107,12 +99,6 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
             TOGGLE_DISABLE_CHAT_BUBBLES -> {
                 val new = InuConfig.DISABLE_CHAT_BUBBLES.toggle()
                 (view as? TextCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_DISABLE_PREDICTIVE_BACK -> {
-                val new = InuConfig.DISABLE_PREDICTIVE_BACK.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-                showRestartBulletin()
             }
 
             BUTTON_TEXT_CLASSIFIER_MODE -> showTextClassifierModeSelector()
@@ -242,7 +228,6 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
 
     companion object {
         private val TOGGLE_DISABLE_CHAT_BUBBLES = InuUtils.generateId()
-        private val TOGGLE_DISABLE_PREDICTIVE_BACK = InuUtils.generateId()
         private val BUTTON_TEXT_CLASSIFIER_MODE = InuUtils.generateId()
         private val TOGGLE_CALL_CONFIRMATION = InuUtils.generateId()
         private val TOGGLE_STRIP_TRACKING_PARAMS = InuUtils.generateId()
@@ -263,7 +248,6 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
             factory = ::BehaviorSettingsActivity,
             entries = listOf(
                 SearchRegistry.Entry("disable-chat-bubbles", R.string.InuDisableChatBubbles, TOGGLE_DISABLE_CHAT_BUBBLES),
-                SearchRegistry.Entry("disable-predictive-back", R.string.InuDisablePredictiveBack, TOGGLE_DISABLE_PREDICTIVE_BACK),
                 SearchRegistry.Entry("text-classifier-mode", R.string.InuTextClassifierMode, BUTTON_TEXT_CLASSIFIER_MODE),
                 SearchRegistry.Entry("call-confirmation", R.string.InuCallConfirmation, TOGGLE_CALL_CONFIRMATION),
                 SearchRegistry.Entry("strip-tracking-params", R.string.InuStripTrackingParams, TOGGLE_STRIP_TRACKING_PARAMS),

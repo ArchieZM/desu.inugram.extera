@@ -4,7 +4,7 @@ misc/remove-play.patch
 misc/settings-ui.patch
 misc/defaults.patch
 debloat/hide-trending-stickers.patch
-debloat/disable-predictive-back.patch
+feature/predictive-back.patch
 debloat/disable-instant-camera.patch
 feature/show-seconds.patch
 debloat/disable-rounding.patch

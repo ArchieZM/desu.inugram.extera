@@ -122,7 +122,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 ## behavior
 
 - call confirmation
-- disable predictive back
+- predictive back mode selector (off / stock / 🐶 Material 3)
 - disable pull-to-next-channel
 - disable swipe-to-unarchive
 - disable instant camera in attachments
