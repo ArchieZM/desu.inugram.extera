@@ -275,8 +275,14 @@
 
     <string name="InuShowForwardTime">显示转发时间</string>
 
+    <string name="InuAddToStickersGifs">添加到贴纸/GIF</string>
+    <string name="InuLongTapAction">长按操作</string>
     <string name="InuForwardWithoutAuthor">不带作者</string>
     <string name="InuForwardWithoutCaption">不带说明</string>
+    <string name="InuForwardLongTapOff">关闭</string>
+    <string name="InuLongTapChooseMode">每次询问</string>
+    <string name="InuForwardNoQuote">无引用转发</string>
+    <string name="InuReplyInDms">在私信中回复</string>
     <string name="InuHiddenCaptionDescription">说明已移除</string>
 
     <string name="InuTextClassifierMode">文本分类器模式</string>
@@ -408,4 +414,8 @@
     <string name="InuPasscodePanicRemove">移除紧急密码</string>
     <string name="InuPasscodePanicRemoveConfirm">移除紧急密码？</string>
     <string name="InuPasscodePanicInfo">在锁屏输入紧急密码时，会登出所有选择参与的账号并让应用保持锁定。</string>
+    <string name="InuMessageMenuOrder">消息菜单</string>
+    <string name="InuMessageMenuItems">项目</string>
+    <string name="InuMessageMenuOrderInfo">重新排序或隐藏消息上下文菜单中的项目。拖动手柄进行排序，使用开关进行隐藏。</string>
+    <string name="InuMessageMenuReset">重置为默认</string>
 </resources>

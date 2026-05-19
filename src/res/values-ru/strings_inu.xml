@@ -275,8 +275,14 @@
 
     <string name="InuShowForwardTime">Показывать время пересылки</string>
 
+    <string name="InuAddToStickersGifs">Добавить в стикеры/GIF</string>
+    <string name="InuLongTapAction">Действие по долгому тапу</string>
     <string name="InuForwardWithoutAuthor">Без автора</string>
     <string name="InuForwardWithoutCaption">Без подписи</string>
+    <string name="InuForwardLongTapOff">Выкл.</string>
+    <string name="InuLongTapChooseMode">Спрашивать каждый раз</string>
+    <string name="InuForwardNoQuote">Переслать без цитаты</string>
+    <string name="InuReplyInDms">Ответить в ЛС</string>
     <string name="InuHiddenCaptionDescription">Подписи удалены</string>
 
     <string name="InuTextClassifierMode">Режим текстового классификатора</string>
@@ -412,4 +418,8 @@
     <string name="InuPasscodePanicRemove">Удалить паник-код</string>
     <string name="InuPasscodePanicRemoveConfirm">Удалить паник-код?</string>
     <string name="InuPasscodePanicInfo">Когда введён на экране блокировки, паник-код разлогинивает все согласившиеся аккаунты и оставляет приложение заблокированным.</string>
+    <string name="InuMessageMenuOrder">Меню сообщения</string>
+    <string name="InuMessageMenuItems">Пункты</string>
+    <string name="InuMessageMenuOrderInfo">Переставь или скрой пункты в контекстном меню сообщения. Перетаскивай ручку для перестановки, используй переключатель чтобы скрыть.</string>
+    <string name="InuMessageMenuReset">Сбросить по умолчанию</string>
 </resources>

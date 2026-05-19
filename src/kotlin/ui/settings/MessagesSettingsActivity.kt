@@ -114,6 +114,12 @@ class MessagesSettingsActivity : SettingsPageActivity() {
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
         items.add(
+            UItem.asButton(
+                BUTTON_MESSAGE_MENU_ORDER,
+                LocaleController.getString(R.string.InuMessageMenuOrder),
+            )
+        )
+        items.add(
             UItem.asCheck(
                 TOGGLE_CHAT_REMEMBER_ALL_REPLIES,
                 LocaleController.getString(R.string.InuChatRememberAllReplies),
@@ -206,6 +212,8 @@ class MessagesSettingsActivity : SettingsPageActivity() {
 
             BUTTON_PINNED_REACTIONS -> presentFragment(PinnedReactionsActivity())
 
+            BUTTON_MESSAGE_MENU_ORDER -> presentFragment(MessageMenuOrderActivity())
+
             BUTTON_DOUBLE_TAP_INCOMING -> showDoubleTapSelector(view, false)
             BUTTON_DOUBLE_TAP_OUTGOING -> showDoubleTapSelector(view, true)
         }
@@ -228,6 +236,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
         private val BUTTON_STICKER_TIME_MODE = InuUtils.generateId()
         private val TOGGLE_NO_STICKER_EXTRA_PADDING = InuUtils.generateId()
         private val BUTTON_PINNED_REACTIONS = InuUtils.generateId()
+        private val BUTTON_MESSAGE_MENU_ORDER = InuUtils.generateId()
         private val TOGGLE_REACTION_BAR_BELOW = InuUtils.generateId()
         private val TOGGLE_CHAT_VIEWS_BOTTOM = InuUtils.generateId()
         private val TOGGLE_HIDE_REACTION_ENTRY = InuUtils.generateId()

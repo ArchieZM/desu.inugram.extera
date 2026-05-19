@@ -72,6 +72,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 disable web preview limit on twitter-like websites
 - message details from menu (+ show json)
 - per-message statistics from message menu
+- customizable message context menu - reorder and hide items + long-tap forward/reply items
 - 🐶 disable custom wallpaper and theme per chat
 - read-only chat "admin" page for non-admins
 - split media restriction toggles for stickers / gifs / games / inline
@@ -82,7 +83,6 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - in-place message translation, with optional web preview translation
 - instant view pages translator
 - show original time/date in "forwarded from" header
-- long-tap "forward" in message menu to forward without sender's name or caption
 - long-tap forward bar (above input) to cycle between regular / without sender / without caption
 - long-tap a mention in a message to insert a name-mention into the input with custom text
 

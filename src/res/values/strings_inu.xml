@@ -275,8 +275,14 @@
 
     <string name="InuShowForwardTime">Show forward time</string>
 
+    <string name="InuAddToStickersGifs">Add to Stickers/GIFs</string>
+    <string name="InuLongTapAction">Long-tap action</string>
     <string name="InuForwardWithoutAuthor">Without author</string>
     <string name="InuForwardWithoutCaption">Without caption</string>
+    <string name="InuForwardLongTapOff">Off</string>
+    <string name="InuLongTapChooseMode">Ask every time</string>
+    <string name="InuForwardNoQuote">No-Quote forward</string>
+    <string name="InuReplyInDms">Reply in DMs</string>
     <string name="InuHiddenCaptionDescription">Captions removed</string>
 
     <string name="InuTextClassifierMode">Text classifier mode</string>
@@ -408,4 +414,8 @@
     <string name="InuPasscodePanicRemove">Remove panic code</string>
     <string name="InuPasscodePanicRemoveConfirm">Remove the panic code?</string>
     <string name="InuPasscodePanicInfo">When typed at the lock screen, the panic code logs out all opted-in accounts and leaves the app locked.</string>
+    <string name="InuMessageMenuOrder">Message menu</string>
+    <string name="InuMessageMenuItems">Items</string>
+    <string name="InuMessageMenuOrderInfo">Reorder or hide items in the message context menu. Drag the handle to rearrange, toggle the switch to hide.</string>
+    <string name="InuMessageMenuReset">Reset to default</string>
 </resources>
