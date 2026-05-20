@@ -31,6 +31,13 @@
     <string name="InuDisableRoundingInfo">1.2K -> 1,234</string>
     <string name="InuMaterial3">Material Design 3</string>
     <string name="InuMaterial3Switches">Switches</string>
+    <string name="InuMonetTheme">Monet theme</string>
+    <string name="InuMonetThemeDisabled">Disabled</string>
+    <string name="InuMonetThemeLight">Light</string>
+    <string name="InuMonetThemeDark">Dark</string>
+    <string name="InuMonetThemeAmoled">AMOLED</string>
+    <string name="InuMonetThemeAuto">Auto</string>
+    <string name="InuMonetThemeAutoAmoled">Auto (AMOLED)</string>
     <string name="InuDisableInstantCamera">Disable instant camera</string>
     <string name="InuDisableInstantCameraInfo">Prevents camera from starting when opening the attachment panel</string>
     <string name="InuShowAllRecentStickers">Show all recent stickers</string>

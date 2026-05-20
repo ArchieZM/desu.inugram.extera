@@ -101,6 +101,10 @@ object InuConfig {
     @JvmField
     val MATERIAL3_SWITCHES = BoolItem("material3_switches", false)
 
+    // snapshot of theme state before Monet was enabled, "day|night|autoNightType"; empty = none
+    @JvmField
+    val MONET_PREV = StringItem("monet_prev", "", exportable = false)
+
     class PredictiveBackModeItem : IntItem("predictive_back_mode", OFF) {
         companion object {
             const val OFF = 0

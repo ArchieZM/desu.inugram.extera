@@ -5,12 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.FontHelper
 import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.MapsHelper
+import desu.inugram.helpers.MonetHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.LocaleController
@@ -132,6 +134,15 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 LocaleController.getString(R.string.InuMaterial3Switches)
             ).setChecked(InuConfig.MATERIAL3_SWITCHES.value)
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            items.add(
+                UItem.asButton(
+                    BUTTON_MONET_THEME,
+                    LocaleController.getString(R.string.InuMonetTheme),
+                    monetThemeModeLabel(MonetHelper.getThemeMode()),
+                )
+            )
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             items.add(
                 UItem.asButton(
@@ -296,6 +307,21 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
+            BUTTON_MONET_THEME -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) RadioItemOptions.show(
+                this, view,
+                listOf(
+                    LocaleController.getString(R.string.InuMonetThemeDisabled),
+                    LocaleController.getString(R.string.InuMonetThemeLight),
+                    LocaleController.getString(R.string.InuMonetThemeDark),
+                    LocaleController.getString(R.string.InuMonetThemeAmoled),
+                    LocaleController.getString(R.string.InuMonetThemeAuto),
+                    LocaleController.getString(R.string.InuMonetThemeAutoAmoled),
+                ),
+                MonetHelper.getThemeMode().ordinal,
+            ) { which ->
+                MonetHelper.setThemeMode(MonetHelper.ThemeMode.entries[which])
+            }
+
             BUTTON_PREDICTIVE_BACK_MODE -> RadioItemOptions.show(
                 this, view,
                 listOf(
@@ -383,6 +409,17 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         private val BUTTON_MAP_PROVIDER = InuUtils.generateId()
         private val BUTTON_MAP_PREVIEW_PROVIDER = InuUtils.generateId()
         private val BUTTON_PREDICTIVE_BACK_MODE = InuUtils.generateId()
+        private val BUTTON_MONET_THEME = InuUtils.generateId()
+
+        @RequiresApi(Build.VERSION_CODES.S)
+        private fun monetThemeModeLabel(mode: MonetHelper.ThemeMode): String = when (mode) {
+            MonetHelper.ThemeMode.LIGHT -> LocaleController.getString(R.string.InuMonetThemeLight)
+            MonetHelper.ThemeMode.DARK -> LocaleController.getString(R.string.InuMonetThemeDark)
+            MonetHelper.ThemeMode.AMOLED -> LocaleController.getString(R.string.InuMonetThemeAmoled)
+            MonetHelper.ThemeMode.AUTO -> LocaleController.getString(R.string.InuMonetThemeAuto)
+            MonetHelper.ThemeMode.AUTO_AMOLED -> LocaleController.getString(R.string.InuMonetThemeAutoAmoled)
+            else -> LocaleController.getString(R.string.InuMonetThemeDisabled)
+        }
 
         private fun predictiveBackModeLabel(value: Int): String = when (value) {
             InuConfig.PredictiveBackModeItem.OFF -> LocaleController.getString(R.string.InuPredictiveBackOff)
@@ -402,6 +439,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("disable-scrim-blur", R.string.InuDisableScrimBlur, TOGGLE_DISABLE_SCRIM_BLUR),
                 SearchRegistry.Entry("reduce-menu-motion", R.string.InuReduceMenuMotion, TOGGLE_REDUCE_MENU_MOTION),
                 SearchRegistry.Entry("material3-switches", R.string.InuMaterial3Switches, TOGGLE_MATERIAL3_SWITCHES),
+                SearchRegistry.Entry("monet-theme", R.string.InuMonetTheme, BUTTON_MONET_THEME),
                 SearchRegistry.Entry("icon-replacement", R.string.InuIconReplacement, BUTTON_ICON_REPLACEMENT),
                 SearchRegistry.Entry("font", R.string.InuFont, BUTTON_FONT_MODE),
                 SearchRegistry.Entry("map-provider", R.string.InuMapProvider, BUTTON_MAP_PROVIDER),
