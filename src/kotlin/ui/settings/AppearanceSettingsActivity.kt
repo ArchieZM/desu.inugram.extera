@@ -111,16 +111,16 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         items.add(UItem.asShadow(null))
 
         if (animationSpeedSlider == null) animationSpeedSlider = SliderCell(
-            this.context, min = 0.5f, max = 2f,
+            this.context, min = 0.5f, max = 3f,
             defaultValue = InuConfig.ANIMATION_SPEED.default,
-            initialValue = if (InuConfig.ANIMATION_SPEED.value >= 2f) 2f else InuConfig.ANIMATION_SPEED.value,
+            initialValue = if (InuConfig.ANIMATION_SPEED.value >= 3f) 3f else InuConfig.ANIMATION_SPEED.value,
             step = 0.05f,
             format = {
-                if (it >= 2f) LocaleController.getString(R.string.InuAnimationSpeedInstant)
+                if (it >= 3f) LocaleController.getString(R.string.InuAnimationSpeedInstant)
                 else String.format("%.2fx", it)
             },
             onChanged = {
-                InuConfig.ANIMATION_SPEED.value = if (it >= 2f) 9999f else it
+                InuConfig.ANIMATION_SPEED.value = if (it >= 3f) 9999f else it
                 InuHooks.syncAnimationSpeed()
             },
         )
