@@ -73,6 +73,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 strip tracking params (utm_*, fbclid, si, erid, …) from links before opening — *rules from AdGuard URL Tracking filter*
 - 🐶 web preview refetch from menu
 - 🐶 disable web preview limit on twitter-like websites
+- tap a web preview photo to open it in the photo viewer
 - message details from menu (+ show json)
 - per-message statistics from message menu
 - customizable message context menu - reorder and hide items + long-tap forward/reply items
