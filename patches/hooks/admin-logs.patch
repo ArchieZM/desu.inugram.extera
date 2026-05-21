@@ -5,8 +5,8 @@ Subject: hooks inside admin logs activity
 
 ---
  .../org/telegram/messenger/MessageObject.java |  4 ++
- .../telegram/ui/ChannelAdminLogActivity.java  | 40 ++++++++++++++++++-
- 2 files changed, 42 insertions(+), 2 deletions(-)
+ .../telegram/ui/ChannelAdminLogActivity.java  | 42 +++++++++++++++++--
+ 2 files changed, 43 insertions(+), 3 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
 index 0000000..0000000 100644
@@ -42,6 +42,15 @@ index 0000000..0000000 100644
  import me.vkryl.core.BitwiseUtils;
  import me.vkryl.core.reference.ReferenceList;
  
+@@ -206,7 +207,7 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
+     private TextView bottomOverlayChatText;
+     private ChatActivityChannelButtonsLayout bottomOverlayChat2;
+     private FrameLayout emptyViewContainer;
+-    private ChatAvatarContainer avatarContainer;
++    public ChatAvatarContainer avatarContainer;
+     private LinearLayout emptyLayoutView;
+     private ImageView emptyImageView;
+     private TextView emptyView;
 @@ -519,6 +520,34 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
          });
      }
@@ -91,7 +100,7 @@ index 0000000..0000000 100644
              }
          });
          searchItem.setSearchFieldHint(getString(R.string.Search));
-+        AdminLogHelper.setupHeader(menu);
++        AdminLogHelper.setupHeader(this, menu);
  
          actionBar.getBackButton().setTranslationX(dp(6));
          actionBar.menu.setTranslationX(-dp(9));
