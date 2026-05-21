@@ -53,7 +53,7 @@ index 0000000..0000000 100644
          }
  
 +        if (!desu.inugram.helpers.ParanoiaHelper.shouldHideSettings()) {
-+            items.add(SettingCell.Factory.of(99, IconBackgroundColors.BLUE_ALT.top, IconBackgroundColors.BLUE_ALT.bottom, R.drawable.settings_features, getString(R.string.InuSettings), getString(R.string.InuSettingsInfo)));
++            items.add(SettingCell.Factory.of(99, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.icon_settings_inu, getString(R.string.InuSettings), getString(R.string.InuSettingsInfo)));
 +            items.add(UItem.asShadow(null));
 +        }
 +

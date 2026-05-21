@@ -15,7 +15,11 @@ import {
 
 const ADAPTIVE_SIZE = 108
 const FG_SAFE = 72
-const FG_INSET = (ADAPTIVE_SIZE - FG_SAFE) / 2
+// settings-list icon: 24dp render in a 72dp viewport, tinted white by
+// SettingCell — mirrors stock settings_account/settings_chat/settings_privacy
+const SETTINGS_DP = 24
+const SETTINGS_VIEWPORT = 72
+const SETTINGS_SAFE = 80
 const BG_GRADIENT_FROM = '#FFD4A3FF'
 const BG_GRADIENT_TO = '#FFD59EFF'
 // debug badge: a small white square (only its top-left corner rounded) tucked
@@ -86,29 +90,54 @@ function buildDebugBadge(): string {
     </group>`
 }
 
-function buildForegroundVector(shapes: SvgShape[], srcW: number, srcH: number, monochrome: boolean, debug = false): string {
-  const scale = FG_SAFE / Math.max(srcW, srcH)
-  const offsetX = FG_INSET + (FG_SAFE - srcW * scale) / 2
-  const offsetY = FG_INSET + (FG_SAFE - srcH * scale) / 2
+interface ScaledVectorOpts {
+  widthDp: number
+  viewport: number
+  safe: number
+  overlay?: string
+}
+
+// scale an SVG body to `safe` units, centered inside a `viewport`-sized canvas
+function buildScaledVector(shapes: SvgShape[], srcW: number, srcH: number, monochrome: boolean, opts: ScaledVectorOpts): string {
+  const inset = (opts.viewport - opts.safe) / 2
+  const scale = opts.safe / Math.max(srcW, srcH)
+  const offsetX = inset + (opts.safe - srcW * scale) / 2
+  const offsetY = inset + (opts.safe - srcH * scale) / 2
   const paths = shapes
     .map(s => shapeToPathXml(s, monochrome))
     .filter((s): s is string => s !== null)
-  const overlay = debug ? buildDebugBadge() : ''
   return `<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="${ADAPTIVE_SIZE}dp"
-    android:height="${ADAPTIVE_SIZE}dp"
-    android:viewportWidth="${ADAPTIVE_SIZE}"
-    android:viewportHeight="${ADAPTIVE_SIZE}">
+    android:width="${fmtNum(opts.widthDp)}dp"
+    android:height="${fmtNum(opts.widthDp)}dp"
+    android:viewportWidth="${opts.viewport}"
+    android:viewportHeight="${opts.viewport}">
     <group
         android:translateX="${fmtNum(offsetX)}"
         android:translateY="${fmtNum(offsetY)}"
         android:scaleX="${fmtNum(scale)}"
         android:scaleY="${fmtNum(scale)}">
 ${paths.join('\n')}
-    </group>${overlay}
+    </group>${opts.overlay ?? ''}
 </vector>
 `
+}
+
+function buildForegroundVector(shapes: SvgShape[], srcW: number, srcH: number, monochrome: boolean, debug = false): string {
+  return buildScaledVector(shapes, srcW, srcH, monochrome, {
+    widthDp: ADAPTIVE_SIZE,
+    viewport: ADAPTIVE_SIZE,
+    safe: FG_SAFE,
+    overlay: debug ? buildDebugBadge() : undefined,
+  })
+}
+
+function buildSettingsVector(shapes: SvgShape[], srcW: number, srcH: number): string {
+  return buildScaledVector(shapes, srcW, srcH, true, {
+    widthDp: SETTINGS_DP,
+    viewport: SETTINGS_VIEWPORT,
+    safe: SETTINGS_SAFE,
+  })
 }
 
 function buildAdaptiveIcon(foreground: string): string {
@@ -170,6 +199,7 @@ const mono = await loadSvg('src/res/launcher/icon-mono.svg')
 const foreground = buildForegroundVector(fg.shapes, fg.srcW, fg.srcH, false)
 const foregroundDebug = buildForegroundVector(fg.shapes, fg.srcW, fg.srcH, false, true)
 const monochrome = buildForegroundVector(mono.shapes, mono.srcW, mono.srcH, true)
+const settingsIcon = buildSettingsVector(mono.shapes, mono.srcW, mono.srcH)
 const background = buildBackgroundVector()
 const debugIcon = buildAdaptiveIcon('icon_foreground_inu_debug')
 
@@ -181,6 +211,7 @@ const targets: [string, string][] = [
   [`${GEN_DRAWABLE}/icon_foreground_inu.xml`, foreground],
   [`${GEN_DRAWABLE}/icon_foreground_inu_round.xml`, foreground],
   [`${GEN_DRAWABLE}/icon_foreground_inu_debug.xml`, foregroundDebug],
+  [`${GEN_DRAWABLE}/icon_settings_inu.xml`, settingsIcon],
   [`${GEN_DEBUG_MIPMAP}/ic_launcher.xml`, debugIcon],
   [`${GEN_DEBUG_MIPMAP}/ic_launcher_round.xml`, debugIcon],
 ]
