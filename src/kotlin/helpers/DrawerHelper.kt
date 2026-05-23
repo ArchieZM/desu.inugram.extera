@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import desu.inugram.InuConfig
+import desu.inugram.helpers.DrawerHelper.setupMainFragment
 import desu.inugram.ui.drawer.DrawerAddCell
 import desu.inugram.ui.drawer.DrawerLayoutAdapter
 import desu.inugram.ui.drawer.DrawerProfileCell
@@ -23,24 +24,24 @@ import org.telegram.messenger.MessagesController
 import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.SharedConfig
 import org.telegram.messenger.UserConfig
-import org.telegram.ui.ActionBar.MenuDrawable
-import org.telegram.ui.IUpdateLayout
-import org.telegram.ui.UpdateLayoutWrapper
 import org.telegram.ui.AccountFrozenAlert
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.ActionBar.DrawerLayoutContainer
 import org.telegram.ui.ActionBar.INavigationLayout
+import org.telegram.ui.ActionBar.MenuDrawable
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.CallLogActivity
 import org.telegram.ui.Components.RecyclerListView
 import org.telegram.ui.ContactsActivity
 import org.telegram.ui.DialogsActivity
 import org.telegram.ui.GroupCreateActivity
+import org.telegram.ui.IUpdateLayout
 import org.telegram.ui.LaunchActivity
 import org.telegram.ui.LoginActivity
 import org.telegram.ui.MainTabsActivity
 import org.telegram.ui.ProfileActivity
 import org.telegram.ui.SettingsActivity
+import org.telegram.ui.UpdateLayoutWrapper
 
 @SuppressLint("StaticFieldLeak")
 object DrawerHelper {
@@ -191,15 +192,18 @@ object DrawerHelper {
                     sideMenu?.let { applySideMenuBottomPadding(it) }
                     refreshMenuButton(animated)
                 }
+
                 NotificationCenter.appUpdateLoading -> {
                     current.updateFileProgress(null)
                     current.updateAppUpdateViews(UserConfig.selectedAccount, true)
                     refreshMenuButton(true)
                 }
+
                 NotificationCenter.fileLoadProgressChanged -> {
                     current.updateFileProgress(args)
                     refreshMenuButton(true)
                 }
+
                 NotificationCenter.fileLoaded, NotificationCenter.fileLoadFailed -> {
                     val name = args.getOrNull(0) as? String ?: return@NotificationCenterDelegate
                     val doc = SharedConfig.pendingAppUpdate?.document ?: return@NotificationCenterDelegate
