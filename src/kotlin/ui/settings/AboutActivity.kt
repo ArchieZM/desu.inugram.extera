@@ -1,23 +1,36 @@
 package desu.inugram.ui.settings
 
-
+import android.content.Context
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import desu.inugram.InuConfig
 import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
+import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
+import org.telegram.messenger.SharedConfig
 import org.telegram.messenger.UserConfig
 import org.telegram.messenger.browser.Browser
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.BulletinFactory
+import org.telegram.ui.Components.LayoutHelper
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
+import org.telegram.ui.IUpdateLayout
+import org.telegram.ui.UpdateLayoutWrapper
 
-class AboutActivity : SettingsPageActivity() {
+class AboutActivity : SettingsPageActivity(), NotificationCenter.NotificationCenterDelegate {
     override fun getTitle(): CharSequence = LocaleController.getString(R.string.InuAbout)
+
+    private var updateLayout: IUpdateLayout? = null
+    private var updateWrapper: UpdateLayoutWrapper? = null
+    private var bottomInset: Int = 0
 
     override fun fillItems(items: ArrayList<UItem>, adapter: UniversalAdapter) {
         items.add(
@@ -55,7 +68,40 @@ class AboutActivity : SettingsPageActivity() {
         items.add(UItem.asShadow(lastCheckLabel()))
     }
 
-    var isChecking = false
+    override fun createView(context: Context): View {
+        val root = super.createView(context) as FrameLayout
+
+        val wrapper = UpdateLayoutWrapper(context)
+        root.addView(
+            wrapper,
+            LayoutHelper.createFrame(
+                LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT,
+                Gravity.BOTTOM,
+            ),
+        )
+        updateWrapper = wrapper
+
+        val ul = ApplicationLoader.applicationLoaderInstance?.takeUpdateLayout(parentActivity, wrapper)
+        updateLayout = ul
+        ul?.updateAppUpdateViews(UserConfig.selectedAccount, false)
+        applyListPadding()
+
+        return root
+    }
+
+    override fun onInsets(left: Int, top: Int, right: Int, bottom: Int) {
+        bottomInset = bottom
+        updateWrapper?.setPadding(0, 0, 0, bottom)
+        applyListPadding()
+    }
+
+    private fun applyListPadding() {
+        val lv = listView ?: return
+        val barHeight = if (SharedConfig.isAppUpdateAvailable()) dp(44f) else 0
+        lv.setPadding(lv.paddingLeft, lv.paddingTop, lv.paddingRight, bottomInset + barHeight)
+    }
+
+    private var isChecking = false
     private fun lastCheckLabel(): String {
         val ms = InuConfig.UPDATE_LAST_CHECK_MS.value
         val text = when {
@@ -106,6 +152,55 @@ class AboutActivity : SettingsPageActivity() {
                         LocaleController.formatString(R.string.InuUpdateError, result.message)
                 }
                 BulletinFactory.of(this).createSimpleBulletin(R.raw.chats_infotip, msg).show()
+            }
+        }
+    }
+
+    override fun onFragmentCreate(): Boolean {
+        val ok = super.onFragmentCreate()
+        val global = NotificationCenter.getGlobalInstance()
+        global.addObserver(this, NotificationCenter.appUpdateAvailable)
+        global.addObserver(this, NotificationCenter.appUpdateLoading)
+        val acct = NotificationCenter.getInstance(UserConfig.selectedAccount)
+        acct.addObserver(this, NotificationCenter.fileLoadProgressChanged)
+        acct.addObserver(this, NotificationCenter.fileLoaded)
+        acct.addObserver(this, NotificationCenter.fileLoadFailed)
+        return ok
+    }
+
+    override fun onFragmentDestroy() {
+        val global = NotificationCenter.getGlobalInstance()
+        global.removeObserver(this, NotificationCenter.appUpdateAvailable)
+        global.removeObserver(this, NotificationCenter.appUpdateLoading)
+        val acct = NotificationCenter.getInstance(UserConfig.selectedAccount)
+        acct.removeObserver(this, NotificationCenter.fileLoadProgressChanged)
+        acct.removeObserver(this, NotificationCenter.fileLoaded)
+        acct.removeObserver(this, NotificationCenter.fileLoadFailed)
+        super.onFragmentDestroy()
+    }
+
+    override fun didReceivedNotification(id: Int, account: Int, vararg args: Any?) {
+        val ul = updateLayout ?: return
+        val acct = UserConfig.selectedAccount
+        when (id) {
+            NotificationCenter.appUpdateAvailable -> {
+                val animated = args.getOrNull(0) as? Boolean ?: true
+                ul.updateAppUpdateViews(acct, animated)
+                applyListPadding()
+            }
+            NotificationCenter.appUpdateLoading -> {
+                ul.updateFileProgress(null)
+                ul.updateAppUpdateViews(acct, true)
+            }
+            NotificationCenter.fileLoadProgressChanged -> {
+                ul.updateFileProgress(args)
+            }
+            NotificationCenter.fileLoaded, NotificationCenter.fileLoadFailed -> {
+                val name = args.getOrNull(0) as? String ?: return
+                val doc = SharedConfig.pendingAppUpdate?.document ?: return
+                if (name == FileLoader.getAttachFileName(doc)) {
+                    ul.updateAppUpdateViews(acct, true)
+                }
             }
         }
     }

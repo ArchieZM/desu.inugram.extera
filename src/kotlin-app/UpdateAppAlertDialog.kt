@@ -1,9 +1,5 @@
 package desu.inugram
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PorterDuff
@@ -19,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
+import desu.inugram.helpers.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.DocumentObject
 import org.telegram.messenger.FileLoader
@@ -27,12 +24,10 @@ import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
-import org.telegram.messenger.SvgHelper
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ActionBar.BottomSheet
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Components.BackupImageView
-import org.telegram.ui.Components.CubicBezierInterpolator
 import org.telegram.ui.Components.LayoutHelper
 
 class UpdateAppAlertDialog(
@@ -48,10 +43,15 @@ class UpdateAppAlertDialog(
     private val container: FrameLayout
     private val scrollView: NestedScrollView
     private val linearLayout: LinearLayout
-    private val shadow: View
     private val location = IntArray(2)
     private var scrollOffsetY = 0
-    private var shadowAnimation: AnimatorSet? = null
+
+    companion object {
+        private const val BUTTON_HEIGHT = 42f
+        private const val BUTTON_ROW_TOP_MARGIN = 16f
+        private const val BUTTON_ROW_BOTTOM_MARGIN = 16f
+        private const val BUTTON_ROW_HEIGHT = BUTTON_HEIGHT + BUTTON_ROW_TOP_MARGIN + BUTTON_ROW_BOTTOM_MARGIN
+    }
 
     init {
         setCanceledOnTouchOutside(false)
@@ -132,7 +132,7 @@ class UpdateAppAlertDialog(
             scrollView,
             LayoutHelper.createFrame(
                 LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT.toFloat(),
-                Gravity.LEFT or Gravity.TOP, 0f, 0f, 0f, 130f,
+                Gravity.LEFT or Gravity.TOP, 0f, 0f, 0f, BUTTON_ROW_HEIGHT,
             ),
         )
 
@@ -149,20 +149,17 @@ class UpdateAppAlertDialog(
 
         appUpdate.sticker?.let { sticker ->
             val imageView = BackupImageView(context)
-            val svgThumb: SvgHelper.SvgDrawable? =
-                DocumentObject.getSvgThumb(sticker.thumbs, Theme.key_windowBackgroundGray, 1.0f)
-            val thumb: TLRPC.PhotoSize? = FileLoader.getClosestPhotoSizeWithSize(sticker.thumbs, 90)
-            val imageLocation = ImageLocation.getForDocument(thumb, sticker)
+            val docLocation = ImageLocation.getForDocument(sticker)
+            val svgThumb = DocumentObject.getSvgThumb(sticker.thumbs, Theme.key_windowBackgroundGray, 1.0f)
             if (svgThumb != null) {
-                imageView.setImage(ImageLocation.getForDocument(sticker), "250_250", svgThumb, 0, "update")
+                imageView.setImage(docLocation, "250_250", svgThumb, 0, "update")
             } else {
-                imageView.setImage(ImageLocation.getForDocument(sticker), "250_250", imageLocation, null, 0, "update")
+                val thumb = FileLoader.getClosestPhotoSizeWithSize(sticker.thumbs, 90)
+                imageView.setImage(docLocation, "250_250", ImageLocation.getForDocument(thumb, sticker), null, 0, "update")
             }
             linearLayout.addView(
                 imageView,
-                LayoutHelper.createLinear(
-                    160, 160, Gravity.CENTER_HORIZONTAL or Gravity.TOP, 17, 8, 17, 0,
-                ),
+                LayoutHelper.createLinear(160, 160, Gravity.CENTER_HORIZONTAL or Gravity.TOP, 17, 8, 17, 0),
             )
         }
 
@@ -182,7 +179,7 @@ class UpdateAppAlertDialog(
             ),
         )
 
-        val messageView = TextView(getContext()).apply {
+        val messageView = TextView(context).apply {
             setTextColor(Theme.getColor(Theme.key_dialogTextGray3))
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
             movementMethod = AndroidUtilities.LinkMovementMethodMy()
@@ -202,7 +199,7 @@ class UpdateAppAlertDialog(
             ),
         )
 
-        val changelogView = TextView(getContext()).apply {
+        val changelogView = TextView(context).apply {
             setTextColor(Theme.getColor(Theme.key_dialogTextBlack))
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
             movementMethod = AndroidUtilities.LinkMovementMethodMy()
@@ -224,76 +221,63 @@ class UpdateAppAlertDialog(
             ),
         )
 
-        val shadowParams = FrameLayout.LayoutParams(
-            LayoutHelper.MATCH_PARENT,
-            AndroidUtilities.getShadowHeight(),
-            Gravity.BOTTOM or Gravity.LEFT,
-        ).apply { bottomMargin = AndroidUtilities.dp(130f) }
-        shadow = View(context).apply {
-            setBackgroundColor(Theme.getColor(Theme.key_dialogShadowLine))
-            alpha = 0f
-            tag = 1
-        }
-        container.addView(shadow, shadowParams)
-
-        val doneButton = BottomSheetCell(context, false).apply {
-            setText(
-                LocaleController.formatString("AppUpdateDownloadNow", R.string.AppUpdateDownloadNow),
-                false,
-            )
-            backgroundView.setOnClickListener {
-                FileLoader.getInstance(accountNum).loadFile(
-                    appUpdate.document, "update", FileLoader.PRIORITY_NORMAL, 1,
-                )
-                NotificationCenter.getGlobalInstance()
-                    .postNotificationName(NotificationCenter.appUpdateLoading)
-                dismiss()
-            }
-        }
-        container.addView(
-            doneButton,
-            LayoutHelper.createFrame(
-                LayoutHelper.MATCH_PARENT, 50f,
-                Gravity.LEFT or Gravity.BOTTOM, 0f, 0f, 0f, 50f,
+        val radius = BUTTON_HEIGHT / 2f
+        val scheduleButton = makeButton(
+            R.string.AppUpdateRemindMeLater,
+            background = Theme.createSimpleSelectorRoundRectDrawable(
+                AndroidUtilities.dp(radius), 0, Theme.getColor(Theme.key_listSelector),
             ),
-        )
-
-        val scheduleButton = BottomSheetCell(context, true).apply {
-            setText(LocaleController.getString(R.string.AppUpdateRemindMeLater), false)
-            backgroundView.setOnClickListener { dismiss() }
+            textColor = Theme.getColor(Theme.key_featuredStickers_addButton),
+            bold = false,
+        ) {
+            UpdateHelper.clearPending()
+            dismiss()
+        }
+        val doneButton = makeButton(
+            R.string.AppUpdateDownloadNow,
+            background = Theme.AdaptiveRipple.filledRectByKey(Theme.key_featuredStickers_addButton, radius),
+            textColor = Theme.getColor(Theme.key_featuredStickers_buttonText),
+            bold = true,
+        ) {
+            FileLoader.getInstance(accountNum).loadFile(
+                appUpdate.document, "update", FileLoader.PRIORITY_NORMAL, 1,
+            )
+            NotificationCenter.getGlobalInstance()
+                .postNotificationName(NotificationCenter.appUpdateLoading)
+            dismiss()
+        }
+        val buttonRow = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            addView(scheduleButton, LinearLayout.LayoutParams(0, AndroidUtilities.dp(BUTTON_HEIGHT), 1f).apply {
+                marginEnd = AndroidUtilities.dp(8f)
+            })
+            addView(doneButton, LinearLayout.LayoutParams(0, AndroidUtilities.dp(BUTTON_HEIGHT), 1f))
         }
         container.addView(
-            scheduleButton,
+            buttonRow,
             LayoutHelper.createFrame(
-                LayoutHelper.MATCH_PARENT, 50f,
-                Gravity.LEFT or Gravity.BOTTOM, 0f, 0f, 0f, 0f,
+                LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT.toFloat(),
+                Gravity.LEFT or Gravity.BOTTOM,
+                16f, BUTTON_ROW_TOP_MARGIN, 16f, BUTTON_ROW_BOTTOM_MARGIN,
             ),
         )
     }
 
-    private fun runShadowAnimation(show: Boolean) {
-        val shouldRun = (show && shadow.tag != null) || (!show && shadow.tag == null)
-        if (!shouldRun) return
-        shadow.tag = if (show) null else 1
-        if (show) shadow.visibility = View.VISIBLE
-        shadowAnimation?.cancel()
-        val anim = AnimatorSet()
-        anim.playTogether(ObjectAnimator.ofFloat(shadow, View.ALPHA, if (show) 1f else 0f))
-        anim.duration = 150
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                if (shadowAnimation === animation) {
-                    if (!show) shadow.visibility = View.INVISIBLE
-                    shadowAnimation = null
-                }
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-                if (shadowAnimation === animation) shadowAnimation = null
-            }
-        })
-        shadowAnimation = anim
-        anim.start()
+    private fun makeButton(
+        textRes: Int,
+        background: Drawable,
+        textColor: Int,
+        bold: Boolean,
+        onClick: () -> Unit,
+    ): TextView = TextView(context).apply {
+        text = LocaleController.getString(textRes)
+        isAllCaps = false
+        gravity = Gravity.CENTER
+        setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+        setTextColor(textColor)
+        if (bold) typeface = AndroidUtilities.bold()
+        this.background = background
+        setOnClickListener { onClick() }
     }
 
     private fun updateLayout() {
@@ -301,10 +285,6 @@ class UpdateAppAlertDialog(
         child.getLocationInWindow(location)
         val top = location[1] - AndroidUtilities.dp(24f)
         val newOffset = top.coerceAtLeast(0)
-        runShadowAnimation(
-            location[1] + linearLayout.measuredHeight
-                > container.measuredHeight - AndroidUtilities.dp(113f) + containerView.translationY
-        )
         if (scrollOffsetY != newOffset) {
             scrollOffsetY = newOffset
             scrollView.invalidate()
@@ -313,87 +293,8 @@ class UpdateAppAlertDialog(
 
     override fun canDismissWithSwipe(): Boolean = false
 
-    private inner class BottomSheetCell(context: Context, withoutBackground: Boolean) : FrameLayout(context) {
-        val backgroundView: View = View(context)
-        private val textViews = arrayOfNulls<TextView>(2)
-        private val hasBackground: Boolean = !withoutBackground
-        private var animationInProgress = false
-
-        init {
-            setBackground(null)
-            if (hasBackground) {
-                backgroundView.background =
-                    Theme.AdaptiveRipple.filledRectByKey(Theme.key_featuredStickers_addButton, 4f)
-            }
-            addView(
-                backgroundView,
-                LayoutHelper.createFrame(
-                    LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT.toFloat(),
-                    0, 16f, if (withoutBackground) 0f else 16f, 16f, 16f,
-                ),
-            )
-            for (a in 0 until 2) {
-                val tv = TextView(context).apply {
-                    setLines(1)
-                    isSingleLine = true
-                    gravity = Gravity.CENTER
-                    ellipsize = TextUtils.TruncateAt.END
-                    if (hasBackground) {
-                        setTextColor(Theme.getColor(Theme.key_featuredStickers_buttonText))
-                        typeface = AndroidUtilities.bold()
-                    } else {
-                        setTextColor(Theme.getColor(Theme.key_featuredStickers_addButton))
-                    }
-                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-                    setPadding(0, 0, 0, if (hasBackground) 0 else AndroidUtilities.dp(13f))
-                }
-                addView(
-                    tv,
-                    LayoutHelper.createFrame(
-                        LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER,
-                    ),
-                )
-                if (a == 1) tv.alpha = 0f
-                textViews[a] = tv
-            }
-        }
-
-        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            super.onMeasure(
-                widthMeasureSpec,
-                MeasureSpec.makeMeasureSpec(
-                    AndroidUtilities.dp(if (hasBackground) 80f else 50f),
-                    MeasureSpec.EXACTLY,
-                ),
-            )
-        }
-
-        fun setText(text: CharSequence, animated: Boolean) {
-            if (!animated) {
-                textViews[0]?.text = text
-                return
-            }
-            textViews[1]?.text = text
-            animationInProgress = true
-            val animator = AnimatorSet().apply {
-                duration = 180
-                interpolator = CubicBezierInterpolator.EASE_OUT
-                playTogether(
-                    ObjectAnimator.ofFloat(textViews[0], View.ALPHA, 1f, 0f),
-                    ObjectAnimator.ofFloat(textViews[0], View.TRANSLATION_Y, 0f, -AndroidUtilities.dp(10f).toFloat()),
-                    ObjectAnimator.ofFloat(textViews[1], View.ALPHA, 0f, 1f),
-                    ObjectAnimator.ofFloat(textViews[1], View.TRANSLATION_Y, AndroidUtilities.dp(10f).toFloat(), 0f),
-                )
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        animationInProgress = false
-                        val tmp = textViews[0]
-                        textViews[0] = textViews[1]
-                        textViews[1] = tmp
-                    }
-                })
-            }
-            animator.start()
-        }
+    override fun onOpenAnimationEnd() {
+        super.onOpenAnimationEnd()
+        UpdateHelper.revealPendingUpdate()
     }
 }

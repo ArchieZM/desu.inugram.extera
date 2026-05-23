@@ -3,6 +3,7 @@ package desu.inugram.helpers
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +16,16 @@ import desu.inugram.ui.drawer.DrawerUserCell
 import desu.inugram.ui.drawer.SideMenultItemAnimator
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.AndroidUtilities.dp
+import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.FileLoader
+import org.telegram.messenger.ImageLoader
 import org.telegram.messenger.MessagesController
 import org.telegram.messenger.NotificationCenter
+import org.telegram.messenger.SharedConfig
 import org.telegram.messenger.UserConfig
+import org.telegram.ui.ActionBar.MenuDrawable
+import org.telegram.ui.IUpdateLayout
+import org.telegram.ui.UpdateLayoutWrapper
 import org.telegram.ui.AccountFrozenAlert
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.ActionBar.DrawerLayoutContainer
@@ -40,8 +48,11 @@ object DrawerHelper {
     private var adapter: DrawerLayoutAdapter? = null
     private var sideMenu: RecyclerListView? = null
     private var sideMenuContainer: FrameLayout? = null
-    private var themeObserverInstalled = false
     private var themeObserver: NotificationCenter.NotificationCenterDelegate? = null
+    private var updateLayout: IUpdateLayout? = null
+    private var updateObserver: NotificationCenter.NotificationCenterDelegate? = null
+    private var updateObserverAccount: Int = -1
+    private var menuDrawableRef: MenuDrawable? = null
 
     @JvmStatic
     @JvmOverloads
@@ -83,6 +94,10 @@ object DrawerHelper {
             setup(dlc.context, dlc, layout)
         } else {
             notifyDataChanged()
+            rebindPerAccountObservers()
+            sideMenu?.let { applySideMenuBottomPadding(it) }
+            updateLayout?.updateAppUpdateViews(UserConfig.selectedAccount, false)
+            refreshMenuButton(false)
         }
     }
 
@@ -130,6 +145,137 @@ object DrawerHelper {
         controller.setAllowOpenDrawer(true, false)
 
         installThemeObserver()
+        installUpdateLayout(context as? android.app.Activity, container, sm)
+    }
+
+    private fun installUpdateLayout(
+        activity: android.app.Activity?,
+        container: FrameLayout,
+        sm: RecyclerListView,
+    ) {
+        if (activity == null) return
+        if (updateLayout != null) return
+        // Stock UpdateLayoutWrapper: paints accent across the navbar inset, propagates
+        // paddingBottom to the row so centered content stays in the visible 44dp.
+        val wrapper = UpdateLayoutWrapper(activity)
+        container.addView(
+            wrapper,
+            FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM,
+            ),
+        )
+        // UpdateLayoutWrapper.setPadding propagates to children — but only children that exist
+        // at call time. The row is added later by UpdateLayout.createUpdateUI, so always
+        // re-propagate on every inset dispatch instead of guarding by current value.
+        wrapper.setOnApplyWindowInsetsListener { v, insets ->
+            v.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+            v.requestLayout()
+            insets
+        }
+        wrapper.setPadding(0, 0, 0, AndroidUtilities.navigationBarHeight)
+
+        val ul = ApplicationLoader.applicationLoaderInstance
+            ?.takeUpdateLayout(activity, wrapper) ?: return
+        updateLayout = ul
+        applySideMenuBottomPadding(sm)
+        ul.updateAppUpdateViews(UserConfig.selectedAccount, false)
+
+        val obs = NotificationCenter.NotificationCenterDelegate { id, _, args ->
+            val current = updateLayout ?: return@NotificationCenterDelegate
+            when (id) {
+                NotificationCenter.appUpdateAvailable -> {
+                    val animated = args.getOrNull(0) as? Boolean ?: true
+                    current.updateAppUpdateViews(UserConfig.selectedAccount, animated)
+                    sideMenu?.let { applySideMenuBottomPadding(it) }
+                    refreshMenuButton(animated)
+                }
+                NotificationCenter.appUpdateLoading -> {
+                    current.updateFileProgress(null)
+                    current.updateAppUpdateViews(UserConfig.selectedAccount, true)
+                    refreshMenuButton(true)
+                }
+                NotificationCenter.fileLoadProgressChanged -> {
+                    current.updateFileProgress(args)
+                    refreshMenuButton(true)
+                }
+                NotificationCenter.fileLoaded, NotificationCenter.fileLoadFailed -> {
+                    val name = args.getOrNull(0) as? String ?: return@NotificationCenterDelegate
+                    val doc = SharedConfig.pendingAppUpdate?.document ?: return@NotificationCenterDelegate
+                    if (name == FileLoader.getAttachFileName(doc)) {
+                        current.updateAppUpdateViews(UserConfig.selectedAccount, true)
+                        refreshMenuButton(true)
+                    }
+                }
+            }
+        }
+        updateObserver = obs
+        val global = NotificationCenter.getGlobalInstance()
+        global.addObserver(obs, NotificationCenter.appUpdateAvailable)
+        global.addObserver(obs, NotificationCenter.appUpdateLoading)
+        rebindPerAccountObservers()
+        refreshMenuButton(false)
+    }
+
+    private fun rebindPerAccountObservers() {
+        val obs = updateObserver ?: return
+        val newAccount = UserConfig.selectedAccount
+        if (updateObserverAccount == newAccount) return
+        if (updateObserverAccount != -1) {
+            val prev = NotificationCenter.getInstance(updateObserverAccount)
+            prev.removeObserver(obs, NotificationCenter.fileLoadProgressChanged)
+            prev.removeObserver(obs, NotificationCenter.fileLoaded)
+            prev.removeObserver(obs, NotificationCenter.fileLoadFailed)
+        }
+        updateObserverAccount = newAccount
+        val acct = NotificationCenter.getInstance(newAccount)
+        acct.addObserver(obs, NotificationCenter.fileLoadProgressChanged)
+        acct.addObserver(obs, NotificationCenter.fileLoaded)
+        acct.addObserver(obs, NotificationCenter.fileLoadFailed)
+    }
+
+    /**
+     * Updates the menu drawable used as a back-button in the drawer-mode DialogsActivity to reflect
+     * the current pending-update state: exclamation when available, circular progress while
+     * downloading. Mirrors stock Telegram 11.4.2's `updateMenuButton`.
+     */
+    @JvmStatic
+    fun refreshMenuButton(drawable: MenuDrawable?, animated: Boolean) {
+        // The patch seeds with a non-null drawable on DialogsActivity creation; we cache the
+        // reference so notification observers can update the icon even when DialogsActivity
+        // isn't the top fragment (e.g. user is in AboutActivity when the check completes).
+        if (drawable != null) menuDrawableRef = drawable
+        val d = drawable ?: menuDrawableRef ?: return
+        val type: Int
+        val downloadProgress: Float
+        if (SharedConfig.isAppUpdateAvailable()) {
+            val doc = SharedConfig.pendingAppUpdate.document
+            val fileName = FileLoader.getAttachFileName(doc)
+            if (UpdateHelper.isPendingStart || FileLoader.getInstance(UserConfig.selectedAccount).isLoadingFile(fileName)) {
+                type = MenuDrawable.TYPE_UDPATE_DOWNLOADING
+                downloadProgress = ImageLoader.getInstance().getFileProgress(fileName) ?: 0f
+            } else {
+                type = MenuDrawable.TYPE_UDPATE_AVAILABLE
+                downloadProgress = 0f
+            }
+        } else {
+            type = MenuDrawable.TYPE_DEFAULT
+            downloadProgress = 0f
+        }
+        d.setType(type, animated)
+        d.setUpdateDownloadProgress(downloadProgress, animated)
+    }
+
+    private fun refreshMenuButton(animated: Boolean) {
+        refreshMenuButton(null, animated)
+    }
+
+    private fun applySideMenuBottomPadding(sm: RecyclerListView) {
+        val extra = if (SharedConfig.isAppUpdateAvailable()) {
+            dp(44f) + AndroidUtilities.navigationBarHeight
+        } else 0
+        sm.setPadding(sm.paddingLeft, sm.paddingTop, sm.paddingRight, extra)
     }
 
     private fun applySideMenuColors(sm: RecyclerListView) {
@@ -140,7 +286,7 @@ object DrawerHelper {
     }
 
     private fun installThemeObserver() {
-        if (themeObserverInstalled) return
+        if (themeObserver != null) return
         val obs = NotificationCenter.NotificationCenterDelegate { id, _, _ ->
             if (id == NotificationCenter.didSetNewTheme || id == NotificationCenter.reloadInterface) {
                 refreshTheme()
@@ -149,7 +295,6 @@ object DrawerHelper {
         themeObserver = obs
         NotificationCenter.getGlobalInstance().addObserver(obs, NotificationCenter.didSetNewTheme)
         NotificationCenter.getGlobalInstance().addObserver(obs, NotificationCenter.reloadInterface)
-        themeObserverInstalled = true
     }
 
     private fun refreshTheme() {
@@ -207,8 +352,8 @@ object DrawerHelper {
             return
         }
 
-        when (val id = adapter.getId(position)) {
-            16 -> { // My Profile
+        when (adapter.getId(position)) {
+            ITEM_MY_PROFILE -> {
                 val args = Bundle()
                 args.putLong("user_id", UserConfig.getInstance(account).getClientUserId())
                 args.putBoolean("my_profile", true)
@@ -216,7 +361,8 @@ object DrawerHelper {
                 close()
             }
 
-            2 -> { // New Group — mirrors the "New Group" row in ContactsActivity.
+            ITEM_NEW_GROUP -> {
+                // mirrors the "New Group" row in ContactsActivity
                 if (MessagesController.getInstance(account).isFrozen) {
                     AccountFrozenAlert.show(account)
                 } else {
@@ -225,38 +371,49 @@ object DrawerHelper {
                 }
             }
 
-            17 -> { // New Message — swapped in for New Group when a compose draft is pending.
+            ITEM_NEW_MESSAGE -> {
+                // swapped in for New Group when a compose draft is pending
                 (nav.lastFragment as? DialogsActivity)?.openWriteContacts()
                 close()
             }
 
-            6 -> { // Contacts
+            ITEM_CONTACTS -> {
                 val args = Bundle()
                 args.putBoolean("needPhonebook", true)
                 nav.presentFragment(ContactsActivity(args))
                 close()
             }
 
-            10 -> { // Calls
+            ITEM_CALLS -> {
                 nav.presentFragment(CallLogActivity())
                 close()
             }
 
-            11 -> { // Saved Messages: ChatActivity expects user_id, not dialog_id.
+            ITEM_SAVED_MESSAGES -> {
+                // ChatActivity expects user_id, not dialog_id
                 val args = Bundle()
                 args.putLong("user_id", UserConfig.getInstance(account).getClientUserId())
                 nav.presentFragment(org.telegram.ui.ChatActivity(args))
                 close()
             }
 
-            8 -> { // Settings
+            ITEM_SETTINGS -> {
                 nav.presentFragment(SettingsActivity())
                 close()
             }
 
-            else -> close() // Unknown id — avoid getting stuck.
+            else -> close()
         }
     }
+
+    // Stock DrawerLayoutAdapter item IDs — these are stable identifiers from the stock drawer.
+    private const val ITEM_MY_PROFILE = 16
+    private const val ITEM_NEW_GROUP = 2
+    private const val ITEM_NEW_MESSAGE = 17
+    private const val ITEM_CONTACTS = 6
+    private const val ITEM_CALLS = 10
+    private const val ITEM_SAVED_MESSAGES = 11
+    private const val ITEM_SETTINGS = 8
 
     @JvmStatic
     fun notifyDataChanged() {

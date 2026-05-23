@@ -8,12 +8,12 @@ Restore hamburger side drawer for old layout mode (DrawerLayoutContainer)
 Restore hamburger side drawer for old layout mode (DialogsActivity)
 ---
  .../ui/ActionBar/DrawerLayoutContainer.java   | 27 ++++++++++++++++---
- .../java/org/telegram/ui/DialogsActivity.java | 13 +++++++--
+ .../java/org/telegram/ui/DialogsActivity.java | 14 ++++++++--
  .../java/org/telegram/ui/LaunchActivity.java  | 24 +++++------------
  .../java/org/telegram/ui/LoginActivity.java   |  9 +++----
  .../ui/TwoStepVerificationActivity.java       |  5 ++--
  .../ui/TwoStepVerificationSetupActivity.java  | 10 +++----
- 6 files changed, 50 insertions(+), 38 deletions(-)
+ 6 files changed, 51 insertions(+), 38 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/DrawerLayoutContainer.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/DrawerLayoutContainer.java
 index 0000000..0000000 100644
@@ -109,7 +109,7 @@ index 0000000..0000000 100644
              optionsItem = menu.addItem(4, R.drawable.ic_ab_other);
              optionsItem.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
              optionsItem.setOnClickListener(v -> {
-@@ -3472,6 +3472,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+@@ -3472,6 +3472,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
          } else {
              if (searchString != null || folderId != 0) {
                  actionBar.setBackButtonDrawable(backDrawable = new BackDrawable(false));
@@ -117,10 +117,11 @@ index 0000000..0000000 100644
 +                org.telegram.ui.ActionBar.MenuDrawable menuDrawable = new org.telegram.ui.ActionBar.MenuDrawable();
 +                menuDrawable.setRoundCap();
 +                actionBar.setBackButtonDrawable(menuDrawable);
++                desu.inugram.helpers.DrawerHelper.refreshMenuButton(menuDrawable, false);
              }
              if (folderId != 0) {
                  actionBar.setTitle(getString(R.string.ArchivedChats));
-@@ -3851,6 +3855,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+@@ -3851,6 +3856,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                      return;
                  }
                  if (id == -1) {

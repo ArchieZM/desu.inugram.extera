@@ -67,6 +67,26 @@ object UpdateHelper {
     var pendingBetaUpdate: BetaUpdate? = null
         private set
 
+    // cached source message of the current pending update, set by applyUpdate. lets
+    // startDownload skip the resolver+RPC dance when the update was detected this session.
+    @Volatile
+    private var pendingSourceMessage: TLRPC.Message? = null
+
+    // true between the click on Update and FileLoader.loadFile actually firing. lets the row
+    // show the Downloading state immediately even while the async file-ref refresh dance is
+    // still running.
+    @Volatile
+    var isPendingStart: Boolean = false
+        private set
+
+    // applyUpdate doesn't post appUpdateAvailable itself — the caller does it, via
+    // revealPendingUpdate, once the changelog dialog is on screen (so the bar slides in behind
+    // the dialog instead of visibly popping into the page underneath).
+    @JvmStatic
+    fun revealPendingUpdate() {
+        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable, true)
+    }
+
     fun checkForCustomUpdate(force: Boolean, whenDone: Runnable?) {
         if (!InuConfig.UPDATES_ENABLED.value) {
             whenDone?.run()
@@ -81,9 +101,11 @@ object UpdateHelper {
 
     fun clearPending() {
         pendingBetaUpdate = null
+        pendingSourceMessage = null
+        isPendingStart = false
         SharedConfig.pendingAppUpdate = null
         SharedConfig.saveConfig()
-        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable)
+        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable, false)
     }
 
     @JvmStatic
@@ -98,7 +120,16 @@ object UpdateHelper {
     fun startDownload(account: Int) {
         val update = SharedConfig.pendingAppUpdate ?: return
         val doc = update.document ?: return
-        // need message for file refs
+
+        isPendingStart = true
+        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateLoading)
+
+        val cached = pendingSourceMessage
+        if (cached != null) {
+            beginLoad(account, doc, MessageObject(account, cached, false, false))
+            return
+        }
+
         val messageId = update.id
         if (messageId <= 0) {
             // pending update persisted before the source message id was tracked
@@ -109,6 +140,7 @@ object UpdateHelper {
         // resolve first so the channel (with access_hash) is cached for getInputChannel
         mc.userNameResolver.resolve(USERNAME) { peerId ->
             AndroidUtilities.runOnUIThread {
+                if (!isPendingStart) return@runOnUIThread
                 if (peerId == null || peerId == 0L || peerId == Long.MAX_VALUE) {
                     beginLoad(account, doc, "update")
                     return@runOnUIThread
@@ -119,12 +151,14 @@ object UpdateHelper {
                 }
                 ConnectionsManager.getInstance(account).sendRequest(req) { resp, _ ->
                     AndroidUtilities.runOnUIThread {
+                        if (!isPendingStart) return@runOnUIThread
                         val msg = (resp as? TLRPC.messages_Messages)?.messages
                             ?.firstOrNull { it.id == messageId }
                         val freshDoc = msg?.let { extractApkInfo(it)?.document }
                         if (msg == null || freshDoc == null) {
                             beginLoad(account, doc, "update")
                         } else {
+                            pendingSourceMessage = msg
                             beginLoad(account, freshDoc, MessageObject(account, msg, false, false))
                         }
                     }
@@ -133,9 +167,19 @@ object UpdateHelper {
         }
     }
 
-    // appUpdateLoading is posted so the update row flips to the downloading state:
-    // stock relied on loadFile being synchronous, but startDownload resolves async.
+    fun cancelDownload(account: Int) {
+        if (isPendingStart) {
+            isPendingStart = false
+        } else {
+            SharedConfig.pendingAppUpdate?.document?.let {
+                FileLoader.getInstance(account).cancelLoadFile(it)
+            }
+        }
+        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateLoading)
+    }
+
     private fun beginLoad(account: Int, document: TLRPC.Document, parent: Any) {
+        isPendingStart = false
         FileLoader.getInstance(account).loadFile(document, parent, FileLoader.PRIORITY_NORMAL, 1)
         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateLoading)
     }
@@ -209,6 +253,7 @@ object UpdateHelper {
         if (!isNewer(info, current)) return
         AndroidUtilities.runOnUIThread {
             applyUpdate(msg, info, current)
+            revealPendingUpdate()
             InuConfig.UPDATE_LAST_CHECK_MS.value = System.currentTimeMillis()
         }
     }
@@ -249,7 +294,7 @@ object UpdateHelper {
         SharedConfig.pendingAppUpdateBuildVersion = current.versionCode
         SharedConfig.saveConfig()
         pendingBetaUpdate = BetaUpdate(info.appVerName, info.verCode, updateObj.text)
-        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable)
+        pendingSourceMessage = msg
         return updateObj
     }
 
