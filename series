@@ -157,3 +157,4 @@ feature/old-layout-nav.patch
 feature/emoji-panel-keywords.patch
 bugfix/camera2-av-sync.patch
 feature/round-recorder.patch
+bugfix/cross-peer-reply-stale-quote.patch
