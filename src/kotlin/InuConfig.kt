@@ -230,6 +230,9 @@ object InuConfig {
     val HIDE_SEND_AS_PICKER = BoolItem("hide_send_as_picker", false)
 
     @JvmField
+    val SEND_TO_DISCUSS_WITHOUT_JOIN = BoolItem("send_to_discuss_without_join", true)
+
+    @JvmField
     val HIDE_BOT_WEBVIEW_DIALOGS = BoolItem("hide_bot_webview_dialogs", true)
 
     @JvmField

@@ -393,11 +393,12 @@ object ChatHelper {
     }
 
     @JvmStatic
-    fun isEffectivelyInChat(chat: TLRPC.Chat?, chatInfo: TLRPC.ChatFull?): Boolean {
+    fun isEffectivelyInChat(chat: TLRPC.Chat?): Boolean {
         if (chat == null) return false
         if (!ChatObject.isNotInChat(chat)) return true
+        if (!InuConfig.SEND_TO_DISCUSS_WITHOUT_JOIN.value) return false
         if (chat.join_to_send) return false
-        return chat.megagroup && chatInfo != null && chatInfo.linked_chat_id != 0L
+        return chat.megagroup && chat.has_link
     }
 
     @JvmStatic
@@ -426,8 +427,9 @@ object ChatHelper {
         val member = ChatObject.isInChat(chat)
         if (
             ChatObject.canSendMessages(chat) &&
-            // edge case that canSendMessages doesn't cover fsr: !member + join requests = effectively join_to_send => cant send messages
-            !(!member && chat.join_request)
+            // canSendMessages reflects server-side permissions, but stock still shows the JOIN bar for non-members
+            // unless we actually let them write (discuss-without-join). also covers the join_request edge case.
+            (member || isEffectivelyInChat(chat))
         ) return false
 
         if (ChatObject.isChannelAndNotMegaGroup(chat)) {

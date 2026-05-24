@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="InuOpenInDiscussion">Open in discussion</string>
+    <string name="InuSendToDiscussWithoutJoin">Write to discuss groups without joining</string>
+    <string name="InuSendToDiscussWithoutJoinInfo">Skip the client-only membership check for discussion groups</string>
     <string name="InuNavigationDrawer">Navigation drawer</string>
     <string name="InuNavigationDrawerInfo">Replaces the bottom tab bar with the pre-12.0 hamburger side drawer. Requires restart.</string>
     <string name="InuSettings">Inugram Settings</string>

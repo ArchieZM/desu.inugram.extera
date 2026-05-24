@@ -236,6 +236,14 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 LocaleController.getString(R.string.InuHideCallActionButton),
             ).setChecked(InuConfig.HIDE_CALL_ACTION_BUTTON.value)
         )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_SEND_TO_DISCUSS_WITHOUT_JOIN,
+                R.string.InuSendToDiscussWithoutJoin,
+                R.string.InuSendToDiscussWithoutJoinInfo,
+                InuConfig.SEND_TO_DISCUSS_WITHOUT_JOIN.value,
+            )
+        )
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {
@@ -271,6 +279,8 @@ class ChatsSettingsActivity : SettingsPageActivity() {
             TOGGLE_ROUND_RECORDER_DUAL_CAMERA -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.ROUND_RECORDER_DUAL_CAMERA.toggle()
             TOGGLE_BOT_WEBVIEW_BUTTON -> (view as? TextCheckCell)?.isChecked = InuConfig.HIDE_BOT_WEBVIEW_INPUT.toggle()
             TOGGLE_HIDE_SEND_AS_PICKER -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.HIDE_SEND_AS_PICKER.toggle()
+            TOGGLE_SEND_TO_DISCUSS_WITHOUT_JOIN ->
+                (view as? NotificationsCheckCell)?.isChecked = InuConfig.SEND_TO_DISCUSS_WITHOUT_JOIN.toggle()
             TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.SUGGEST_CUSTOM_EMOJI_AFTER.toggle()
             TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.EMOJI_PANEL_KEYWORD_SEARCH.toggle()
 
@@ -309,6 +319,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         private val BUTTON_FORMATTING_POPUP = InuUtils.generateId()
         private val TOGGLE_BOT_WEBVIEW_BUTTON = InuUtils.generateId()
         private val TOGGLE_HIDE_SEND_AS_PICKER = InuUtils.generateId()
+        private val TOGGLE_SEND_TO_DISCUSS_WITHOUT_JOIN = InuUtils.generateId()
         private val TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER = InuUtils.generateId()
         private val TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH = InuUtils.generateId()
         private val TOGGLE_SEARCH_FROM_GLOBAL = InuUtils.generateId()
@@ -346,6 +357,11 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("formatting-popup", R.string.InuFormattingPopup, BUTTON_FORMATTING_POPUP),
                 SearchRegistry.Entry("hide-bot-webview", R.string.InuHideBotWebView, TOGGLE_BOT_WEBVIEW_BUTTON),
                 SearchRegistry.Entry("hide-send-as-picker", R.string.InuHideSendAsPicker, TOGGLE_HIDE_SEND_AS_PICKER),
+                SearchRegistry.Entry(
+                    "send-to-discuss-without-join",
+                    R.string.InuSendToDiscussWithoutJoin,
+                    TOGGLE_SEND_TO_DISCUSS_WITHOUT_JOIN,
+                ),
                 SearchRegistry.Entry("show-all-recent-stickers", R.string.InuShowAllRecentStickers, TOGGLE_SHOW_ALL_RECENT_STICKERS),
                 SearchRegistry.Entry("suggest-custom-emoji-after", R.string.InuSuggestCustomEmojiAfter, TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER),
                 SearchRegistry.Entry("emoji-panel-keyword-search", R.string.InuEmojiPanelKeywordSearch, TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH),
