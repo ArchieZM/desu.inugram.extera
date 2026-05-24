@@ -42,6 +42,13 @@
     <string name="InuMonetThemeAutoAmoled">Auto (AMOLED)</string>
     <string name="InuDisableInstantCamera">Disable instant camera</string>
     <string name="InuDisableInstantCameraInfo">Prevents camera from starting when opening the attachment panel</string>
+    <string name="InuRoundRecorderKeepZoom">Keep zoom on pinch release</string>
+    <string name="InuRoundRecorderZoomSlider">Zoom slider</string>
+    <string name="InuRoundRecorderExponentialZoom">Exponential zoom</string>
+    <string name="InuRoundRecorderExponentialZoomInfo">Smoother zoom curve, like Google Camera</string>
+    <string name="InuRoundRecorderDualCamera">Dual camera</string>
+    <string name="InuRoundRecorderDualCameraInfo">Open both front and rear cameras simultaneously for instant switching while recording. Uses more battery.</string>
+    <string name="InuRoundRecorderCameraApi">Round recorder uses %1$s API. **Switch to %2$s >**</string>
     <string name="InuShowAllRecentStickers">Show all recent stickers</string>
     <string name="InuNoStickerExtraPadding">Remove extra bottom padding</string>
     <string name="InuHideKeyboardOnScroll">Hide keyboard on scroll</string>
@@ -202,6 +209,7 @@
     <string name="InuProfileIdCopied">ID copied to clipboard</string>
     <string name="InuMessageInput">Message input</string>
     <string name="InuAttachmentSheet">Attachment sheet</string>
+    <string name="InuVoiceRecorder">Voice / round recorder</string>
     <string name="InuIconReplacement">Icon pack</string>
     <string name="InuIconReplacementOff">Default</string>
     <string name="InuIconReplacementSolar">Solar by @Design480</string>

@@ -4,14 +4,15 @@ import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
-import desu.inugram.ui.settings.FormattingPopupActivity
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
+import org.telegram.messenger.SharedConfig
 import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
+import org.telegram.ui.Stories.recorder.DualCameraView
 
 class ChatsSettingsActivity : SettingsPageActivity() {
 
@@ -84,6 +85,15 @@ class ChatsSettingsActivity : SettingsPageActivity() {
             )
         )
         items.add(
+            UItem.asCheck(
+                TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION,
+                LocaleController.getString(R.string.InuSimpleAttachPopupAnimation),
+            ).setChecked(InuConfig.SIMPLE_ATTACH_POPUP_ANIMATION.value)
+        )
+        items.add(UItem.asShadow(null))
+
+        items.add(UItem.asHeader(LocaleController.getString(R.string.InuVoiceRecorder)))
+        items.add(
             mkTwoLineCheckItem(
                 TOGGLE_CHAT_VOICE_IN_ATTACH,
                 R.string.InuChatVoiceInAttach,
@@ -93,19 +103,57 @@ class ChatsSettingsActivity : SettingsPageActivity() {
             )
         )
         items.add(
-            UItem.asCheck(
-                TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION,
-                LocaleController.getString(R.string.InuSimpleAttachPopupAnimation),
-            ).setChecked(InuConfig.SIMPLE_ATTACH_POPUP_ANIMATION.value)
-        )
-        items.add(
             UItem.asButton(
                 BUTTON_ROUND_DEFAULT_CAMERA,
                 LocaleController.getString(R.string.InuRoundDefaultCamera),
                 roundCameraLabel(InuConfig.ROUND_DEFAULT_CAMERA.value),
             )
         )
-        items.add(UItem.asShadow(null))
+        items.add(
+            UItem.asCheck(
+                TOGGLE_ROUND_RECORDER_ZOOM_SLIDER,
+                LocaleController.getString(R.string.InuRoundRecorderZoomSlider)
+            ).setChecked(InuConfig.ROUND_RECORDER_ZOOM_SLIDER.value)
+        )
+        items.add(
+            UItem.asCheck(
+                TOGGLE_ROUND_RECORDER_KEEP_ZOOM,
+                LocaleController.getString(R.string.InuRoundRecorderKeepZoom)
+            ).setChecked(InuConfig.ROUND_RECORDER_KEEP_ZOOM.value)
+        )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_ROUND_RECORDER_EXPONENTIAL_ZOOM,
+                R.string.InuRoundRecorderExponentialZoom,
+                R.string.InuRoundRecorderExponentialZoomInfo,
+                InuConfig.ROUND_RECORDER_EXPONENTIAL_ZOOM.value,
+            )
+        )
+        val usingCamera2 = SharedConfig.isUsingCamera2(currentAccount)
+        if (DualCameraView.roundDualAvailableStatic(context) && usingCamera2) {
+            items.add(
+                mkTwoLineCheckItem(
+                    TOGGLE_ROUND_RECORDER_DUAL_CAMERA,
+                    R.string.InuRoundRecorderDualCamera,
+                    R.string.InuRoundRecorderDualCameraInfo,
+                    InuConfig.ROUND_RECORDER_DUAL_CAMERA.value,
+                )
+            )
+        }
+        val cameraApi = if (usingCamera2) "Camera2" else "Camera1"
+        val otherCameraApi = if (usingCamera2) "Camera1" else "Camera2"
+        val cameraApiText = LocaleController.formatString(R.string.InuRoundRecorderCameraApi, cameraApi, otherCameraApi)
+        items.add(
+            UItem.asShadow(
+                AndroidUtilities.replaceArrows(
+                    AndroidUtilities.replaceSingleTag(cameraApiText) {
+                        SharedConfig.toggleUseCamera2(currentAccount)
+                        listView.adapter.update(true)
+                    },
+                    true,
+                )
+            )
+        )
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMessageInput)))
         items.add(
@@ -194,67 +242,36 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         if (hideBottomBarGroup.handleClick(item, view) { listView.adapter.update(true) }) return
 
         when (item.id) {
-            TOGGLE_HIDE_KEYBOARD_ON_SCROLL -> {
-                val new = InuConfig.HIDE_KEYBOARD_ON_SCROLL.toggle()
-                (view as? TextCheckCell)?.isChecked = new
+            TOGGLE_HIDE_KEYBOARD_ON_SCROLL -> (view as? TextCheckCell)?.isChecked = InuConfig.HIDE_KEYBOARD_ON_SCROLL.toggle()
+            TOGGLE_DISABLE_PULL_TO_NEXT -> (view as? TextCheckCell)?.isChecked = InuConfig.DISABLE_PULL_TO_NEXT.toggle()
+            TOGGLE_CHAT_ALWAYS_SHOW_DOWN -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_ALWAYS_SHOW_DOWN.toggle()
+            TOGGLE_CHAT_TWO_FINGER_SELECT -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_TWO_FINGER_SELECT.toggle()
+            TOGGLE_SHOW_ALL_RECENT_STICKERS -> (view as? TextCheckCell)?.isChecked = InuConfig.SHOW_ALL_RECENT_STICKERS.toggle()
+            TOGGLE_DISABLE_INSTANT_CAMERA -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.DISABLE_INSTANT_CAMERA.toggle()
+            TOGGLE_CHAT_VOICE_IN_ATTACH -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_VOICE_IN_ATTACH.toggle()
+            TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION -> (view as? TextCheckCell)?.isChecked = InuConfig.SIMPLE_ATTACH_POPUP_ANIMATION.toggle()
+            BUTTON_ROUND_DEFAULT_CAMERA -> RadioItemOptions.show(
+                this, view,
+                listOf(
+                    LocaleController.getString(R.string.InuRoundCameraFront),
+                    LocaleController.getString(R.string.InuRoundCameraRear),
+                    LocaleController.getString(R.string.InuRoundCameraAsk),
+                ),
+                (InuConfig.ROUND_DEFAULT_CAMERA.value - 1).coerceIn(0, 2),
+            ) { which ->
+                InuConfig.ROUND_DEFAULT_CAMERA.value = which + 1
             }
 
-            TOGGLE_DISABLE_PULL_TO_NEXT -> {
-                val new = InuConfig.DISABLE_PULL_TO_NEXT.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
+            TOGGLE_ROUND_RECORDER_ZOOM_SLIDER -> (view as? TextCheckCell)?.isChecked = InuConfig.ROUND_RECORDER_ZOOM_SLIDER.toggle()
+            TOGGLE_ROUND_RECORDER_KEEP_ZOOM -> (view as? TextCheckCell)?.isChecked = InuConfig.ROUND_RECORDER_KEEP_ZOOM.toggle()
+            TOGGLE_ROUND_RECORDER_EXPONENTIAL_ZOOM ->
+                (view as? NotificationsCheckCell)?.isChecked = InuConfig.ROUND_RECORDER_EXPONENTIAL_ZOOM.toggle()
 
-            TOGGLE_CHAT_ALWAYS_SHOW_DOWN -> {
-                val new = InuConfig.CHAT_ALWAYS_SHOW_DOWN.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_CHAT_TWO_FINGER_SELECT -> {
-                val new = InuConfig.CHAT_TWO_FINGER_SELECT.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_SHOW_ALL_RECENT_STICKERS -> {
-                val new = InuConfig.SHOW_ALL_RECENT_STICKERS.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_DISABLE_INSTANT_CAMERA -> {
-                val new = InuConfig.DISABLE_INSTANT_CAMERA.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_CHAT_VOICE_IN_ATTACH -> {
-                val new = InuConfig.CHAT_VOICE_IN_ATTACH.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION -> {
-                val new = InuConfig.SIMPLE_ATTACH_POPUP_ANIMATION.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-
-            BUTTON_ROUND_DEFAULT_CAMERA -> showRoundCameraSelector(view)
-
-            TOGGLE_BOT_WEBVIEW_BUTTON -> {
-                val new = InuConfig.HIDE_BOT_WEBVIEW_INPUT.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_HIDE_SEND_AS_PICKER -> {
-                val new = InuConfig.HIDE_SEND_AS_PICKER.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER -> {
-                val new = InuConfig.SUGGEST_CUSTOM_EMOJI_AFTER.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH -> {
-                val new = InuConfig.EMOJI_PANEL_KEYWORD_SEARCH.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
+            TOGGLE_ROUND_RECORDER_DUAL_CAMERA -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.ROUND_RECORDER_DUAL_CAMERA.toggle()
+            TOGGLE_BOT_WEBVIEW_BUTTON -> (view as? TextCheckCell)?.isChecked = InuConfig.HIDE_BOT_WEBVIEW_INPUT.toggle()
+            TOGGLE_HIDE_SEND_AS_PICKER -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.HIDE_SEND_AS_PICKER.toggle()
+            TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.SUGGEST_CUSTOM_EMOJI_AFTER.toggle()
+            TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.EMOJI_PANEL_KEYWORD_SEARCH.toggle()
 
             BUTTON_FORMATTING_POPUP -> {
                 val isSwitch = if (LocaleController.isRTL)
@@ -269,29 +286,8 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 }
             }
 
-            TOGGLE_SEARCH_FROM_GLOBAL -> {
-                val new = InuConfig.SEARCH_FROM_GLOBAL.toggle()
-                (view as? NotificationsCheckCell)?.isChecked = new
-            }
-
-            TOGGLE_HIDE_CALL_ACTION_BUTTON -> {
-                val new = InuConfig.HIDE_CALL_ACTION_BUTTON.toggle()
-                (view as? TextCheckCell)?.isChecked = new
-            }
-        }
-    }
-
-    private fun showRoundCameraSelector(anchor: View) {
-        RadioItemOptions.show(
-            this, anchor,
-            listOf(
-                LocaleController.getString(R.string.InuRoundCameraFront),
-                LocaleController.getString(R.string.InuRoundCameraRear),
-                LocaleController.getString(R.string.InuRoundCameraAsk),
-            ),
-            (InuConfig.ROUND_DEFAULT_CAMERA.value - 1).coerceIn(0, 2),
-        ) { which ->
-            InuConfig.ROUND_DEFAULT_CAMERA.value = which + 1
+            TOGGLE_SEARCH_FROM_GLOBAL -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.SEARCH_FROM_GLOBAL.toggle()
+            TOGGLE_HIDE_CALL_ACTION_BUTTON -> (view as? TextCheckCell)?.isChecked = InuConfig.HIDE_CALL_ACTION_BUTTON.toggle()
         }
     }
 
@@ -305,6 +301,10 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_CHAT_VOICE_IN_ATTACH = InuUtils.generateId()
         private val TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION = InuUtils.generateId()
         private val BUTTON_ROUND_DEFAULT_CAMERA = InuUtils.generateId()
+        private val TOGGLE_ROUND_RECORDER_ZOOM_SLIDER = InuUtils.generateId()
+        private val TOGGLE_ROUND_RECORDER_KEEP_ZOOM = InuUtils.generateId()
+        private val TOGGLE_ROUND_RECORDER_EXPONENTIAL_ZOOM = InuUtils.generateId()
+        private val TOGGLE_ROUND_RECORDER_DUAL_CAMERA = InuUtils.generateId()
         private val BUTTON_FORMATTING_POPUP = InuUtils.generateId()
         private val TOGGLE_BOT_WEBVIEW_BUTTON = InuUtils.generateId()
         private val TOGGLE_HIDE_SEND_AS_PICKER = InuUtils.generateId()
@@ -319,7 +319,8 @@ class ChatsSettingsActivity : SettingsPageActivity() {
             else -> LocaleController.getString(R.string.InuRoundCameraFront)
         }
 
-        @JvmField val PAGE = SearchRegistry.Page(
+        @JvmField
+        val PAGE = SearchRegistry.Page(
             slug = "chats",
             titleRes = R.string.Chats,
             iconRes = R.drawable.msg_discussion,
@@ -333,6 +334,14 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("chat-voice-in-attach", R.string.InuChatVoiceInAttach, TOGGLE_CHAT_VOICE_IN_ATTACH),
                 SearchRegistry.Entry("simple-attach-popup-animation", R.string.InuSimpleAttachPopupAnimation, TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION),
                 SearchRegistry.Entry("round-default-camera", R.string.InuRoundDefaultCamera, BUTTON_ROUND_DEFAULT_CAMERA),
+                SearchRegistry.Entry("round-recorder-zoom-slider", R.string.InuRoundRecorderZoomSlider, TOGGLE_ROUND_RECORDER_ZOOM_SLIDER),
+                SearchRegistry.Entry("round-recorder-keep-zoom", R.string.InuRoundRecorderKeepZoom, TOGGLE_ROUND_RECORDER_KEEP_ZOOM),
+                SearchRegistry.Entry(
+                    "round-recorder-exponential-zoom",
+                    R.string.InuRoundRecorderExponentialZoom,
+                    TOGGLE_ROUND_RECORDER_EXPONENTIAL_ZOOM
+                ),
+                SearchRegistry.Entry("round-recorder-dual-camera", R.string.InuRoundRecorderDualCamera, TOGGLE_ROUND_RECORDER_DUAL_CAMERA),
                 SearchRegistry.Entry("formatting-popup", R.string.InuFormattingPopup, BUTTON_FORMATTING_POPUP),
                 SearchRegistry.Entry("hide-bot-webview", R.string.InuHideBotWebView, TOGGLE_BOT_WEBVIEW_BUTTON),
                 SearchRegistry.Entry("hide-send-as-picker", R.string.InuHideSendAsPicker, TOGGLE_HIDE_SEND_AS_PICKER),

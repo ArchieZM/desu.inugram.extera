@@ -388,6 +388,18 @@ object InuConfig {
     val ROUND_DEFAULT_CAMERA = IntItem("round_default_camera", 1) // 1=Front, 2=Rear, 3=Ask
 
     @JvmField
+    val ROUND_RECORDER_KEEP_ZOOM = BoolItem("round_recorder_keep_zoom", false)
+
+    @JvmField
+    val ROUND_RECORDER_ZOOM_SLIDER = BoolItem("round_recorder_zoom_slider", true)
+
+    @JvmField
+    val ROUND_RECORDER_EXPONENTIAL_ZOOM = BoolItem("round_recorder_exponential_zoom", true)
+
+    @JvmField
+    val ROUND_RECORDER_DUAL_CAMERA = BoolItem("round_recorder_dual_camera", true)
+
+    @JvmField
     val NON_ISLAND_TAB_BARS = BoolItem("non_island_tab_bars", false)
 
     @JvmField

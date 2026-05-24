@@ -103,6 +103,11 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - search regular emoji by keyword in the emoji panel (not just custom emoji)
 - "delete for both/all" default checkbox state
 - hide "send as" picker (long-tap stickers button to reveal)
+- round recorder:
+  - zoom slider below the video feed
+  - keep zoom on pinch release
+  - gentler exponential zoom curve (like in normal camera apps)
+  - toggle to disable dual-camera mode
 
 ## photo viewer
 
@@ -198,3 +203,4 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - fix glitch when quickly dismissing photo editor after cropping
 - persist crop when rotating photo in photo editor
 - chat preview no longer marks visible reactions/poll votes as read
+- fix camera2api a/v sync issue in round messages
