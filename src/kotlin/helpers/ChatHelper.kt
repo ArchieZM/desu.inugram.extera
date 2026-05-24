@@ -221,7 +221,7 @@ object ChatHelper {
         ) {
             items.add(LocaleController.getString(R.string.InuRemoveFromCache))
             options.add(OPTION_REMOVE_FROM_CACHE)
-            icons.add(R.drawable.msg_clear_solar)
+            icons.add(R.drawable.msg_clear)
         }
 
         items.add(LocaleController.getString(R.string.InuMessageDetails))
@@ -230,6 +230,7 @@ object ChatHelper {
 
         applyMessageMenuOrder(items, options, icons)
     }
+
 
     private fun applyMessageMenuOrder(
         items: ArrayList<CharSequence>,
@@ -422,12 +423,19 @@ object ChatHelper {
         if (user != null && UserObject.isReplyUser(user) && InuConfig.HIDE_BOTTOM_BAR_REPLIES.value) return true
 
         if (chat == null) return false
-        if (!ChatObject.isChannelAndNotMegaGroup(chat)) return false
-        if (ChatObject.canSendMessages(chat)) return false
         val member = ChatObject.isInChat(chat)
+        if (
+            ChatObject.canSendMessages(chat) &&
+            // edge case that canSendMessages doesn't cover fsr: !member + join requests = effectively join_to_send => cant send messages
+            !(!member && chat.join_request)
+        ) return false
 
-        if (member && InuConfig.HIDE_BOTTOM_BAR_JOINED.value) return true
-        if (!member && InuConfig.HIDE_BOTTOM_BAR_NON_JOINED.value) return true
+        if (ChatObject.isChannelAndNotMegaGroup(chat)) {
+            if (member && InuConfig.HIDE_BOTTOM_BAR_JOINED.value) return true
+            if (!member && InuConfig.HIDE_BOTTOM_BAR_NON_JOINED.value) return true
+        } else if (!member && InuConfig.HIDE_BOTTOM_BAR_NON_JOINED_GROUPS.value) {
+            return true
+        }
 
         return false
     }

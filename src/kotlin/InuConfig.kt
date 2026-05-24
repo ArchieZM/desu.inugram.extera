@@ -209,6 +209,9 @@ object InuConfig {
     val HIDE_BOTTOM_BAR_NON_JOINED = BoolItem("hide_bottom_bar_non_joined", false)
 
     @JvmField
+    val HIDE_BOTTOM_BAR_NON_JOINED_GROUPS = BoolItem("hide_bottom_bar_non_joined_groups", false)
+
+    @JvmField
     val HIDE_BOTTOM_BAR_REPLIES = BoolItem("hide_bottom_bar_replies", false)
 
     @JvmField

@@ -60,7 +60,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - remember all clicked replies when jumping back via the down-button
 - 🐶 long-press reply panel in "Replies" chat opens discussion group
 - hide pinned panel
-- hide channel and replies (🐶) bottom bar (mute/join/etc)
+- hide channel, group preview (🐶) and replies (🐶) bottom bar (mute/join/etc)
 - send message to discussion group without joining
 - 🐶 search: media-type filter + "show only matches"
 - 🐶 "from user" picker in search also finds users not in chat (like tdesktop)
