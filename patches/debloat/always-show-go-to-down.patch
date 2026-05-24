@@ -11,12 +11,12 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMe
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -6741,7 +6741,13 @@ public class ChatActivity extends BaseFragment implements
+@@ -6757,7 +6757,13 @@ public class ChatActivity extends BaseFragment implements
                                  }
                              }
                          } else {
 -                            if (pagedownButtonShowedByScroll && isPageDownButtonVisible) {
-+                            if (desu.inugram.InuConfig.CHAT_ALWAYS_SHOW_DOWN.getValue()) {
++                            if (InuConfig.CHAT_ALWAYS_SHOW_DOWN.getValue()) {
 +                                if (firstVisibleItem != 0 && !isPageDownButtonVisible) {
 +                                    canShowPagedownButton = true;
 +                                    updatePagedownButtonVisibility(true);

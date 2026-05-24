@@ -4,35 +4,26 @@ Date: Fri, 10 Apr 2026 01:21:49 +0300
 Subject: disable channel bottom bar (mute and join buttons)
 
 ---
- .../java/org/telegram/ui/ChatActivity.java    | 30 +++++++++++++++----
+ .../java/org/telegram/ui/ChatActivity.java    | 28 +++++++++++++++----
  .../chat/ChatInputViewsContainer.java         |  4 ++-
- 2 files changed, 27 insertions(+), 7 deletions(-)
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -3651,6 +3651,8 @@ public class ChatActivity extends BaseFragment implements
-                     ChatHelper.openInDiscussionGroup(ChatActivity.this);
-                 } else if (id == ChatHelper.ACTION_SHOW_PINNED_PANEL) {
-                     ChatHelper.showPinnedPanel(ChatActivity.this);
-+                } else if (id == ChatHelper.ACTION_PINNED_UNPIN_ALL) {
-+                    if (bottomOverlayChatText != null) bottomOverlayChatText.callOnClick();
-                 } else if (id == view_as_topics) {
-                     if (getUserConfig().getClientUserId() == dialog_id) {
-                         getMessagesController().setSavedViewAs(true);
-@@ -4159,6 +4161,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -4155,6 +4155,10 @@ public class ChatActivity extends BaseFragment implements
              menu.addItem(edit_quick_reply, R.drawable.group_edit).setContentDescription(LocaleController.getString(R.string.Edit));
          }
  
 +        if (chatMode == MODE_PINNED) {
-+            menu.addItem(ChatHelper.ACTION_PINNED_UNPIN_ALL, R.drawable.msg_unpin).setVisibility(View.GONE);
++            menu.addItem(ChatActionsHelper.ACTION_PINNED_UNPIN_ALL, R.drawable.msg_unpin).setVisibility(View.GONE);
 +        }
 +
          if (UserObject.isBotForumWithEditableTopics(currentUser) && chatMode == 0) {
              topicCreateItem = menu.addItem(chat_menu_topic_create, R.drawable.menu_topic_add_30);
          }
-@@ -4303,7 +4309,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -4300,7 +4304,7 @@ public class ChatActivity extends BaseFragment implements
              }
              if (currentChat != null) {
                  headerItem.lazilyAddSubItem(open_direct, R.drawable.msg_markunread, getString(R.string.ChannelOpenDirect));
@@ -41,7 +32,7 @@ index 0000000..0000000 100644
              }
              if (currentUser != null && chatMode != MODE_SAVED) {
                  headerItem.lazilyAddSubItem(call, R.drawable.msg_callback, LocaleController.getString(R.string.Call));
-@@ -5199,7 +5205,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -5195,7 +5199,7 @@ public class ChatActivity extends BaseFragment implements
                      updateSkeletonColors();
                      updateSkeletonGradient();
  
@@ -50,7 +41,7 @@ index 0000000..0000000 100644
                      int j = 0;
  
                      int childMaxTop = Integer.MAX_VALUE;
-@@ -8238,6 +8244,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -8234,6 +8238,7 @@ public class ChatActivity extends BaseFragment implements
              }
          });
          bottomChannelButtonsLayout.setButtonOnFullyVisibleListener(ChatActivityChannelButtonsLayout.BUTTON_GIFT, (v, id, firstTime) -> {
@@ -58,7 +49,7 @@ index 0000000..0000000 100644
              if (bottomGiftHintView == null && firstTime && (bottomSuggestHintView == null || !bottomSuggestHintView.shown()) && HintsController.Hint.ChannelGiftHint.show()) {
                  AndroidUtilities.runOnUIThread(() -> {
                      if (getContext() == null) return;
-@@ -8257,6 +8264,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -8253,6 +8258,7 @@ public class ChatActivity extends BaseFragment implements
              }
          });
          bottomChannelButtonsLayout.setButtonOnFullyVisibleListener(ChatActivityChannelButtonsLayout.BUTTON_DIRECT, (v, id, firstTime) -> {
@@ -66,7 +57,7 @@ index 0000000..0000000 100644
              if (bottomSuggestHintView == null && firstTime && HintsController.Hint.ChannelSuggestHint.show()) {
                  AndroidUtilities.runOnUIThread(() -> {
                      if (getContext() == null) return;
-@@ -17432,7 +17440,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -17428,7 +17434,7 @@ public class ChatActivity extends BaseFragment implements
              float canvasOffsetX = chatListView.getLeft() + cell.getX();
              float canvasOffsetY = chatListView.getY() + cell.getY() + cell.getPaddingTop();
              float alpha = cell.shouldDrawAlphaLayer() ? cell.getAlpha() : 1f;
@@ -75,7 +66,7 @@ index 0000000..0000000 100644
              canvas.translate(canvasOffsetX, canvasOffsetY);
              cell.setInvalidatesParent(true);
              if (type == 0) {
-@@ -17653,6 +17661,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -17649,6 +17655,7 @@ public class ChatActivity extends BaseFragment implements
                                      - inputIslandHeightCurrent
                                      - dp(NonIslandHelper.chatElements() ? 0 : 9)
                                      - (mentionContainer != null ? mentionContainer.clipBottom() : 0);
@@ -83,7 +74,7 @@ index 0000000..0000000 100644
  
                              canvas.clipRect(0, listTop + (mentionContainer != null ? mentionContainer.clipTop() : 0), getMeasuredWidth(), viewClipBottom2);
                              canvas.translate(0, chatListView.getY());
-@@ -17673,6 +17682,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -17669,6 +17676,7 @@ public class ChatActivity extends BaseFragment implements
                              - inputIslandHeightCurrent
                              - getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
                              - dp(NonIslandHelper.chatElements() ? 0 : 9);
@@ -91,7 +82,7 @@ index 0000000..0000000 100644
  
                          float clipTop = 0, clipBottom = 0;
                          if (mentionContainer != null) {
-@@ -21554,7 +21564,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -21550,7 +21558,7 @@ public class ChatActivity extends BaseFragment implements
                  updateTopPanel(true);
              }
              if (headerItem != null) {
@@ -100,7 +91,7 @@ index 0000000..0000000 100644
              }
          } else if (id == NotificationCenter.didReceiveNewMessages) {
              FileLog.d("ChatActivity didReceiveNewMessages start");
-@@ -27131,7 +27141,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -27127,7 +27135,10 @@ public class ChatActivity extends BaseFragment implements
  
          boolean accentTextButton = false;
          boolean forceVisible = false;
@@ -112,11 +103,11 @@ index 0000000..0000000 100644
          boolean showGiftButton = false;
          boolean showSuggestButton = false;
          boolean showSearchButton = chatMode == MODE_DEFAULT && ChatObject.isChannelOrGiga(currentChat);
-@@ -27207,6 +27220,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -27203,6 +27214,11 @@ public class ChatActivity extends BaseFragment implements
                  bottomOverlayChatText.setTag(null);
                  bottomOverlayChatText.setText(LocaleController.getString(R.string.HidePinnedMessagesNoCaps));
              }
-+            ActionBarMenuItem unpinAllItem = actionBar.createMenu().getItem(ChatHelper.ACTION_PINNED_UNPIN_ALL);
++            ActionBarMenuItem unpinAllItem = actionBar.createMenu().getItem(desu.inugram.helpers.ChatActionsHelper.ACTION_PINNED_UNPIN_ALL);
 +            if (unpinAllItem != null) {
 +                unpinAllItem.setVisibility(forceNoBottom ? View.VISIBLE : View.GONE);
 +                unpinAllItem.setContentDescription(LocaleController.getString(allowPin ? R.string.UnpinAllMessagesNoCaps : R.string.HidePinnedMessagesNoCaps));
@@ -124,7 +115,7 @@ index 0000000..0000000 100644
              showBottomOverlayProgress(false, false);
          } else if (currentUser != null && currentUser.id == UserObject.VERIFY) {
              if (!getMessagesController().isDialogMuted(dialog_id, getTopicId())) {
-@@ -45479,7 +45497,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -45475,7 +45491,7 @@ public class ChatActivity extends BaseFragment implements
              pollAddVisibility = animatorPollAddAnswerVisibility.getFloatValue();
          }
  

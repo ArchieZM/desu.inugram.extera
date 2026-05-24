@@ -12,7 +12,7 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMe
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -13887,7 +13887,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -13881,7 +13881,11 @@ public class ChatActivity extends BaseFragment implements
      }
  
      public void searchLinks(final CharSequence charSequence, final boolean force) {
@@ -25,7 +25,7 @@ index 0000000..0000000 100644
              return;
          }
          if (currentChat != null && !ChatObject.canSendEmbed(currentChat)) {
-@@ -14069,6 +14073,34 @@ public class ChatActivity extends BaseFragment implements
+@@ -14063,6 +14067,34 @@ public class ChatActivity extends BaseFragment implements
  
      private HashMap<String, TLRPC.WebPage> lastLinkPreviewResults;
  

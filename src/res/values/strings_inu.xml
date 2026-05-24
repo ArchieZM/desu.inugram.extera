@@ -465,6 +465,12 @@
     <string name="InuMessageMenuItems">Items</string>
     <string name="InuMessageMenuOrderInfo">Reorder or hide items in the message context menu. Drag the handle to rearrange, toggle the switch to hide.</string>
     <string name="InuMessageMenuReset">Reset to default</string>
+    <string name="InuChatMenuOrder">Chat menu</string>
+    <string name="InuChatMenuItems">Items</string>
+    <string name="InuChatMenuOrderInfo">Reorder or hide items in the three-dots menu in chats. Drag the handle to rearrange, toggle the switch to hide.</string>
+    <string name="InuChatMenuReset">Reset to default</string>
+    <string name="InuGoToMessage">Go to message</string>
+    <string name="InuGoToMessagePrompt">Message ID</string>
     <string name="InuPrivacySecurity">Privacy &amp; Security</string>
     <string name="InuPerAccountPasscode">Per-account passcode</string>
     <string name="InuHideInugramSettings">Hide Inugram settings</string>
@@ -489,4 +495,7 @@
     <string name="InuParanoiaEnableConfirm">Enter paranoia mode and restart? This entry will disappear — the only way back is typing the exit code in chat search, or reinstalling the app!</string>
     <string name="InuParanoiaNeedSetup">Set an exit code and pick at least one chat first.</string>
     <string name="InuParanoiaExit">Exit paranoia mode</string>
+
+    <string name="InuBotSettings">Bot Settings</string>
+    <string name="InuBotHelp">Bot Help</string>
 </resources>

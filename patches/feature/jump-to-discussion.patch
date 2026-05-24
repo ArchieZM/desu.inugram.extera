@@ -4,28 +4,19 @@ Date: Mon, 13 Apr 2026 01:39:15 +0300
 Subject: a button to jump from comments to discussion group
 
 ---
- .../src/main/java/org/telegram/ui/ChatActivity.java        | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../src/main/java/org/telegram/ui/ChatActivity.java          | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -3630,6 +3630,8 @@ public class ChatActivity extends BaseFragment implements
-                             finishFragment();
-                         }
-                     }
-+                } else if (id == ChatHelper.ACTION_OPEN_IN_DISCUSSION) {
-+                    ChatHelper.openInDiscussionGroup(ChatActivity.this);
-                 } else if (id == view_as_topics) {
-                     if (getUserConfig().getClientUserId() == dialog_id) {
-                         getMessagesController().setSavedViewAs(true);
-@@ -4157,6 +4159,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -4160,6 +4160,11 @@ public class ChatActivity extends BaseFragment implements
              searchItemVisible = false;
          }
  
 +        if (isReplyChatComment()) {
-+            menu.addItem(ChatHelper.ACTION_OPEN_IN_DISCUSSION, R.drawable.msg_discussion)
++            menu.addItem(ChatActionsHelper.ACTION_OPEN_IN_DISCUSSION, R.drawable.msg_discussion)
 +                .setContentDescription(LocaleController.getString(R.string.InuOpenInDiscussion));
 +        }
 +

@@ -2,17 +2,12 @@ package desu.inugram.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
 import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.ParanoiaHelper
-import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.AlertDialog
-import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.UItem
@@ -121,40 +116,24 @@ class ParanoiaActivity : SettingsPageActivity() {
     }
 
     private fun showCodeDialog() {
-        val ctx = context ?: return
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(24f), dp(8f), dp(24f), 0)
-        }
-        val input = EditText(ctx).apply {
-            setTextColor(Theme.getColor(Theme.key_dialogTextBlack))
-            setHintTextColor(Theme.getColor(Theme.key_dialogTextHint))
-            hint = LocaleController.getString(R.string.InuParanoiaExitCodeHint)
-            inputType = InputType.TYPE_CLASS_TEXT
-            isSingleLine = true
-            textSize = 16f
-        }
-        container.addView(input, LinearLayout.LayoutParams(-1, -2))
-
-        val builder = AlertDialog.Builder(ctx)
-            .setTitle(LocaleController.getString(R.string.InuParanoiaExitCode))
-            .setView(container)
-            .setPositiveButton(LocaleController.getString(R.string.OK)) { _, _ ->
-                val code = input.text.toString().trim()
-                if (code.isEmpty()) {
-                    BulletinFactory.of(this)
-                        .createErrorBulletin(LocaleController.getString(R.string.InuParanoiaExitCodeEmpty))
-                        .show()
-                    return@setPositiveButton
-                }
-                ParanoiaHelper.setExitCode(code)
-                listView.adapter.update(true)
+        desu.inugram.ui.showInputDialog(
+            fragment = this,
+            title = LocaleController.getString(R.string.InuParanoiaExitCode),
+            hint = LocaleController.getString(R.string.InuParanoiaExitCodeHint),
+        ) { code ->
+            if (code.isEmpty()) {
                 BulletinFactory.of(this)
-                    .createSimpleBulletin(R.raw.done, LocaleController.getString(R.string.InuParanoiaExitCodeSaved))
+                    .createErrorBulletin(LocaleController.getString(R.string.InuParanoiaExitCodeEmpty))
                     .show()
+                return@showInputDialog false
             }
-            .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
-        showDialog(builder.create())
+            ParanoiaHelper.setExitCode(code)
+            listView.adapter.update(true)
+            BulletinFactory.of(this)
+                .createSimpleBulletin(R.raw.done, LocaleController.getString(R.string.InuParanoiaExitCodeSaved))
+                .show()
+            true
+        }
     }
 
     private fun tryEnableParanoia() {

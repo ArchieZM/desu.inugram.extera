@@ -1,19 +1,15 @@
 package desu.inugram.helpers
 
-import android.content.SharedPreferences
-import desu.inugram.InuConfig
-import org.json.JSONArray
-import org.json.JSONObject
 import org.telegram.messenger.R
 import org.telegram.ui.ChatActivity
 
-class MessageMenuConfig(key: String) : InuConfig.Item<List<MessageMenuConfig.Entry>>(key, DEFAULT) {
+class MessageMenuConfig(key: String) : MenuOrderConfig<MessageMenuConfig.Item>(key, Item.entries, OFF_BY_DEFAULT) {
     enum class Item(
-        val key: String,
+        override val key: String,
         val optionIds: List<Int>,
-        val labelRes: Int,
-        val iconRes: Int,
-    ) {
+        override val labelRes: Int,
+        override val iconRes: Int,
+    ) : MenuOrderItem {
         REPLY("reply", listOf(ChatActivity.OPTION_REPLY), R.string.Reply, R.drawable.menu_reply),
         REPLY_IN("reply_in", listOf(ChatHelper.OPTION_REPLY_IN), R.string.InuReplyIn, R.drawable.menu_reply),
         ADD_TO_STICKERS(
@@ -63,52 +59,16 @@ class MessageMenuConfig(key: String) : InuConfig.Item<List<MessageMenuConfig.Ent
                 map
             }
 
+            private val byKey: Map<String, Item> by lazy { Item.entries.associateBy { it.key } }
+
             fun forOption(optionId: Int): Item? = byOption[optionId]
+            fun forKey(key: String): Item? = byKey[key]
         }
     }
 
-    data class Entry(val item: Item, val enabled: Boolean)
-
-    override fun read(prefs: SharedPreferences): List<Entry> {
-        val json = prefs.getString(key, "") ?: ""
-        if (json.isEmpty()) return DEFAULT
-        return try {
-            val arr = JSONArray(json)
-            val seen = HashSet<Item>()
-            val out = ArrayList<Entry>()
-            for (i in 0 until arr.length()) {
-                val obj = arr.getJSONObject(i)
-                val itemKey = obj.getString("k")
-                val item = Item.entries.firstOrNull { it.key == itemKey } ?: continue
-                if (!seen.add(item)) continue
-                out.add(Entry(item, obj.optBoolean("e", true)))
-            }
-            for (it in Item.entries) {
-                if (!seen.contains(it)) out.add(Entry(it, it !in OFF_BY_DEFAULT))
-            }
-            out
-        } catch (_: Exception) {
-            DEFAULT
-        }
-    }
-
-    override fun SharedPreferences.Editor.write() {
-        val arr = JSONArray()
-        for (e in value) {
-            arr.put(JSONObject().apply {
-                put("k", e.item.key)
-                put("e", e.enabled)
-            })
-        }
-        putString(key, arr.toString())
-    }
-
-    fun resetToDefault() {
-        value = DEFAULT
-    }
+    override fun itemByKey(key: String): Item? = Item.forKey(key)
 
     companion object {
         private val OFF_BY_DEFAULT = setOf(Item.REPLY_IN, Item.DETAILS, Item.FORWARD_NO_QUOTE, Item.SUMMARIZE, Item.REMOVE_FROM_CACHE)
-        val DEFAULT: List<Entry> = Item.entries.map { Entry(it, it !in OFF_BY_DEFAULT) }
     }
 }

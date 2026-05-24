@@ -1,19 +1,16 @@
 package desu.inugram.helpers
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.View.MeasureSpec
-import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.content.edit
@@ -27,7 +24,6 @@ import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.MessagePreviewParams
-import org.telegram.messenger.MessagesController
 import org.telegram.messenger.MessagesStorage
 import org.telegram.messenger.R
 import org.telegram.messenger.SendMessagesHelper
@@ -35,12 +31,9 @@ import org.telegram.messenger.TranslateController
 import org.telegram.messenger.UserConfig
 import org.telegram.messenger.UserObject
 import org.telegram.messenger.Utilities
-import org.telegram.tgnet.ConnectionsManager
 import org.telegram.tgnet.TLRPC
-import org.telegram.ui.ActionBar.ActionBarMenu
 import org.telegram.ui.ActionBar.ActionBarMenuItem
 import org.telegram.ui.ActionBar.ActionBarPopupWindow
-import org.telegram.ui.ActionBar.AlertDialog
 import org.telegram.ui.ActionBar.BottomSheet
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.BasePermissionsActivity
@@ -48,18 +41,14 @@ import org.telegram.ui.Cells.ChatMessageCell
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.ChatActivityEnterView
-import org.telegram.ui.Components.EditTextBoldCursor
 import org.telegram.ui.Components.EditTextCaption
 import org.telegram.ui.Components.ItemOptions
-import org.telegram.ui.Components.LayoutHelper
 import org.telegram.ui.Components.PopupSwipeBackLayout
 import org.telegram.ui.Components.RLottieDrawable
-import org.telegram.ui.Components.TranslateAlert2
 import org.telegram.ui.Components.URLSpanUserMention
 import org.telegram.ui.Components.UndoView
 import org.telegram.ui.DialogsActivity
 import org.telegram.ui.LaunchActivity
-import org.telegram.ui.RestrictedLanguagesSelectActivity
 import java.io.File
 import java.util.Calendar
 import kotlin.math.roundToInt
@@ -68,24 +57,25 @@ object ChatHelper {
     const val OPTION_SAVE = 501
     const val OPTION_DETAILS = 502
     const val OPTION_REPLY_IN = 503
-    const val ACTION_OPEN_IN_DISCUSSION = 504
     const val OPTION_SHOW_IN_CHAT = 505
-    const val ACTION_SHOW_PINNED_PANEL = 506
-    const val ACTION_PINNED_UNPIN_ALL = 507
-    const val ACTION_SELECT_RANGE = 1500
-    const val ACTION_SELECTION_MENU = 1501
-    const val ACTION_SEL_SAVE = 1502
-    const val ACTION_SEL_TRANSLATE = 1503
-    const val ACTION_SEL_GALLERY = 1504
     const val OPTION_TRANSLATE_REVERT = 508
     const val OPTION_FORWARD_NO_QUOTE = 509
     const val OPTION_REPLY_IN_DMS = 510
     const val OPTION_SUMMARIZE = 511
     const val OPTION_REMOVE_FROM_CACHE = 512
 
+    @JvmStatic
+    fun forwardToSavedMessages(activity: ChatActivity, messages: ArrayList<MessageObject>) {
+        if (messages.isEmpty()) return
+        val selfId = UserConfig.getInstance(activity.currentAccount).clientUserId
+        SendMessagesHelper.getInstance(activity.currentAccount)
+            .sendMessage(messages, selfId, false, false, true, 0, 0L)
+        activity.createUndoView()
+        activity.undoView.showWithAction(selfId, UndoView.ACTION_FWD_MESSAGES, messages.size)
+    }
+
     private fun removeWallpaperKey(currentAccount: Int, dialogId: Long) = "remove_wallpaper:$currentAccount:$dialogId"
     private fun removeThemeKey(currentAccount: Int, dialogId: Long) = "remove_theme:$currentAccount:$dialogId"
-    private fun hidePinnedPanelKey(currentAccount: Int, dialogId: Long) = "hide_pinned_panel:$currentAccount:$dialogId"
 
     private fun toggleDialogBool(key: String): Boolean {
         val new = !InuConfig.prefs.getBoolean(key, false)
@@ -121,34 +111,6 @@ object ChatHelper {
     @JvmStatic
     fun isRemoveThemeSetForDialog(currentAccount: Int, dialogId: Long): Boolean {
         return InuConfig.prefs.getBoolean(removeThemeKey(currentAccount, dialogId), false)
-    }
-
-    @JvmStatic
-    fun isPinnedPanelHidden(currentAccount: Int, dialogId: Long): Boolean =
-        InuConfig.prefs.getBoolean(hidePinnedPanelKey(currentAccount, dialogId), false)
-
-    @JvmStatic
-    fun onPinnedPanelLongPressed(activity: ChatActivity): Boolean {
-        toggleDialogBool(hidePinnedPanelKey(activity.currentAccount, activity.dialogId))
-        activity.wasManualScroll = true
-        activity.updatePinnedMessageView(true)
-        return true
-    }
-
-    @JvmStatic
-    fun showPinnedPanel(activity: ChatActivity) {
-        val key = hidePinnedPanelKey(activity.currentAccount, activity.dialogId)
-        if (!InuConfig.prefs.getBoolean(key, false)) return
-        InuConfig.prefs.edit { remove(key) }
-        activity.wasManualScroll = true
-        activity.updatePinnedMessageView(true)
-    }
-
-    @JvmStatic
-    fun updateShowPinnedMenuItem(activity: ChatActivity, hasPinnedMessages: Boolean) {
-        val headerItem = activity.headerItem ?: return
-        val shouldShow = hasPinnedMessages && isPinnedPanelHidden(activity.currentAccount, activity.dialogId)
-        headerItem.setSubItemShown(ACTION_SHOW_PINNED_PANEL, shouldShow)
     }
 
     @JvmStatic
@@ -239,35 +201,10 @@ object ChatHelper {
     ) {
         data class Row(val label: CharSequence, val option: Int, val icon: Int)
 
-        val byItem = HashMap<MessageMenuConfig.Item, ArrayList<Row>>()
-        // unknown rows attached to the closest preceding known Item (null = head)
-        val unknownAfter = HashMap<MessageMenuConfig.Item?, ArrayList<Row>>()
-        var lastKnown: MessageMenuConfig.Item? = null
-        for (i in options.indices) {
-            val row = Row(items[i], options[i], icons[i])
-            val cfgItem = MessageMenuConfig.Item.forOption(options[i])
-            if (cfgItem != null) {
-                byItem.getOrPut(cfgItem) { ArrayList() }.add(row)
-                lastKnown = cfgItem
-            } else {
-                unknownAfter.getOrPut(lastKnown) { ArrayList() }.add(row)
-            }
+        val rows = options.indices.map { Row(items[it], options[it], icons[it]) }
+        val ordered = MenuOrderUtils.reorder(rows, InuConfig.MESSAGE_MENU_ITEMS.value) {
+            MessageMenuConfig.Item.forOption(it.option)
         }
-
-        val ordered = ArrayList<Row>(items.size)
-        unknownAfter.remove(null)?.let { ordered.addAll(it) }
-        for (entry in InuConfig.MESSAGE_MENU_ITEMS.value) {
-            val rows = byItem.remove(entry.item)
-            if (rows != null && entry.enabled) ordered.addAll(rows)
-            unknownAfter.remove(entry.item)?.let { ordered.addAll(it) }
-        }
-        // items absent from saved order (e.g. enum extended after save) — append at end
-        for ((item, rows) in byItem) {
-            ordered.addAll(rows)
-            unknownAfter.remove(item)?.let { ordered.addAll(it) }
-        }
-        // unknowns anchored to a disabled-and-missing item (shouldn't happen, but safe): append
-        for ((_, rows) in unknownAfter) ordered.addAll(rows)
 
         items.clear(); options.clear(); icons.clear()
         for (r in ordered) {
@@ -399,17 +336,6 @@ object ChatHelper {
         if (!InuConfig.SEND_TO_DISCUSS_WITHOUT_JOIN.value) return false
         if (chat.join_to_send) return false
         return chat.megagroup && chat.has_link
-    }
-
-    @JvmStatic
-    fun openInDiscussionGroup(activity: ChatActivity) {
-        val chat = activity.currentChat ?: return
-        val threadId = activity.threadId
-        val args = Bundle().apply {
-            putLong("chat_id", chat.id)
-            putInt("message_id", threadId.toInt())
-        }
-        activity.presentFragment(ChatActivity(args))
     }
 
     @JvmStatic
@@ -584,49 +510,19 @@ object ChatHelper {
         start: Int,
         len: Int,
     ): Boolean {
-        val ctx = activity.parentActivity ?: return false
         if (enterView == null) return false
         if (enterView.editField == null) return false
         if (user.bot_inline_placeholder != null) return false
         val userId = user.id
 
-        val editText = EditTextBoldCursor(ctx).apply {
-            background = null
-            setLineColors(
-                Theme.getColor(Theme.key_dialogInputField),
-                Theme.getColor(Theme.key_dialogInputFieldActivated),
-                Theme.getColor(Theme.key_text_RedBold),
-            )
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
-            setTextColor(Theme.getColor(Theme.key_dialogTextBlack))
-            maxLines = 1
-            setLines(1)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            gravity = Gravity.LEFT or Gravity.TOP
-            setSingleLine(true)
-            imeOptions = EditorInfo.IME_ACTION_DONE
-            setCursorColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText))
-            setCursorSize(AndroidUtilities.dp(20f))
-            setCursorWidth(1.5f)
-            setPadding(0, AndroidUtilities.dp(4f), 0, 0)
-            val defaultName = UserObject.getUserName(user)
-            setText(defaultName)
-            setSelection(0, defaultName.length)
-        }
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            addView(
-                editText,
-                LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 36, Gravity.TOP or Gravity.LEFT, 24, 6, 24, 0),
-            )
-        }
-
-        val onSubmit = onSubmit@{
-            val text = editText.text?.toString()?.trim().orEmpty()
-            if (text.isEmpty()) {
-                AndroidUtilities.shakeView(editText)
-                return@onSubmit false
-            }
+        desu.inugram.ui.showInputDialog(
+            fragment = activity,
+            title = LocaleController.getString(R.string.InuMentionInsertTitle),
+            initialText = UserObject.getUserName(user),
+            selectAll = true,
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+        ) { text ->
+            if (text.isEmpty()) return@showInputDialog false
             val spannable = SpannableString("$text ")
             spannable.setSpan(
                 URLSpanUserMention("" + userId, 3),
@@ -636,306 +532,7 @@ object ChatHelper {
             enterView.replaceWithText(start, len, spannable, false)
             true
         }
-
-        val dialog = AlertDialog.Builder(ctx, activity.themeDelegate)
-            .setTitle(LocaleController.getString(R.string.InuMentionInsertTitle))
-            .setView(container)
-            .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
-            .setPositiveButton(LocaleController.getString(R.string.OK)) { _, _ -> }
-            .create()
-        editText.setOnEditorActionListener { _, _, _ ->
-            if (onSubmit()) dialog.dismiss()
-            true
-        }
-        dialog.setOnShowListener {
-            AndroidUtilities.runOnUIThread {
-                editText.requestFocus()
-                AndroidUtilities.showKeyboard(editText)
-            }
-        }
-        activity.showDialog(dialog)
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
-            if (onSubmit()) dialog.dismiss()
-        }
         return true
-    }
-
-    @JvmStatic
-    fun addActionModeItems(activity: ChatActivity, actionMode: ActionBarMenu, anchorAfterId: Int) {
-        val item = actionMode.addItemWithWidth(
-            ACTION_SELECT_RANGE,
-            R.drawable.msg_select_between_solar,
-            AndroidUtilities.dp(54f),
-            LocaleController.getString(R.string.InuSelectRange),
-        )
-        val anchor = actionMode.getItem(anchorAfterId)
-        if (anchor != null) {
-            val targetIndex = actionMode.indexOfChild(anchor) + 1
-            actionMode.removeView(item)
-            actionMode.addView(item, targetIndex)
-        }
-        activity.actionModeViews.add(item)
-
-        val overflow = actionMode.addItemWithWidth(
-            ACTION_SELECTION_MENU,
-            R.drawable.ic_ab_other,
-            AndroidUtilities.dp(54f),
-            LocaleController.getString(R.string.AccDescrMoreOptions),
-        )
-        overflow.addSubItem(
-            ACTION_SEL_SAVE,
-            R.drawable.msg_saved,
-            LocaleController.getString(R.string.InuSaveToSavedMessages),
-        )
-        overflow.addSubItem(
-            ACTION_SEL_TRANSLATE,
-            R.drawable.msg_translate,
-            LocaleController.getString(R.string.TranslateMessage),
-        )
-        overflow.addSubItem(
-            ACTION_SEL_GALLERY,
-            R.drawable.msg_download,
-            LocaleController.getString(R.string.SaveToGallery),
-        )
-        activity.actionModeViews.add(overflow)
-    }
-
-    @JvmStatic
-    fun shouldAnimateEditButton(activity: ChatActivity): Boolean {
-        val item = activity.actionBar?.createActionMode()?.getItem(ACTION_SELECT_RANGE) ?: return true
-        return item.visibility != View.VISIBLE
-    }
-
-    @JvmStatic
-    fun updateActionModeVisibility(activity: ChatActivity) {
-        val actionMode = activity.actionBar?.createActionMode() ?: return
-        actionMode.setItemVisibility(
-            ACTION_SELECT_RANGE,
-            if (hasUnselectedGap(activity)) View.VISIBLE else View.GONE,
-        )
-
-        val overflow = actionMode.getItem(ACTION_SELECTION_MENU) as? ActionBarMenuItem ?: return
-        var any = false
-        var hasText = false
-        var hasMedia = false
-        var allForwardable = true
-        forEachSelectedMessage(activity) { msg ->
-            any = true
-            if (!msg.messageOwner?.message.isNullOrEmpty()) hasText = true
-            if (msg.isPhoto || msg.isVideo) hasMedia = true
-            if (!msg.canForwardMessage()) allForwardable = false
-        }
-        val selfId = UserConfig.getInstance(activity.currentAccount).clientUserId
-        val canSave = any && allForwardable && !activity.isPeerNoForwards && activity.dialogId != selfId
-        val canTranslate = any && hasText && InuConfig.IN_PLACE_TRANSLATION.value
-        overflow.setSubItemShown(ACTION_SEL_SAVE, canSave)
-        overflow.setSubItemShown(ACTION_SEL_TRANSLATE, canTranslate)
-        overflow.setSubItemShown(ACTION_SEL_GALLERY, hasMedia)
-        actionMode.setItemVisibility(
-            ACTION_SELECTION_MENU,
-            if (canSave || canTranslate || hasMedia) View.VISIBLE else View.GONE,
-        )
-    }
-
-    @JvmStatic
-    fun handleActionModeClick(id: Int, activity: ChatActivity): Boolean {
-        when (id) {
-            ACTION_SELECT_RANGE -> fillSelectionGaps(activity)
-            ACTION_SEL_SAVE -> saveSelectionToSavedMessages(activity)
-            ACTION_SEL_TRANSLATE -> translateSelection(activity)
-            ACTION_SEL_GALLERY -> saveSelectionToGallery(activity)
-            else -> return false
-        }
-        return true
-    }
-
-    private inline fun forEachSelectedMessage(activity: ChatActivity, action: (MessageObject) -> Unit) {
-        // index 1 (merged dialog) first, then 0; SparseArray iteration is id-ascending within each
-        for (a in 1 downTo 0) {
-            val arr = activity.selectedMessagesIds[a]
-            for (i in 0 until arr.size()) action(arr.valueAt(i))
-        }
-    }
-
-    private fun collectSelected(activity: ChatActivity): ArrayList<MessageObject> {
-        val out = ArrayList<MessageObject>()
-        forEachSelectedMessage(activity) { out.add(it) }
-        return out
-    }
-
-    private fun forwardToSavedMessages(activity: ChatActivity, messages: ArrayList<MessageObject>) {
-        if (messages.isEmpty()) return
-        val selfId = UserConfig.getInstance(activity.currentAccount).clientUserId
-        SendMessagesHelper.getInstance(activity.currentAccount)
-            .sendMessage(messages, selfId, false, false, true, 0, 0L)
-        activity.createUndoView()
-        activity.undoView.showWithAction(selfId, UndoView.ACTION_FWD_MESSAGES, messages.size)
-    }
-
-    private fun saveSelectionToSavedMessages(activity: ChatActivity) {
-        forwardToSavedMessages(activity, collectSelected(activity))
-        activity.clearSelectionMode()
-    }
-
-    private fun translateSelection(activity: ChatActivity) {
-        if (!InuConfig.IN_PLACE_TRANSLATION.value) return
-        val toLang = TranslateAlert2.getToLanguage()
-        val toLangDefault = LocaleController.getInstance().currentLocale.language
-        val restricted = RestrictedLanguagesSelectActivity.getRestrictedLanguages()
-        val seenGroups = HashSet<Long>()
-        var anyStarted = false
-        for (msg in collectSelected(activity)) {
-            val groupId = msg.groupId
-            val group = if (groupId != 0L) {
-                if (!seenGroups.add(groupId)) continue
-                activity.getGroup(groupId)
-            } else {
-                null
-            }
-            val target = group?.captionMessage?.takeIf { !it.messageOwner?.message.isNullOrEmpty() } ?: msg
-            val fromLang = target.messageOwner?.originalLanguage
-            if (fromLang != null && restricted.contains(fromLang)) continue
-            // mirror the message menu: a message already in the target language is translated to the app locale
-            val toLangValue = if (fromLang == toLang) toLangDefault else toLang
-            if (fromLang != null && fromLang == toLangValue) continue
-            if (TranslateHelper.startTranslate(activity, msg, group, fromLang, toLangValue)) {
-                anyStarted = true
-            }
-        }
-        activity.clearSelectionMode()
-        if (!anyStarted) {
-            BulletinFactory.of(activity)
-                .createErrorBulletin(LocaleController.getString(R.string.InuNothingToTranslate))
-                .show()
-        }
-    }
-
-    private fun saveSelectionToGallery(activity: ChatActivity) {
-        val parent = activity.parentActivity ?: return
-        if (Build.VERSION.SDK_INT >= 23 && (Build.VERSION.SDK_INT <= 28 || BuildVars.NO_SCOPED_STORAGE) &&
-            parent.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            parent.requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                BasePermissionsActivity.REQUEST_CODE_EXTERNAL_STORAGE,
-            )
-            return
-        }
-        var photos = 0
-        var videos = 0
-        for (msg in collectSelected(activity)) {
-            when {
-                msg.isPhoto -> photos++
-                msg.isVideo -> videos++
-                else -> continue
-            }
-            activity.saveMessageToGallery(msg)
-        }
-        val count = photos + videos
-        if (count > 0) {
-            val type = when {
-                videos == 0 -> BulletinFactory.FileType.PHOTOS
-                photos == 0 -> BulletinFactory.FileType.VIDEOS
-                else -> BulletinFactory.FileType.MEDIA
-            }
-            BulletinFactory.of(activity).createDownloadBulletin(type, count, activity.resourceProvider).show()
-        }
-        activity.clearSelectionMode()
-    }
-
-    private data class GapInfo(val targetIndex: Int, val minId: Int, val maxId: Int)
-
-    private fun gapInfo(activity: ChatActivity): GapInfo? {
-        val a = activity.selectedMessagesIds[0].size()
-        val b = activity.selectedMessagesIds[1].size()
-        val targetIndex = when {
-            a >= 2 && b == 0 -> 0
-            b >= 2 && a == 0 -> 1
-            else -> return null
-        }
-        val arr = activity.selectedMessagesIds[targetIndex]
-        var minId = Int.MAX_VALUE
-        var maxId = Int.MIN_VALUE
-        for (i in 0 until arr.size()) {
-            val id = arr.keyAt(i)
-            if (id < minId) minId = id
-            if (id > maxId) maxId = id
-        }
-        if (minId >= maxId) return null
-        return GapInfo(targetIndex, minId, maxId)
-    }
-
-    private inline fun forEachGapMessage(
-        activity: ChatActivity,
-        info: GapInfo,
-        action: (MessageObject) -> Boolean,
-    ) {
-        val arr = activity.selectedMessagesIds[info.targetIndex]
-        val dialogId = activity.dialogId
-        for (msg in activity.messages) {
-            val msgIndex = if (msg.dialogId == dialogId) 0 else 1
-            if (msgIndex != info.targetIndex) continue
-            val id = msg.id
-            if (id <= info.minId || id >= info.maxId) continue
-            if (arr.indexOfKey(id) >= 0) continue
-            if (!action(msg)) return
-        }
-    }
-
-    private fun hasUnselectedGap(activity: ChatActivity): Boolean {
-        if (activity.selectedMessagesIds[0].size() + activity.selectedMessagesIds[1].size() >= 100) return false
-        val info = gapInfo(activity) ?: return false
-        var found = false
-        forEachGapMessage(activity, info) {
-            found = true
-            false
-        }
-        return found
-    }
-
-    private fun fillSelectionGaps(activity: ChatActivity) {
-        val info = gapInfo(activity) ?: return
-        val arr = activity.selectedMessagesIds[info.targetIndex]
-        val candidates = ArrayList<MessageObject>()
-        forEachGapMessage(activity, info) {
-            candidates.add(it)
-            true
-        }
-        if (candidates.isEmpty()) return
-
-        val cap = 100 - arr.size()
-        if (cap <= 0) {
-            showSelectRangeCappedBulletin(activity)
-            return
-        }
-        if (candidates.size <= cap) {
-            for (i in candidates.indices) {
-                activity.addToSelectedMessages(candidates[i], false, i == candidates.size - 1)
-            }
-            activity.updateActionModeTitle()
-            activity.updateVisibleRows()
-            return
-        }
-
-        val edgeIdToRemove = if (candidates[cap].id < candidates[cap - 1].id) info.minId else info.maxId
-        val edgeMsg = arr.get(edgeIdToRemove) ?: run {
-            showSelectRangeCappedBulletin(activity)
-            return
-        }
-        activity.addToSelectedMessages(edgeMsg, false, false)
-        for (i in 0..cap) {
-            activity.addToSelectedMessages(candidates[i], false, i == cap)
-        }
-        activity.updateActionModeTitle()
-        activity.updateVisibleRows()
-        activity.scrollToMessageId(candidates[cap].id, 0, false, 0, true, 0)
-        showSelectRangeCappedBulletin(activity)
-    }
-
-    private fun showSelectRangeCappedBulletin(activity: ChatActivity) {
-        BulletinFactory.of(activity)
-            .createSimpleBulletin(R.raw.error, LocaleController.formatString(R.string.InuSelectRangeLimit, 100))
-            .show()
     }
 
     @JvmStatic
@@ -985,27 +582,19 @@ object ChatHelper {
             fallback.run(0)
             return
         }
+        jumpToBeginning(activity)
+    }
+
+    @JvmStatic
+    fun jumpToBeginning(activity: ChatActivity) {
         if (activity.isThreadChat || activity.isTopic) {
             activity.scrollToMessageId(activity.threadMessageId.toInt(), 0, false, 0, true, 0)
             return
         }
         if (DialogObject.isEncryptedDialog(activity.dialogId)) return
-
-        val account = activity.currentAccount
-        val peer = MessagesController.getInstance(account).getInputPeer(activity.dialogId) ?: return
-        val req = TLRPC.TL_messages_getHistory().apply {
-            this.peer = peer
-            offset_id = 1
-            add_offset = -1
-            limit = 1
-        }
-        ConnectionsManager.getInstance(account).sendRequest(req) { response, _ ->
-            val res = response as? TLRPC.messages_Messages ?: return@sendRequest
-            val first = res.messages.minByOrNull { it.id } ?: return@sendRequest
-            AndroidUtilities.runOnUIThread {
-                activity.scrollToMessageId(first.id, 0, false, 0, true, 0)
-            }
-        }
+        // date=1 routes through stock's loadMessages-by-date path — handles merged dialogs,
+        // loading state, and the "already at end" case
+        activity.jumpToDate(1)
     }
 
     @JvmStatic

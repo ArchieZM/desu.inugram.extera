@@ -4,8 +4,8 @@ Date: Thu, 23 Apr 2026 21:22:31 +0300
 Subject: hiding pinned panel from the chat
 
 ---
- .../java/org/telegram/ui/ChatActivity.java    | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ .../src/main/java/org/telegram/ui/ChatActivity.java | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
@@ -29,43 +29,23 @@ index 0000000..0000000 100644
      private boolean fixPaddingsInLayout;
      private boolean globalIgnoreLayout;
  
-@@ -3649,6 +3649,8 @@ public class ChatActivity extends BaseFragment implements
-                     }
-                 } else if (id == ChatHelper.ACTION_OPEN_IN_DISCUSSION) {
-                     ChatHelper.openInDiscussionGroup(ChatActivity.this);
-+                } else if (id == ChatHelper.ACTION_SHOW_PINNED_PANEL) {
-+                    ChatHelper.showPinnedPanel(ChatActivity.this);
-                 } else if (id == view_as_topics) {
-                     if (getUserConfig().getClientUserId() == dialog_id) {
-                         getMessagesController().setSavedViewAs(true);
-@@ -4418,6 +4420,10 @@ public class ChatActivity extends BaseFragment implements
-             closeTopicItem = headerItem.lazilyAddSubItem(topic_close, R.drawable.msg_topic_close, LocaleController.getString(R.string.CloseTopic));
-             closeTopicItem.setVisibility(currentChat != null && ChatObject.canManageTopic(currentAccount, currentChat, forumTopic) && forumTopic != null && !forumTopic.closed ? View.VISIBLE : View.GONE);
-         }
-+        if (headerItem != null && chatMode == 0 && currentEncryptedChat == null) {
-+            headerItem.lazilyAddSubItem(ChatHelper.ACTION_SHOW_PINNED_PANEL, R.drawable.msg_pin, LocaleController.getString(R.string.InuShowPinnedPanel));
-+            headerItem.setSubItemShown(ChatHelper.ACTION_SHOW_PINNED_PANEL, false);
-+        }
-         menu.setVisibility(inMenuMode ? View.GONE : View.VISIBLE);
- 
-         updateTitle(false);
-@@ -11306,6 +11312,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -11308,6 +11308,7 @@ public class ChatActivity extends BaseFragment implements
          pinnedListButton.setBackgroundDrawable(Theme.createSelectorDrawable(getThemedColor(Theme.key_inappPlayerClose) & 0x19ffffff));
          pinnedMessageView.addView(pinnedListButton, LayoutHelper.createFrame(36, 48, Gravity.RIGHT | Gravity.TOP, 0, 0, 7, 0));
          pinnedListButton.setOnClickListener(v -> openPinnedMessagesList(false));
-+        pinnedListButton.setOnLongClickListener(v -> ChatHelper.onPinnedPanelLongPressed(ChatActivity.this));
++        pinnedListButton.setOnLongClickListener(v -> desu.inugram.helpers.ChatActionsHelper.onPinnedPanelLongPressed(ChatActivity.this));
  
          closePinned = new ImageView(getContext());
          closePinned.setImageResource(R.drawable.miniplayer_close);
-@@ -11358,6 +11365,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -11360,6 +11361,7 @@ public class ChatActivity extends BaseFragment implements
                  updatePinnedMessageView(true);
              }
          });
-+        closePinned.setOnLongClickListener(v -> ChatHelper.onPinnedPanelLongPressed(ChatActivity.this));
++        closePinned.setOnLongClickListener(v -> desu.inugram.helpers.ChatActionsHelper.onPinnedPanelLongPressed(ChatActivity.this));
  
          updatePinnedListButton(false);
      }
-@@ -27643,7 +27651,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -27645,7 +27647,7 @@ public class ChatActivity extends BaseFragment implements
          return false;
      }
  
@@ -74,12 +54,12 @@ index 0000000..0000000 100644
          updatePinnedMessageView(animated, 0);
      }
  
-@@ -27761,6 +27769,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -27763,6 +27765,11 @@ public class ChatActivity extends BaseFragment implements
          if (currentEncryptedChat != null || chatMode != 0) {
              return;
          }
-+        ChatHelper.updateShowPinnedMenuItem(this, !pinnedMessageIds.isEmpty());
-+        if (ChatHelper.isPinnedPanelHidden(currentAccount, dialog_id) && !(isThreadChat() && !isTopic)) {
++        desu.inugram.helpers.ChatActionsHelper.updateShowPinnedMenuItem(this, !pinnedMessageIds.isEmpty());
++        if (desu.inugram.helpers.ChatActionsHelper.isPinnedPanelHidden(currentAccount, dialog_id) && !(isThreadChat() && !isTopic)) {
 +            hidePinnedMessageView(animated);
 +            return;
 +        }

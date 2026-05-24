@@ -221,6 +221,12 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
+        items.add(
+            UItem.asButton(
+                BUTTON_CHAT_MENU_ORDER,
+                LocaleController.getString(R.string.InuChatMenuOrder),
+            )
+        )
         hideBottomBarGroup.addTo(items) { listView.adapter.update(true) }
         items.add(
             mkTwoLineCheckItem(
@@ -299,6 +305,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
 
             TOGGLE_SEARCH_FROM_GLOBAL -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.SEARCH_FROM_GLOBAL.toggle()
             TOGGLE_HIDE_CALL_ACTION_BUTTON -> (view as? TextCheckCell)?.isChecked = InuConfig.HIDE_CALL_ACTION_BUTTON.toggle()
+            BUTTON_CHAT_MENU_ORDER -> presentFragment(ChatMenuOrderActivity())
         }
     }
 
@@ -324,6 +331,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH = InuUtils.generateId()
         private val TOGGLE_SEARCH_FROM_GLOBAL = InuUtils.generateId()
         private val TOGGLE_HIDE_CALL_ACTION_BUTTON = InuUtils.generateId()
+        private val BUTTON_CHAT_MENU_ORDER = InuUtils.generateId()
 
         private fun roundCameraLabel(value: Int): String = when (value) {
             2 -> LocaleController.getString(R.string.InuRoundCameraRear)
@@ -367,6 +375,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("emoji-panel-keyword-search", R.string.InuEmojiPanelKeywordSearch, TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH),
                 SearchRegistry.Entry("search-from-global", R.string.InuSearchFromGlobal, TOGGLE_SEARCH_FROM_GLOBAL),
                 SearchRegistry.Entry("hide-call-action-button", R.string.InuHideCallActionButton, TOGGLE_HIDE_CALL_ACTION_BUTTON),
+                SearchRegistry.Entry("chat-menu-order", R.string.InuChatMenuOrder, BUTTON_CHAT_MENU_ORDER),
             ),
         )
     }

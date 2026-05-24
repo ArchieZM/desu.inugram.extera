@@ -14,7 +14,7 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMe
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -12939,15 +12939,33 @@ public class ChatActivity extends BaseFragment implements
+@@ -12941,15 +12941,33 @@ public class ChatActivity extends BaseFragment implements
      }
  
      private void showMediaBannedHint() {
@@ -51,7 +51,7 @@ index 0000000..0000000 100644
          try {
              fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
          } catch (Exception e) {
-@@ -12957,16 +12975,16 @@ public class ChatActivity extends BaseFragment implements
+@@ -12959,16 +12977,16 @@ public class ChatActivity extends BaseFragment implements
          if (mediaBanTooltip == null) {
              mediaBanTooltip = new HintView(getParentActivity(), 9, themeDelegate);
              mediaBanTooltip.setVisibility(View.GONE);
@@ -72,7 +72,7 @@ index 0000000..0000000 100644
                  mediaBanTooltip.setText(ChatObject.getRestrictedErrorText(currentChat, ChatObject.ACTION_SEND_ROUND));
              } else {
                  mediaBanTooltip.setText(ChatObject.getRestrictedErrorText(currentChat, ChatObject.ACTION_SEND_VOICE));
-@@ -12979,7 +12997,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -12981,7 +12999,7 @@ public class ChatActivity extends BaseFragment implements
              mediaBanTooltip.setText(LocaleController.getString(R.string.GlobalAttachMediaRestricted));
          } else {
              if (currentChat.banned_rights == null) {
@@ -81,7 +81,7 @@ index 0000000..0000000 100644
              }
              if (AndroidUtilities.isBannedForever(currentChat.banned_rights)) {
                  mediaBanTooltip.setText(LocaleController.getString(R.string.AttachMediaRestrictedForever));
-@@ -12987,14 +13005,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -12989,14 +13007,7 @@ public class ChatActivity extends BaseFragment implements
                  mediaBanTooltip.setText(LocaleController.formatString("AttachMediaRestricted", R.string.AttachMediaRestricted, LocaleController.formatDateForBan(currentChat.banned_rights.until_date)));
              }
          }

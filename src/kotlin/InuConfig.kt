@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import desu.inugram.helpers.FormattingPopupConfig
 import desu.inugram.helpers.MessageMenuConfig
+import desu.inugram.helpers.ChatMenuConfig
 import desu.inugram.helpers.PinnedReactionsHelper
 
 object InuConfig {
@@ -503,6 +504,9 @@ object InuConfig {
 
     @JvmField
     val MESSAGE_MENU_ITEMS = MessageMenuConfig("message_menu_items")
+
+    @JvmField
+    val CHAT_MENU_ITEMS = ChatMenuConfig("chat_menu_items")
 
     class ForwardLongTapItem : IntItem("forward_long_tap_action", CHOOSE_MODE) {
         companion object {
