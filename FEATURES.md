@@ -134,6 +134,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 customizable account order
 - per-account passcodes, hidden accounts, panic code, hidden settings deeplink - *ported from [Nekogram](https://github.com/Nekogram/Nekogram)*
 - 🐶 paranoia mode: pick chats to hide everywhere; all secret chats hidden too; exit by typing a custom code in chat search
+  - optional whitelist mode: hide everything *except* the picked chats (service notifications stay visible)
   - optionally hide the Inugram settings entirely when enabled
   - optionally disguise as stock Telegram when enabled
   - optionally silence all notifications while enabled

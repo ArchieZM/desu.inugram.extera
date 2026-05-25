@@ -485,7 +485,9 @@
     <string name="InuParanoiaMode">Paranoia mode</string>
     <string name="InuParanoiaModeInfo">Paranoia mode lets you \"prepare\" for someone else checking your phone, by hiding any \"dangerous\" chats, and optionally disguising as the stock app.</string>
     <string name="InuParanoiaSelect">Chats to hide</string>
-    <string name="InuParanoiaSelectInfo">Secret chats are always hidden</string>
+    <string name="InuParanoiaSelectWhitelist">Chats to show</string>
+    <string name="InuParanoiaSelectInfo">Secret chats are always hidden. Service notifications stay visible.</string>
+    <string name="InuParanoiaWhitelist">Whitelist mode</string>
     <string name="InuParanoiaCount">%1$d chats</string>
     <string name="InuParanoiaExitCode">Exit code</string>
     <string name="InuParanoiaExitCodeSet">Set exit code</string>

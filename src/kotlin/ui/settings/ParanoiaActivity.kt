@@ -29,6 +29,7 @@ class ParanoiaActivity : SettingsPageActivity() {
         items.add(UItem.asShadow(LocaleController.getString(R.string.InuParanoiaModeInfo)))
 
         val count = ParanoiaHelper.getHidden(currentAccount).size
+        val whitelist = ParanoiaHelper.whitelist
         items.add(
             UItem.asButton(
                 SET_CODE,
@@ -41,12 +42,20 @@ class ParanoiaActivity : SettingsPageActivity() {
         )
         items.add(UItem.asShadow(LocaleController.getString(R.string.InuParanoiaExitCodeInfo)))
 
-
+        items.add(
+            UItem.asCheck(
+                TOGGLE_WHITELIST,
+                LocaleController.getString(R.string.InuParanoiaWhitelist)
+            ).setChecked(whitelist)
+        )
         items.add(
             UItem.asButton(
                 SELECT_CHATS,
                 R.drawable.menu_hide_gift,
-                LocaleController.getString(R.string.InuParanoiaSelect),
+                LocaleController.getString(
+                    if (whitelist) R.string.InuParanoiaSelectWhitelist
+                    else R.string.InuParanoiaSelect
+                ),
                 LocaleController.formatString(R.string.InuParanoiaCount, count)
             )
         )
@@ -83,6 +92,11 @@ class ParanoiaActivity : SettingsPageActivity() {
         when (item.id) {
             SELECT_CHATS -> openPicker()
             SET_CODE -> showCodeDialog()
+            TOGGLE_WHITELIST -> {
+                toggleCheck(view, ParanoiaHelper.whitelist) { ParanoiaHelper.whitelist = it }
+                listView.adapter.update(true)
+            }
+
             TOGGLE_DISGUISE -> toggleCheck(view, ParanoiaHelper.disguiseIcon) { ParanoiaHelper.disguiseIcon = it }
             TOGGLE_HIDE_OTHER_ACCOUNTS -> toggleCheck(view, ParanoiaHelper.hideOtherAccounts) { ParanoiaHelper.hideOtherAccounts = it }
             TOGGLE_DISABLE_NOTIFICATIONS -> toggleCheck(view, ParanoiaHelper.disableNotifications) { ParanoiaHelper.disableNotifications = it }
@@ -159,6 +173,7 @@ class ParanoiaActivity : SettingsPageActivity() {
     companion object {
         private val SELECT_CHATS = InuUtils.generateId()
         private val SET_CODE = InuUtils.generateId()
+        private val TOGGLE_WHITELIST = InuUtils.generateId()
         private val TOGGLE_DISGUISE = InuUtils.generateId()
         private val TOGGLE_HIDE_OTHER_ACCOUNTS = InuUtils.generateId()
         private val TOGGLE_DISABLE_NOTIFICATIONS = InuUtils.generateId()

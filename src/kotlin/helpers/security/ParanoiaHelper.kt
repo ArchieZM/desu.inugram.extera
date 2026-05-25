@@ -33,7 +33,10 @@ object ParanoiaHelper {
     fun isHidden(account: Int, dialogId: Long): Boolean {
         if (!isParanoia()) return false
         if (DialogObject.isEncryptedDialog(dialogId)) return true
-        return getHidden(account).contains(dialogId)
+        // service notifications (login codes, etc.) — never hide, would lock user out
+        if (dialogId == 777000L) return false
+        val selected = getHidden(account).contains(dialogId)
+        return if (whitelist) !selected else selected
     }
 
     fun getHidden(account: Int): Set<Long> {
@@ -54,6 +57,10 @@ object ParanoiaHelper {
         prefs.edit { putStringSet("hiddenChats$account", ids.map(Long::toString).toHashSet()) }
         hiddenCache = null
     }
+
+    var whitelist: Boolean
+        get() = prefs.getBoolean("whitelist", false)
+        set(value) = prefs.edit { putBoolean("whitelist", value) }
 
     var hideSettings: Boolean
         get() = prefs.getBoolean("hideSettings", false)
