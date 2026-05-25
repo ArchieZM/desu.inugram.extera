@@ -35,6 +35,7 @@ object InuHooks {
         syncDoubleTapDelay()
         syncAnimationSpeed()
         UpdateHelper.clearPendingIfInstalled()
+        ApkInstaller.dismissInstalledNotification()
         CloudSettingsHelper.attachAutoSyncListener()
         Utilities.globalQueue.postRunnable { UrlCleanerHelper.preload() }
     }

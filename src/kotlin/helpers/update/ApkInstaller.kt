@@ -48,6 +48,11 @@ import java.io.IOException
 object ApkInstaller {
     private const val ACTION = "desu.inugram.helpers.update.ApkInstaller.STATUS"
 
+    fun dismissInstalledNotification() {
+        NotificationManagerCompat.from(ApplicationLoader.applicationContext)
+            .cancel(UpdateReceiver.NOTIFICATION_ID)
+    }
+
     @SuppressLint("StaticFieldLeak")
     @Volatile
     private var dialog: AlertDialog? = null
@@ -353,7 +358,7 @@ object ApkInstaller {
 
         companion object {
             private const val CHANNEL_ID = "inu_updated"
-            private const val NOTIFICATION_ID = 1337
+            const val NOTIFICATION_ID = 1337
         }
     }
 }
