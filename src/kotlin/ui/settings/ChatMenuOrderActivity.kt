@@ -1,7 +1,7 @@
 package desu.inugram.ui.settings
 
 import desu.inugram.InuConfig
-import desu.inugram.helpers.ChatMenuConfig
+import desu.inugram.helpers.menu.ChatMenuConfig
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 

@@ -5,7 +5,7 @@ import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.WebPreviewHelper
+import desu.inugram.helpers.chat.WebPreviewHelper
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import org.telegram.ui.Cells.TextCheckCell

@@ -226,7 +226,7 @@ index 0000000..0000000 100644
              } else {
                  statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
                  statusDrawable.center = true;
-+                if (desu.inugram.helpers.ParanoiaHelper.isDisguised()) {
++                if (desu.inugram.helpers.security.ParanoiaHelper.isDisguised()) {
                  logoDrawable = context.getResources().getDrawable(R.drawable.telegram_logo_2).mutate();
                  logoDrawable.setBounds(0, dp(2), logoDrawable.getIntrinsicWidth(), dp(2) + logoDrawable.getIntrinsicHeight());
                  logoDrawable.setColorFilter(getThemedColor(Theme.key_telegram_color_dialogsLogo), PorterDuff.Mode.MULTIPLY);
@@ -285,12 +285,12 @@ index 0000000..0000000 100644
                  }
              } else {
 -                currentTitle = menuItemsOffset < dp(50) ? null :
-+                currentTitle = menuItemsOffset < dp(50) ? (desu.inugram.helpers.ParanoiaHelper.isDisguised() ? null : LocaleController.getString(R.string.AppName)) :
++                currentTitle = menuItemsOffset < dp(50) ? (desu.inugram.helpers.security.ParanoiaHelper.isDisguised() ? null : LocaleController.getString(R.string.AppName)) :
                      LocaleController.getString(R.string.MyStory);
              }
          } else {
 -            currentTitle = menuItemsOffset < dp(50) ? null :
-+            currentTitle = menuItemsOffset < dp(50) ? (desu.inugram.helpers.ParanoiaHelper.isDisguised() ? null : LocaleController.getString(R.string.AppName)) :
++            currentTitle = menuItemsOffset < dp(50) ? (desu.inugram.helpers.security.ParanoiaHelper.isDisguised() ? null : LocaleController.getString(R.string.AppName)) :
                  LocaleController.formatPluralString("Stories", totalCount);
          }
  
@@ -299,7 +299,7 @@ index 0000000..0000000 100644
              telegramLogoView.setTranslationY(bottomY + dp(14 + FAKE_TOP_PADDING + 4.333f) + translationOffset /*titleView.getTranslationY() + dpf2(37.33f)*/);
  
 -            emojiStatusView.setTranslationX(titleView.getTranslationX() - dpf2(3.33f) + telegramLogoView.getMeasuredWidth());
-+            if (desu.inugram.helpers.ParanoiaHelper.isDisguised()) {
++            if (desu.inugram.helpers.security.ParanoiaHelper.isDisguised()) {
 +                emojiStatusView.setTranslationX(titleView.getTranslationX() - dpf2(3.33f) + telegramLogoView.getMeasuredWidth());
 +            } else {
 +                emojiStatusView.setTranslationX(titleView.getTranslationX() + titleView.getDrawable().getCurrentWidth() + dpf2(2.66f));
@@ -320,7 +320,7 @@ index 0000000..0000000 100644
          final float logoVisibility = 1f - titleVisibility;
          final float titleAlpha = titleVisibility * progress;
          final float logoAlpha = logoVisibility * progress;
-+        final boolean inu_disguised = desu.inugram.helpers.ParanoiaHelper.isDisguised();
++        final boolean inu_disguised = desu.inugram.helpers.security.ParanoiaHelper.isDisguised();
  
          if (titleView != null) {
              titleView.setAlpha(titleAlpha);

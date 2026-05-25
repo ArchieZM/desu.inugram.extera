@@ -1,6 +1,7 @@
 package desu.inugram.ui.drawer
 
 import android.animation.Animator
+import androidx.annotation.Keep
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -17,6 +18,7 @@ import android.widget.FrameLayout
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.DrawerLayoutContainer
+import org.telegram.ui.DialogsActivity
 
 /**
  * Old Layout side drawer mechanics for [DrawerLayoutContainer]: swipe
@@ -69,7 +71,7 @@ class DrawerSwipeController(private val host: DrawerLayoutContainer) {
         }
     }
 
-    @androidx.annotation.Keep
+    @Keep
     fun setDrawerPosition(value: Float) {
         val layout = drawerLayout ?: return
         drawerPosition = maxOf(0f, minOf(value, layout.measuredWidth.toFloat()))
@@ -136,7 +138,7 @@ class DrawerSwipeController(private val host: DrawerLayoutContainer) {
         if (drawerOpened || drawerPosition > 0) return true
         if (host.parentActionBarLayout.fragmentStack.size != 1) return false
         val top = host.parentActionBarLayout.lastFragment
-        if (top is org.telegram.ui.DialogsActivity) {
+        if (top is DialogsActivity) {
             if (top.searchIsShowed) return false
             val tabs = top.filterTabsView
             return tabs == null || tabs.visibility != View.VISIBLE || tabs.isFirstTabSelected

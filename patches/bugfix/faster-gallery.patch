@@ -24,7 +24,7 @@ index 0000000..0000000 100644
                  final String xmp = ei.getAttribute(ExifInterface.TAG_XMP);
                  if (xmp != null) {
 -                    final MotionPhotoDescription motionPhoto = XmpMotionPhotoDescriptionParser.parse(xmp);
-+                    final MotionPhotoDescription motionPhoto = desu.inugram.helpers.GalleryHelper.lookupXmp(imageId, dateTaken, xmp.getBytes());
++                    final MotionPhotoDescription motionPhoto = desu.inugram.helpers.media.GalleryHelper.lookupXmp(imageId, dateTaken, xmp.getBytes());
                      if (motionPhoto != null) {
                          MotionPhotoDescription.ContainerItem photo = null, video = null;
                          for (int i = 0; i < motionPhoto.items.size(); ++i) {
@@ -34,7 +34,7 @@ index 0000000..0000000 100644
                  refreshGalleryRunnable = null;
 -                loadGalleryPhotosAlbums(0);
 -            }, 2000);
-+                if (!desu.inugram.helpers.GalleryHelper.tryConsumeIncremental(0)) {
++                if (!desu.inugram.helpers.media.GalleryHelper.tryConsumeIncremental(0)) {
 +                    loadGalleryPhotosAlbums(0);
 +                }
 +            }, 200);
@@ -48,7 +48,7 @@ index 0000000..0000000 100644
 +
 +        @Override
 +        public void onChange(boolean selfChange, Uri uri, int flags) {
-+            desu.inugram.helpers.GalleryHelper.recordEvent(uri, flags);
++            desu.inugram.helpers.media.GalleryHelper.recordEvent(uri, flags);
 +            super.onChange(selfChange, uri, flags);
 +        }
      }
@@ -60,7 +60,7 @@ index 0000000..0000000 100644
                  refreshGalleryRunnable = null;
 -                loadGalleryPhotosAlbums(0);
 -            }, 2000);
-+                if (!desu.inugram.helpers.GalleryHelper.tryConsumeIncremental(0)) {
++                if (!desu.inugram.helpers.media.GalleryHelper.tryConsumeIncremental(0)) {
 +                    loadGalleryPhotosAlbums(0);
 +                }
 +            }, 200);
@@ -68,7 +68,7 @@ index 0000000..0000000 100644
 +
 +        @Override
 +        public void onChange(boolean selfChange, Uri uri, int flags) {
-+            desu.inugram.helpers.GalleryHelper.recordEvent(uri, flags);
++            desu.inugram.helpers.media.GalleryHelper.recordEvent(uri, flags);
 +            super.onChange(selfChange, uri, flags);
          }
      }
@@ -77,7 +77,7 @@ index 0000000..0000000 100644
              allPhotosAlbumEntry = allPhotosAlbumFinal;
              allMediaAlbumEntry = allMediaAlbumFinal;
              allVideosAlbumEntry = allVideosAlbumFinal;
-+            desu.inugram.helpers.GalleryHelper.markFullScanComplete(cameraAlbumIdFinal);
++            desu.inugram.helpers.media.GalleryHelper.markFullScanComplete(cameraAlbumIdFinal);
              NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.albumsDidLoad, guid, mediaAlbumsSorted, photoAlbumsSorted, cameraAlbumIdFinal);
          }, delay);
      }

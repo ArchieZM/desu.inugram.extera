@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.graphics.withTranslation
 import desu.inugram.SearchRegistry
+import desu.inugram.helpers.InuUtils
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController
@@ -147,7 +148,7 @@ abstract class SettingsPageActivity : UniversalFragment() {
                 LocaleController.getString(R.string.InuRestartNow)
             ) {
                 val activity = parentActivity ?: return@createSimpleBulletin
-                desu.inugram.helpers.InuUtils.restartApp(activity)
+                InuUtils.restartApp(activity)
             }
             .show()
     }

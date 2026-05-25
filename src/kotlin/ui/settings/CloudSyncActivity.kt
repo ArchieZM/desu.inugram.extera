@@ -13,9 +13,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import desu.inugram.InuConfig
-import desu.inugram.helpers.CloudSettingsHelper
+import desu.inugram.helpers.cloud.CloudSettingsHelper
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.SettingsBackupHelper
+import desu.inugram.helpers.cloud.SettingsBackupHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.Emoji
 import org.telegram.messenger.LocaleController

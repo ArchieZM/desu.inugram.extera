@@ -68,6 +68,9 @@ stg new feature__double-tap-to-edit -m 'Allow editing by double tapping a messag
 - Under ~5–7 lines of change, inline it in the patch instead of adding a helper.
 - For bigger changes, prefer running logic *after* stock code rather than rewriting it (easier rebase).
 - Reference stock constants directly from the helper (make them `public` if needed).
+- Helpers live in sub-packages by feature area: `chat/`, `dialogs/`, `menu/`, `translate/`, `search/`, `media/`, `font/`, `update/`, `cloud/`, `security/`, `theme/`, `profile/`, `icons/`, `maps/`. Cross-cutting / standalone ones stay flat in `desu.inugram.helpers`. New helpers go into the matching sub-package; create a new one only if no existing area fits.
+- Naming convention (not drift, do not mass-rename): `*Helper` = feature-coordinator singleton; `*Config` = `InuConfig.Item` subclass / data model; `*Utils`/`*Parser`/`*Drawable`/`*Resources` = concrete type or algorithm.
+- `InuHooks` is for generic lifecycle dispatch only (init, onUpdate, onDeepLink, onAuthSuccess, onResume, etc.). Feature-specific code lives on its helper; new feature hooks add `@JvmStatic` methods on the helper itself, not on `InuHooks`.
 
 ## Project landmarks
 

@@ -17,7 +17,7 @@ index 0000000..0000000 100644
              int count = webPage.cached_page.blocks.size();
              for (int a = 0; a < count; a++) {
                  TLRPC.PageBlock block = webPage.cached_page.blocks.get(a);
-+                if (desu.inugram.helpers.InstantViewHelper.shouldHideBlock(block)) continue;
++                if (desu.inugram.helpers.translate.InstantViewHelper.shouldHideBlock(block)) continue;
                  if (a == 0) {
                      block.first = true;
                      if (block instanceof TLRPC.TL_pageBlockCover) {

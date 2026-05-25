@@ -21,7 +21,7 @@ index 0000000..0000000 100644
                          inlineBots = inlineBotsNew;
                          guestBots = guestsBotsNew;
                          webapps = webappsNew;
-+                        desu.inugram.helpers.ParanoiaHelper.filterTopPeers(currentAccount, hints);
++                        desu.inugram.helpers.security.ParanoiaHelper.filterTopPeers(currentAccount, hints);
                          buildShortcuts();
                          getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
                          getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
@@ -29,7 +29,7 @@ index 0000000..0000000 100644
                          }
                      }
                      getUserConfig().saveConfig(false);
-+                    desu.inugram.helpers.ParanoiaHelper.filterTopPeers(currentAccount, hints);
++                    desu.inugram.helpers.security.ParanoiaHelper.filterTopPeers(currentAccount, hints);
                      buildShortcuts();
                      getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
                      getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
@@ -41,7 +41,7 @@ index 0000000..0000000 100644
          }
          for (int a = 0, N = allDialogs.size(); a < N; a++) {
              TLRPC.Dialog d = allDialogs.get(a);
-+            if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
++            if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
              if (d instanceof TLRPC.TL_dialog) {
                  long dialogId = d.id;
                  if (DialogObject.isEncryptedDialog(dialogId)) {
@@ -49,7 +49,7 @@ index 0000000..0000000 100644
                  }
                  for (int a = 0, N = allDialogs.size(); a < N; a++) {
                      TLRPC.Dialog d = allDialogs.get(a);
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
                      if (d instanceof TLRPC.TL_dialog) {
                          long dialogId = d.id;
                          if (DialogObject.isEncryptedDialog(dialogId)) {
@@ -57,7 +57,7 @@ index 0000000..0000000 100644
          }
          for (int a = 0, N = allDialogs.size(); a < N; a++) {
              TLRPC.Dialog d = allDialogs.get(a);
-+            if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
++            if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, d.id)) continue;
              if (d instanceof TLRPC.TL_dialog) {
                  ArrayList<MessageObject> messageObjects = dialogMessage.get(d.id);
                  if (messageObjects != null) {
@@ -69,7 +69,7 @@ index 0000000..0000000 100644
                      if (id == -1) {
                          continue;
                      }
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, id)) continue;
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, id)) continue;
                      dids.add(id);
                      if (users != null && chats != null) {
                          if (DialogObject.isUserDialog(id)) {
@@ -77,7 +77,7 @@ index 0000000..0000000 100644
                      if (id == -1) {
                          continue;
                      }
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, id)) continue;
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, id)) continue;
                      dids.add(id);
                      if (DialogObject.isUserDialog(id)) {
                          usersToLoad.add(id);
@@ -85,7 +85,7 @@ index 0000000..0000000 100644
                      if (DialogObject.isFolderDialogId(dialogId)) {
                          continue;
                      }
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, dialogId)) continue;
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, dialogId)) continue;
                      if (add) {
                          dids.add(dialogId);
                      }
@@ -93,7 +93,7 @@ index 0000000..0000000 100644
              }
              while (cursor.next()) {
                  long id = cursor.longValue(0);
-+                if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, id)) continue;
++                if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, id)) continue;
                  DialogsSearchAdapter.DialogSearchResult dialogSearchResult = new DialogsSearchAdapter.DialogSearchResult();
                  dialogSearchResult.date = cursor.intValue(1);
                  dialogsResult.put(id, dialogSearchResult);
@@ -101,7 +101,7 @@ index 0000000..0000000 100644
                  cursor = getDatabase().queryFinalized("SELECT u.data, u.status, u.name, u.uid FROM users as u INNER JOIN contacts as c ON u.uid = c.uid");
                  while (cursor.next()) {
                      long uid = cursor.longValue(3);
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, uid)) {
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, uid)) {
 +                        continue;
 +                    }
                      if (dialogsResult.indexOfKey(uid) >= 0) {
@@ -115,7 +115,7 @@ index 0000000..0000000 100644
  
              for (int a = 0; a < messageObjects.size(); a++) {
                  MessageObject messageObject = messageObjects.get(a);
-+                if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, messageObject.getDialogId())) continue;
++                if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, messageObject.getDialogId())) continue;
                  if (messageObject.messageOwner != null && (messageObject.isImportedForward() ||
                          messageObject.messageOwner.action instanceof TLRPC.TL_messageActionSetMessagesTTL ||
                          messageObject.messageOwner.silent && (messageObject.messageOwner.action instanceof TLRPC.TL_messageActionContactSignUp || messageObject.messageOwner.action instanceof TLRPC.TL_messageActionUserJoined)) ||
@@ -123,7 +123,7 @@ index 0000000..0000000 100644
              SharedPreferences preferences = getAccountInstance().getNotificationsSettings();
              for (int b = 0; b < dialogsToUpdate.size(); b++) {
                  long dialogId = dialogsToUpdate.keyAt(b);
-+                if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, dialogId)) continue;
++                if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, dialogId)) continue;
                  Integer currentCount = pushDialogs.get(dialogId);
                  int newCount = dialogsToUpdate.get(dialogId);
                  boolean forum = false;
@@ -131,7 +131,7 @@ index 0000000..0000000 100644
                              final ArrayList<TLRPC.Dialog> dialogs = new ArrayList<>(MessagesController.getInstance(a).allDialogs);
                              for (int i = 0, N = dialogs.size(); i < N; i++) {
                                  TLRPC.Dialog dialog = dialogs.get(i);
-+                                if (dialog != null && desu.inugram.helpers.ParanoiaHelper.isHidden(a, dialog.id)) continue;
++                                if (dialog != null && desu.inugram.helpers.security.ParanoiaHelper.isHidden(a, dialog.id)) continue;
                                  if (dialog != null && DialogObject.isChatDialog(dialog.id)) {
                                      TLRPC.Chat chat = getMessagesController().getChat(-dialog.id);
                                      if (ChatObject.isNotInChat(chat)) {
@@ -139,7 +139,7 @@ index 0000000..0000000 100644
                          try {
                              for (int i = 0, N = MessagesController.getInstance(a).allDialogs.size(); i < N; i++) {
                                  TLRPC.Dialog dialog = MessagesController.getInstance(a).allDialogs.get(i);
-+                                if (desu.inugram.helpers.ParanoiaHelper.isHidden(a, dialog.id)) continue;
++                                if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(a, dialog.id)) continue;
                                  if (DialogObject.isChatDialog(dialog.id)) {
                                      TLRPC.Chat chat = getMessagesController().getChat(-dialog.id);
                                      if (ChatObject.isNotInChat(chat)) {
@@ -147,8 +147,8 @@ index 0000000..0000000 100644
      }
  
      private void showOrUpdateNotification(boolean notifyAboutLast) {
--        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.PasscodeHelper.isAccountHidden(currentAccount) || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
-+        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.PasscodeHelper.isAccountHidden(currentAccount) || desu.inugram.helpers.ParanoiaHelper.shouldSuppressNotifications() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
+-        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.security.PasscodeHelper.isAccountHidden(currentAccount) || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
++        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.security.PasscodeHelper.isAccountHidden(currentAccount) || desu.inugram.helpers.security.ParanoiaHelper.shouldSuppressNotifications() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
              dismissNotification();
              return;
          }
@@ -160,8 +160,8 @@ index 0000000..0000000 100644
      }
  
      private boolean filter(Object obj) {
-+        if (obj instanceof TLRPC.User && desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, ((TLRPC.User) obj).id)) return false;
-+        if (obj instanceof TLRPC.Chat && desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, -((TLRPC.Chat) obj).id)) return false;
++        if (obj instanceof TLRPC.User && desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, ((TLRPC.User) obj).id)) return false;
++        if (obj instanceof TLRPC.Chat && desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, -((TLRPC.Chat) obj).id)) return false;
          if (dialogsType != DialogsActivity.DIALOGS_TYPE_START_ATTACH_BOT) {
              return true;
          }
@@ -169,7 +169,7 @@ index 0000000..0000000 100644
                          for (int a = 0; a < res.messages.size(); a++) {
                              TLRPC.Message message = res.messages.get(a);
                              long did = MessageObject.getDialogId(message);
-+                            if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, did)) continue;
++                            if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, did)) continue;
                              int maxId = MessagesController.getInstance(currentAccount).deletedHistory.get(did);
                              if (maxId != 0 && message.id <= maxId) {
                                  continue;
@@ -177,7 +177,7 @@ index 0000000..0000000 100644
                          for (int a = 0; a < res.messages.size(); a++) {
                              TLRPC.Message message = res.messages.get(a);
                              long did = MessageObject.getDialogId(message);
-+                            if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, did)) continue;
++                            if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, did)) continue;
                              int maxId = MessagesController.getInstance(currentAccount).deletedHistory.get(did);
                              if (maxId != 0 && message.id <= maxId) {
                                  continue;
@@ -185,7 +185,7 @@ index 0000000..0000000 100644
                  final LongSparseArray<RecentSearchObject> hashMap = new LongSparseArray<>();
                  while (cursor.next()) {
                      long did = cursor.longValue(0);
-+                    if (desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, did)) continue;
++                    if (desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, did)) continue;
  
                      boolean add = false;
                      if (DialogObject.isEncryptedDialog(did)) {
@@ -198,14 +198,14 @@ index 0000000..0000000 100644
                                      }
                                      if (chat != null) {
 -                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || !allowGlobalResults && ChatObject.isNotInChat(chat) || !filter(chat)) {
-+                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || !allowGlobalResults && ChatObject.isNotInChat(chat) || !filter(chat) || desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, -chat.id)) {
++                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || !allowGlobalResults && ChatObject.isNotInChat(chat) || !filter(chat) || desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, -chat.id)) {
                                              continue;
                                          }
                                          globalSearch.add(chat);
                                          globalSearchMap.put(-chat.id, chat);
                                      } else if (user != null) {
 -                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && !user.contact || !filter(user)) {
-+                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && !user.contact || !filter(user) || desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, user.id)) {
++                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && !user.contact || !filter(user) || desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, user.id)) {
                                              continue;
                                          }
                                          globalSearch.add(user);
@@ -214,14 +214,14 @@ index 0000000..0000000 100644
                                      }
                                      if (chat != null) {
 -                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || -chat.id == exceptDialogId || !filter(chat)) {
-+                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || -chat.id == exceptDialogId || !filter(chat) || desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, -chat.id)) {
++                                        if (!allowChats || canAddGroupsOnly && !ChatObject.canAddBotsToChat(chat) || -chat.id == exceptDialogId || !filter(chat) || desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, -chat.id)) {
                                              continue;
                                          }
                                          localServerSearch.add(chat);
                                          globalSearchMap.put(-chat.id, chat);
                                      } else if (user != null) {
 -                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || user.id == exceptDialogId || !filter(user)) {
-+                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || user.id == exceptDialogId || !filter(user) || desu.inugram.helpers.ParanoiaHelper.isHidden(currentAccount, user.id)) {
++                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || user.id == exceptDialogId || !filter(user) || desu.inugram.helpers.security.ParanoiaHelper.isHidden(currentAccount, user.id)) {
                                              continue;
                                          }
                                          localServerSearch.add(user);
@@ -233,7 +233,7 @@ index 0000000..0000000 100644
      private void updateIconsVisibility() {
          availableIcons.clear();
          availableIcons.addAll(Arrays.asList(LauncherIconController.LauncherIcon.values()));
-+        desu.inugram.helpers.ParanoiaHelper.filterLauncherIcons(availableIcons);
++        desu.inugram.helpers.security.ParanoiaHelper.filterLauncherIcons(availableIcons);
          if (MessagesController.getInstance(currentAccount).premiumFeaturesBlocked()) {
              for (int i = 0; i < availableIcons.size(); i++) {
                  if (availableIcons.get(i).premium) {

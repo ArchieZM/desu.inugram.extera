@@ -24,7 +24,7 @@ index 0000000..0000000 100644
  import androidx.core.view.ViewCompat;
  import androidx.recyclerview.widget.LinearLayoutManager;
  import androidx.recyclerview.widget.RecyclerView;
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  
  public class CallLogActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, MainTabsActivity.TabFragmentDelegate {
  	private final int ADDITIONAL_LIST_HEIGHT_DP = Build.VERSION.SDK_INT >= 31 ? 48 : 0;
@@ -85,7 +85,7 @@ index 0000000..0000000 100644
  import java.util.ArrayList;
  import java.util.Arrays;
  import java.util.List;
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  
  public final class BulletinFactory {
  
@@ -156,7 +156,7 @@ index 0000000..0000000 100644
  
  import java.util.ArrayList;
  
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
  import me.vkryl.android.animator.FactorAnimator;
  
@@ -191,7 +191,7 @@ index 0000000..0000000 100644
  import java.util.concurrent.ConcurrentHashMap;
  
 +import desu.inugram.InuHooks;
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
  import me.vkryl.android.animator.FactorAnimator;
  
@@ -220,7 +220,7 @@ index 0000000..0000000 100644
                  }
              }
 +
-+            InuHooks.addDialogsActivityOptions(this, io);
++            desu.inugram.helpers.dialogs.DrawerHelper.addDialogsActivityOptions(this, io);
          } else {
              io.add(R.drawable.msg_customize, getString(R.string.ArchiveSettings), () -> presentFragment(new ArchiveSettingsActivity()));
              io.add(R.drawable.msg_help, getString(R.string.HowDoesItWork), this::showArchiveHelp);
@@ -243,7 +243,7 @@ index 0000000..0000000 100644
  import java.util.ArrayList;
  import java.util.Collections;
  
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
  import me.vkryl.android.animator.FactorAnimator;
  
@@ -464,7 +464,7 @@ index 0000000..0000000 100644
  import java.util.zip.ZipEntry;
  import java.util.zip.ZipOutputStream;
  
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
  
  public class ProfileActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate, SharedMediaLayout.SharedMediaPreloaderDelegate, ImageUpdater.ImageUpdaterDelegate, SharedMediaLayout.Delegate, MainTabsActivity.TabFragmentDelegate {
@@ -498,7 +498,7 @@ index 0000000..0000000 100644
  import androidx.core.view.WindowInsetsCompat;
  import androidx.recyclerview.widget.RecyclerView;
  
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
 +
  import org.telegram.PhoneFormat.PhoneFormat;
  import org.telegram.messenger.AndroidUtilities;
@@ -531,7 +531,7 @@ index 0000000..0000000 100644
  import java.util.HashSet;
  import java.util.Iterator;
  import java.util.concurrent.CountDownLatch;
-+import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.MainTabsHelper;
  
  public class TopicsFragment extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, ChatActivityInterface, RightSlidingDialogContainer.BaseFragmentWithFullscreen, MainTabsActivity.TabFragmentDelegate {
  
@@ -566,7 +566,7 @@ index 0000000..0000000 100644
      public void clearViews() {
          if (viewPager != null) {
 -            initialFragmentPosition = viewPager.getCurrentPosition();
-+            initialFragmentPosition = desu.inugram.helpers.MainTabsHelper.isHidden() ? 0 : viewPager.getCurrentPosition();
++            initialFragmentPosition = desu.inugram.helpers.dialogs.MainTabsHelper.isHidden() ? 0 : viewPager.getCurrentPosition();
          }
          for (int a = 0, N = fragmentsArr.size(); a < N; a++) {
              final FragmentState state = fragmentsArr.valueAt(a);

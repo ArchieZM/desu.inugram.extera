@@ -26,7 +26,7 @@ index 0000000..0000000 100644
 +
 +    public static Typeface getTypeface(String assetPath, boolean inu_forPaint) {
          synchronized (typefaceCache) {
-+            Typeface inu_override = inu_forPaint ? null : desu.inugram.InuHooks.onGetTypeface(typefaceCache, assetPath);
++            Typeface inu_override = inu_forPaint ? null : desu.inugram.helpers.font.FontHelper.onGetTypeface(typefaceCache, assetPath);
 +            if (inu_override != null) return inu_override;
              if (!typefaceCache.containsKey(assetPath)) {
                  try {
@@ -39,7 +39,7 @@ index 0000000..0000000 100644
      public SimpleTextView(Context context) {
          super(context);
          textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-+        desu.inugram.InuHooks.applyDefaultFont(textPaint);
++        desu.inugram.helpers.font.FontHelper.applyDefaultFont(textPaint);
          setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
      }
  
@@ -51,7 +51,7 @@ index 0000000..0000000 100644
          dialogs_tagTextPaint.setTextSize(dp(10));
          dialogs_searchNamePaint.setTextSize(dp(16));
          dialogs_searchNameEncryptedPaint.setTextSize(dp(16));
-+        desu.inugram.InuHooks.onThemePaintsCreated();
++        desu.inugram.helpers.font.FontHelper.onThemePaintsCreated();
      }
  
      public static void applyDialogsTheme() {
@@ -59,7 +59,7 @@ index 0000000..0000000 100644
              addChatPaint(key_paint_chatComposeBackground, chat_composeBackgroundPaint, key_chat_messagePanelBackground);
              addChatPaint(key_paint_chatTimeBackground, chat_timeBackgroundPaint, key_chat_mediaTimeBackground);
          }
-+        desu.inugram.InuHooks.onThemePaintsCreated();
++        desu.inugram.helpers.font.FontHelper.onThemePaintsCreated();
      }
  
      public static void createChatResources(Context context, boolean fontsOnly) {
@@ -67,7 +67,7 @@ index 0000000..0000000 100644
          }
  
          profile_aboutTextPaint.setTextSize(dp(16));
-+        desu.inugram.InuHooks.onThemePaintsCreated();
++        desu.inugram.helpers.font.FontHelper.onThemePaintsCreated();
      }
  
      private static ColorFilter currentShareColorFilter;
@@ -79,7 +79,7 @@ index 0000000..0000000 100644
          if (customPaints) {
              if (statusPaint == null) {
                  statusPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-+                desu.inugram.InuHooks.applyDefaultFont(statusPaint);
++                desu.inugram.helpers.font.FontHelper.applyDefaultFont(statusPaint);
              }
              statusPaint.setTextSize(dp(callCellStyle ? 13f : 15));
              if (currentStatusPaint == Theme.dialogs_offlinePaint) {
@@ -91,7 +91,7 @@ index 0000000..0000000 100644
          private int cacheType = AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES;
          public TextViewEmojis(Context context) {
              super(context);
-+            desu.inugram.InuHooks.applyDefaultFont(this);
++            desu.inugram.helpers.font.FontHelper.applyDefaultFont(this);
          }
  
          private ColorFilter emojiColorFilter;
@@ -103,7 +103,7 @@ index 0000000..0000000 100644
              this.preserveIndex = preserveIndex;
              this.startFromEnd = startFromEnd;
              this.enforceByLetter = enforceByLetter;
-+            desu.inugram.InuHooks.applyDefaultFont(textPaint);
++            desu.inugram.helpers.font.FontHelper.applyDefaultFont(textPaint);
          }
  
          public void setAllowCancel(boolean allowCancel) {

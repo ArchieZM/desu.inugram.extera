@@ -9,11 +9,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.MenuOrderConfig
-import desu.inugram.helpers.MenuOrderEntry
-import desu.inugram.helpers.MenuOrderItem
+import desu.inugram.helpers.menu.MenuOrderConfig
+import desu.inugram.helpers.menu.MenuOrderEntry
+import desu.inugram.helpers.menu.MenuOrderItem
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
@@ -140,7 +141,7 @@ abstract class MenuOrderActivity<I : MenuOrderItem> : SettingsPageActivity() {
 }
 
 @SuppressLint("ViewConstructor")
-class MenuOrderRow(context: Context) : android.widget.LinearLayout(context) {
+class MenuOrderRow(context: Context) : LinearLayout(context) {
     private val handle: ImageView
     private val icon: ImageView
     private val text: TextView

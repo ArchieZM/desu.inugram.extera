@@ -7,7 +7,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import desu.inugram.InuConfig
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.WebPreviewHelper
+import desu.inugram.helpers.chat.WebPreviewHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R

@@ -15,7 +15,7 @@ index 0000000..0000000 100644
  
                      forwardedNameWidth = getMaxNameWidth();
                      forwardedString = getForwardedMessageText(messageObject);
-+                    forwardedString = desu.inugram.helpers.ChatHelper.maybeAppendForwardTime(forwardedString, messageObject);
++                    forwardedString = desu.inugram.helpers.chat.ChatHelper.maybeAppendForwardTime(forwardedString, messageObject);
                      if (hasPsaHint) {
                          forwardedNameWidth -= dp(36);
                      }

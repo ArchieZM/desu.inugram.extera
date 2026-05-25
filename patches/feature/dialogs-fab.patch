@@ -15,9 +15,9 @@ index 0000000..0000000 100644
  import java.util.concurrent.ConcurrentHashMap;
  
  import desu.inugram.InuHooks;
-+import desu.inugram.helpers.DialogsFabHelper;
- import desu.inugram.helpers.FolderHelper;
- import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.DialogsFabHelper;
+ import desu.inugram.helpers.dialogs.FolderHelper;
+ import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
 @@ -4484,7 +4485,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                                  } else {

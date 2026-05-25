@@ -9,10 +9,10 @@ import androidx.annotation.RequiresApi
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.SearchRegistry
-import desu.inugram.helpers.FontHelper
+import desu.inugram.helpers.font.FontHelper
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.MapsHelper
-import desu.inugram.helpers.MonetHelper
+import desu.inugram.helpers.maps.MapsHelper
+import desu.inugram.helpers.theme.MonetHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.LocaleController

@@ -5,6 +5,7 @@ import android.content.res.Resources
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController
 import java.util.Locale
+import desu.inugram.helpers.security.ParanoiaHelper
 
 // resolves fork ("local-only") strings against the Telegram-selected locale instead of the
 // system locale. builds candidate Locales from LocaleInfo (pluralLangCode/baseLangCode/shortName,

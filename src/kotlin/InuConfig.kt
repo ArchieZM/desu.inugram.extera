@@ -3,10 +3,10 @@ package desu.inugram
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import desu.inugram.helpers.FormattingPopupConfig
-import desu.inugram.helpers.MessageMenuConfig
-import desu.inugram.helpers.ChatMenuConfig
-import desu.inugram.helpers.PinnedReactionsHelper
+import desu.inugram.ui.FormattingPopupConfig
+import desu.inugram.helpers.menu.MessageMenuConfig
+import desu.inugram.helpers.menu.ChatMenuConfig
+import desu.inugram.helpers.chat.PinnedReactionsHelper
 
 object InuConfig {
     private const val PREFS_NAME = "inugram"

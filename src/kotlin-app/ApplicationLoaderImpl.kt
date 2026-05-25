@@ -3,10 +3,10 @@ package desu.inugram
 import android.app.Activity
 import android.content.Context
 import android.view.ViewGroup
-import desu.inugram.helpers.ApkInstaller
-import desu.inugram.helpers.UpdateHelper
-import desu.inugram.helpers.maplibre.MapLibreMapsProvider
+import desu.inugram.helpers.update.ApkInstaller
+import desu.inugram.helpers.update.UpdateHelper
 import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.ApplicationLoaderImpl as BaseApplicationLoaderImpl
 import org.telegram.messenger.BetaUpdate
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.FileLog
@@ -17,8 +17,9 @@ import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.Components.AlertsCreator
 import org.telegram.ui.IUpdateLayout
+import desu.inugram.helpers.maps.MapLibreMapsProvider
 
-class ApplicationLoaderImpl : org.telegram.messenger.ApplicationLoaderImpl() {
+class ApplicationLoaderImpl : BaseApplicationLoaderImpl() {
     override fun isStandalone(): Boolean = true
 
     override fun isCustomUpdate(): Boolean = true

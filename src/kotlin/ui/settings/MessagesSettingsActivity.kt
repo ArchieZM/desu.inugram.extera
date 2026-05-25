@@ -4,7 +4,7 @@ import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.SearchRegistry
-import desu.inugram.helpers.DoubleTapAction
+import desu.inugram.helpers.chat.DoubleTapAction
 import desu.inugram.helpers.InuUtils
 import desu.inugram.ui.settings.PinnedReactionsActivity
 import org.telegram.messenger.LocaleController

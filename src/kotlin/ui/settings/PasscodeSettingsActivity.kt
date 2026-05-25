@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.PasscodeHelper
+import desu.inugram.helpers.security.PasscodeHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.ContactsController

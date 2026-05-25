@@ -18,7 +18,7 @@ index 0000000..0000000 100644
  import java.util.Map;
  import java.util.Objects;
  import java.util.concurrent.CountDownLatch;
-+import desu.inugram.helpers.MonetHelper;
++import desu.inugram.helpers.theme.MonetHelper;
  
  public class Theme {
  
@@ -150,7 +150,7 @@ index 0000000..0000000 100644
              subtitleView.setTranslationX(icon == 0 ? dp(2) : 0);
  
 +            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && Theme.getActiveTheme().inu_isMonet()) {
-+                int flatHarmonizedColor = desu.inugram.helpers.MonetHelper.harmonizeAvatarColor(androidx.core.graphics.ColorUtils.blendARGB(iconColorTop, iconColorBottom, 0.5f));
++                int flatHarmonizedColor = desu.inugram.helpers.theme.MonetHelper.harmonizeAvatarColor(androidx.core.graphics.ColorUtils.blendARGB(iconColorTop, iconColorBottom, 0.5f));
 +                iconColorTop = flatHarmonizedColor;
 +                iconColorBottom = flatHarmonizedColor;
 +            }

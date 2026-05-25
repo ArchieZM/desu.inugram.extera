@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import desu.inugram.InuConfig
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.PinnedReactionsHelper
+import desu.inugram.helpers.chat.PinnedReactionsHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.DocumentObject
 import org.telegram.messenger.Emoji

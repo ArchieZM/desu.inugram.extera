@@ -26,7 +26,7 @@ index 0000000..0000000 100644
 -            }
 -            return 0;
 -        });
-+        desu.inugram.helpers.AccountOrderHelper.sort(accountNumbers);
++        desu.inugram.helpers.dialogs.AccountOrderHelper.sort(accountNumbers);
  
          ItemOptions o = ItemOptions.makeOptions(this, button);
          if (UserConfig.getActivatedAccountsCount() < UserConfig.MAX_ACCOUNT_COUNT) {
@@ -47,7 +47,7 @@ index 0000000..0000000 100644
          searchItem.setSearchFieldHint(getString(R.string.Search));
  
          otherItem = menu.addItem(1, R.drawable.ic_ab_other);
-+        if (UserConfig.getActivatedAccountsCount() > 1 && !desu.inugram.helpers.ParanoiaHelper.hidesOtherAccounts()) {
++        if (UserConfig.getActivatedAccountsCount() > 1 && !desu.inugram.helpers.security.ParanoiaHelper.hidesOtherAccounts()) {
 +            otherItem.addSubItem(98, R.drawable.tabs_reorder, getString(R.string.InuReorderAccounts));
 +        }
          otherItem.addSubItem(2, R.drawable.msg_leave, getString(R.string.LogOut));
@@ -80,7 +80,7 @@ index 0000000..0000000 100644
 -            }
 -            return 0;
 -        });
-+        desu.inugram.helpers.AccountOrderHelper.sort(accountNumbers);
++        desu.inugram.helpers.dialogs.AccountOrderHelper.sort(accountNumbers);
  
          final Set<String> suggestions = getMessagesController().pendingSuggestions;
          if (suggestions.contains("PREMIUM_GRACE")) {

@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import desu.inugram.helpers.AccountOrderHelper
-import desu.inugram.helpers.DialogsFabHelper
-import desu.inugram.helpers.PasscodeHelper
+import desu.inugram.helpers.dialogs.AccountOrderHelper
+import desu.inugram.helpers.dialogs.DialogsFabHelper
+import desu.inugram.helpers.security.PasscodeHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MediaDataController

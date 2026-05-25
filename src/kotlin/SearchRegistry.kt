@@ -1,7 +1,7 @@
 package desu.inugram
 
 import android.content.Intent
-import desu.inugram.helpers.ParanoiaHelper
+import desu.inugram.helpers.security.ParanoiaHelper
 import desu.inugram.ui.settings.AnnoyancesSettingsActivity
 import desu.inugram.ui.settings.AppearanceSettingsActivity
 import desu.inugram.ui.settings.BehaviorSettingsActivity

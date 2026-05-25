@@ -33,7 +33,7 @@ index 0000000..0000000 100644
              AndroidUtilities.cancelRunOnUIThread(searchGlobalRunnable);
              searchGlobalRunnable = null;
          }
-+        desu.inugram.helpers.SearchFromHelper.cancel();
++        desu.inugram.helpers.search.SearchFromHelper.cancel();
          if (checkAgainRunnable != null) {
              AndroidUtilities.cancelRunOnUIThread(checkAgainRunnable);
              checkAgainRunnable = null;
@@ -42,7 +42,7 @@ index 0000000..0000000 100644
                  showUsersResult(newResult, newMap, true);
              }
 +            if (forSearch && desu.inugram.InuConfig.SEARCH_FROM_GLOBAL.getValue()) {
-+                desu.inugram.helpers.SearchFromHelper.queryAndMerge(this, currentAccount, usernameString);
++                desu.inugram.helpers.search.SearchFromHelper.queryAndMerge(this, currentAccount, usernameString);
 +            }
          } else if (foundType == 1) {
              ArrayList<String> newResult = new ArrayList<>();

@@ -374,7 +374,7 @@ index 0000000..0000000 100644
  
          <receiver android:name=".NotificationDismissReceiver" android:exported="false"/>
  
-+        <receiver android:name="desu.inugram.helpers.ApkInstaller$UpdateReceiver" android:exported="false">
++        <receiver android:name="desu.inugram.helpers.update.ApkInstaller$UpdateReceiver" android:exported="false">
 +            <intent-filter>
 +                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
 +            </intent-filter>
@@ -528,7 +528,7 @@ index 0000000..0000000 100644
 -            FileLog.e(e);
 -        }
 -        return null;
-+        return desu.inugram.helpers.UpdateHelper.getFullVersionInfo();
++        return desu.inugram.helpers.update.UpdateHelper.getFullVersionInfo();
      }
  
      @Override

@@ -4,7 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.ParanoiaHelper
+import desu.inugram.helpers.security.ParanoiaHelper
+import desu.inugram.ui.showInputDialog
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.AlertDialog
@@ -116,7 +117,7 @@ class ParanoiaActivity : SettingsPageActivity() {
     }
 
     private fun showCodeDialog() {
-        desu.inugram.ui.showInputDialog(
+        showInputDialog(
             fragment = this,
             title = LocaleController.getString(R.string.InuParanoiaExitCode),
             hint = LocaleController.getString(R.string.InuParanoiaExitCodeHint),

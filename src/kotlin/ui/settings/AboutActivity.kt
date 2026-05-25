@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import desu.inugram.InuConfig
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.UpdateHelper
+import desu.inugram.helpers.update.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.ApplicationLoader

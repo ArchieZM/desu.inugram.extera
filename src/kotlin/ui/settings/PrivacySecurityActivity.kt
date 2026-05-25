@@ -4,7 +4,7 @@ import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.ParanoiaHelper
+import desu.inugram.helpers.security.ParanoiaHelper
 import desu.inugram.helpers.UrlCleanerHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController

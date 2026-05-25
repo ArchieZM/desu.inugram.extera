@@ -15,7 +15,7 @@ index 0000000..0000000 100644
                  }
              }
  
-+            private final desu.inugram.helpers.TwoFingerSelectHelper.State inu_twoFingerSelect = desu.inugram.helpers.TwoFingerSelectHelper.newState(ChatActivity.this, this);
++            private final desu.inugram.helpers.chat.TwoFingerSelectHelper.State inu_twoFingerSelect = desu.inugram.helpers.chat.TwoFingerSelectHelper.newState(ChatActivity.this, this);
 +
 +            @Override
 +            public boolean dispatchTouchEvent(MotionEvent ev) {

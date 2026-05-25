@@ -3,7 +3,7 @@ package desu.inugram.ui.settings
 import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.SearchRegistry
-import desu.inugram.helpers.DialogsFabHelper
+import desu.inugram.helpers.dialogs.DialogsFabHelper
 import desu.inugram.helpers.InuUtils
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessagesStorage

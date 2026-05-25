@@ -68,7 +68,7 @@ index 0000000..0000000 100644
          }
  
 +        if (overrideColorProgress == 0 && desu.inugram.InuConfig.MATERIAL3_SWITCHES.getValue()) {
-+            desu.inugram.helpers.M3SwitchHelper.draw(getMeasuredWidth(), getMeasuredHeight(), progress, isChecked, drawIconType, iconProgress, iconDrawable, animatorIconVisibility.getFloatValue(), trackColorKey, trackCheckedColorKey, thumbCheckedColorKey, resourcesProvider, canvas);
++            desu.inugram.helpers.theme.M3SwitchHelper.draw(getMeasuredWidth(), getMeasuredHeight(), progress, isChecked, drawIconType, iconProgress, iconDrawable, animatorIconVisibility.getFloatValue(), trackColorKey, trackCheckedColorKey, thumbCheckedColorKey, resourcesProvider, canvas);
 +            return;
 +        }
 +

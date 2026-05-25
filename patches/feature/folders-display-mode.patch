@@ -31,7 +31,7 @@ index 0000000..0000000 100644
  import java.util.concurrent.atomic.AtomicLong;
  import java.util.concurrent.atomic.AtomicReference;
  import java.util.function.Consumer;
-+import desu.inugram.helpers.FolderHelper;
++import desu.inugram.helpers.dialogs.FolderHelper;
  
  public class MessagesStorage extends BaseController {
  
@@ -147,7 +147,7 @@ index 0000000..0000000 100644
  
  import java.util.ArrayList;
 -import java.util.Map;
-+import desu.inugram.helpers.FolderHelper;
++import desu.inugram.helpers.dialogs.FolderHelper;
  
  @SuppressLint("ViewConstructor")
  public class FilterTabsView extends FrameLayout {
@@ -457,8 +457,8 @@ index 0000000..0000000 100644
  import java.util.concurrent.ConcurrentHashMap;
  
  import desu.inugram.InuHooks;
-+import desu.inugram.helpers.FolderHelper;
- import desu.inugram.helpers.MainTabsHelper;
++import desu.inugram.helpers.dialogs.FolderHelper;
+ import desu.inugram.helpers.dialogs.MainTabsHelper;
  import me.vkryl.android.animator.BoolAnimator;
  import me.vkryl.android.animator.FactorAnimator;
 @@ -3609,6 +3610,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.

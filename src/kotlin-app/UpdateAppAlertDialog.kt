@@ -15,7 +15,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
-import desu.inugram.helpers.UpdateHelper
+import desu.inugram.helpers.update.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.DocumentObject
 import org.telegram.messenger.FileLoader

@@ -126,7 +126,7 @@ index 0000000..0000000 100644
 +                org.telegram.ui.ActionBar.MenuDrawable menuDrawable = new org.telegram.ui.ActionBar.MenuDrawable();
 +                menuDrawable.setRoundCap();
 +                actionBar.setBackButtonDrawable(menuDrawable);
-+                desu.inugram.helpers.DrawerHelper.refreshMenuButton(menuDrawable, false);
++                desu.inugram.helpers.dialogs.DrawerHelper.refreshMenuButton(menuDrawable, false);
              }
              if (folderId != 0) {
                  actionBar.setTitle(getString(R.string.ArchivedChats));
@@ -136,7 +136,7 @@ index 0000000..0000000 100644
                  if (id == -1) {
 +                    if (!hasMainTabs && desu.inugram.InuConfig.NAVIGATION_DRAWER.getValue()
 +                            && folderId == 0 && searchString == null
-+                            && desu.inugram.helpers.DrawerHelper.INSTANCE.toggleDrawer(parentLayout)) {
++                            && desu.inugram.helpers.dialogs.DrawerHelper.INSTANCE.toggleDrawer(parentLayout)) {
 +                        return;
 +                    }
                      if (rightSlidingDialogContainer != null && rightSlidingDialogContainer.hasFragment()) {
@@ -152,7 +152,7 @@ index 0000000..0000000 100644
              } else {
 -                MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -                actionBarLayout.addFragmentToStack(mainTabsActivity);
-+                desu.inugram.helpers.DrawerHelper.setupMainFragment(this, actionBarLayout, drawerLayoutContainer);
++                desu.inugram.helpers.dialogs.DrawerHelper.setupMainFragment(this, actionBarLayout, drawerLayoutContainer);
              }
  
              try {
@@ -161,7 +161,7 @@ index 0000000..0000000 100644
      private boolean switchingAccount;
      public void switchToAccount(int account, boolean removeAll) {
 -        switchToAccount(account, removeAll, obj -> new MainTabsActivity());
-+        switchToAccount(account, removeAll, obj -> desu.inugram.helpers.DrawerHelper.createMainFragment());
++        switchToAccount(account, removeAll, obj -> desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment());
      }
  
 -    public void switchToAccount(int account, boolean removeAll, GenericProvider<Void, MainTabsActivity> dialogsActivityProvider) {
@@ -182,7 +182,7 @@ index 0000000..0000000 100644
              showTosActivity(account, UserConfig.getInstance(account).unacceptedTermsOfService);
          }
          updateCurrentConnectionState(currentAccount);
-+        desu.inugram.helpers.DrawerHelper.notifyDataChanged();
++        desu.inugram.helpers.dialogs.DrawerHelper.notifyDataChanged();
  
          switchingAccount = false;
      }
@@ -196,7 +196,7 @@ index 0000000..0000000 100644
 -                            dialogsActivity.setInitialSearchString(searchQuery);
 -                        }
 -                        actionBarLayout.addFragmentToStack(mainTabsActivity, INavigationLayout.FORCE_NOT_ATTACH_VIEW);
-+                        desu.inugram.helpers.DrawerHelper.addMainFragmentToStack(actionBarLayout, searchQuery);
++                        desu.inugram.helpers.dialogs.DrawerHelper.addMainFragmentToStack(actionBarLayout, searchQuery);
                      }
                  }
              } else {
@@ -210,7 +210,7 @@ index 0000000..0000000 100644
 -                            dialogsActivity.setInitialSearchString(searchQuery);
 -                        }
 -                        actionBarLayout.addFragmentToStack(mainTabsActivity, INavigationLayout.FORCE_NOT_ATTACH_VIEW);
-+                        desu.inugram.helpers.DrawerHelper.addMainFragmentToStack(actionBarLayout, searchQuery);
++                        desu.inugram.helpers.dialogs.DrawerHelper.addMainFragmentToStack(actionBarLayout, searchQuery);
                      }
                  }
              }
@@ -225,7 +225,7 @@ index 0000000..0000000 100644
 -                    MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -                    mainTabsActivity.prepareDialogsActivity(args);
 -                    return mainTabsActivity;
-+                    return desu.inugram.helpers.DrawerHelper.createMainFragment(args);
++                    return desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment(args);
                  });
                  pendingSwitchingAccount = false;
                  finishFragment();
@@ -236,8 +236,8 @@ index 0000000..0000000 100644
 -                    MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -                    mainTabsActivity.prepareDialogsActivity(args);
 -                    presentFragment(mainTabsActivity, true);
-+                    desu.inugram.helpers.DrawerHelper.ensureSetup(getParentLayout());
-+                    presentFragment(desu.inugram.helpers.DrawerHelper.createMainFragment(args), true);
++                    desu.inugram.helpers.dialogs.DrawerHelper.ensureSetup(getParentLayout());
++                    presentFragment(desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment(args), true);
                  }
  
                  NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.mainUserInfoChanged);
@@ -252,8 +252,8 @@ index 0000000..0000000 100644
 -            MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -            mainTabsActivity.prepareDialogsActivity(args);
 -            presentFragment(mainTabsActivity, true);
-+            desu.inugram.helpers.DrawerHelper.ensureSetup(getParentLayout());
-+            presentFragment(desu.inugram.helpers.DrawerHelper.createMainFragment(args), true);
++            desu.inugram.helpers.dialogs.DrawerHelper.ensureSetup(getParentLayout());
++            presentFragment(desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment(args), true);
          } else {
              super.finishFragment();
          }
@@ -268,8 +268,8 @@ index 0000000..0000000 100644
 -                    MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -                    mainTabsActivity.prepareDialogsActivity(args);
 -                    presentFragment(mainTabsActivity, true);
-+                    desu.inugram.helpers.DrawerHelper.ensureSetup(getParentLayout());
-+                    presentFragment(desu.inugram.helpers.DrawerHelper.createMainFragment(args), true);
++                    desu.inugram.helpers.dialogs.DrawerHelper.ensureSetup(getParentLayout());
++                    presentFragment(desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment(args), true);
                  } else {
                      TwoStepVerificationActivity fragment = new TwoStepVerificationActivity();
                      fragment.setCurrentPasswordParams(currentPassword, currentPasswordHash, currentSecretId, currentSecret);
@@ -280,8 +280,8 @@ index 0000000..0000000 100644
 -            MainTabsActivity mainTabsActivity = new MainTabsActivity();
 -            mainTabsActivity.prepareDialogsActivity(args);
 -            presentFragment(mainTabsActivity, true);
-+            desu.inugram.helpers.DrawerHelper.ensureSetup(getParentLayout());
-+            presentFragment(desu.inugram.helpers.DrawerHelper.createMainFragment(args), true);
++            desu.inugram.helpers.dialogs.DrawerHelper.ensureSetup(getParentLayout());
++            presentFragment(desu.inugram.helpers.dialogs.DrawerHelper.createMainFragment(args), true);
          } else {
              super.finishFragment();
          }

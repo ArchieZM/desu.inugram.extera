@@ -4,7 +4,7 @@ package desu.inugram.ui.settings
 import android.content.Context
 import android.view.View
 import desu.inugram.InuConfig
-import desu.inugram.helpers.FormattingPopupConfig
+import desu.inugram.ui.FormattingPopupConfig
 import desu.inugram.helpers.InuUtils
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R

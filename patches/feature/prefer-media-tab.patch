@@ -24,7 +24,7 @@ index 0000000..0000000 100644
          } else {
              main_tab = null;
          }
-+        if (desu.inugram.helpers.ProfileHelper.preferMediaTab()) {
++        if (desu.inugram.helpers.profile.ProfileHelper.preferMediaTab()) {
 +            main_tab = null;
 +        }
          if (initialTab == TAB_GIFTS || initialTab == TAB_RECOMMENDED_CHANNELS || initialTab == TAB_SAVED_DIALOGS || initialTab == TAB_COMMON_GROUPS) {
@@ -35,10 +35,10 @@ index 0000000..0000000 100644
          } else if (main_tab instanceof TLRPC.TL_profileTabVoice && (hasMedia[2] == -1 || hasMedia[2] > 0)) {
              this.initialTab = TAB_VOICE;
 -        } else if (userInfo != null && userInfo.stories_pinned_available || chatInfo != null && chatInfo.stories_pinned_available || isStoriesView()) {
-+        } else if (!desu.inugram.helpers.ProfileHelper.preferMediaTab() && (userInfo != null && userInfo.stories_pinned_available || chatInfo != null && chatInfo.stories_pinned_available || isStoriesView())) {
++        } else if (!desu.inugram.helpers.profile.ProfileHelper.preferMediaTab() && (userInfo != null && userInfo.stories_pinned_available || chatInfo != null && chatInfo.stories_pinned_available || isStoriesView())) {
              this.initialTab = getInitialTab();
 -        } else if (userInfo != null && userInfo.stargifts_count > 0 || chatInfo != null && chatInfo.stargifts_count > 0) {
-+        } else if (!desu.inugram.helpers.ProfileHelper.preferMediaTab() && (userInfo != null && userInfo.stargifts_count > 0 || chatInfo != null && chatInfo.stargifts_count > 0)) {
++        } else if (!desu.inugram.helpers.profile.ProfileHelper.preferMediaTab() && (userInfo != null && userInfo.stargifts_count > 0 || chatInfo != null && chatInfo.stargifts_count > 0)) {
              this.initialTab = TAB_GIFTS;
          } else if (initialTab != -1 && topicId == 0) {
              this.initialTab = initialTab;
@@ -47,7 +47,7 @@ index 0000000..0000000 100644
          }
          if (info != null && (stories_pinned_available != info.stories_pinned_available)) {
 -            if (scrollSlidingTextTabStrip != null) {
-+            if (scrollSlidingTextTabStrip != null && !desu.inugram.helpers.ProfileHelper.preferMediaTab()) {
++            if (scrollSlidingTextTabStrip != null && !desu.inugram.helpers.profile.ProfileHelper.preferMediaTab()) {
                  scrollSlidingTextTabStrip.setInitialTabId(isArchivedOnlyStoriesView() ? TAB_ARCHIVED_STORIES : TAB_STORIES);
              }
              updateTabs(true);
@@ -56,7 +56,7 @@ index 0000000..0000000 100644
          this.userInfo = userInfo;
          updateTabs(true);
 -        if (userInfo != null && (stories_pinned_available != userInfo.stories_pinned_available)) {
-+        if (userInfo != null && (stories_pinned_available != userInfo.stories_pinned_available) && !desu.inugram.helpers.ProfileHelper.preferMediaTab()) {
++        if (userInfo != null && (stories_pinned_available != userInfo.stories_pinned_available) && !desu.inugram.helpers.profile.ProfileHelper.preferMediaTab()) {
              scrollToPage(TAB_STORIES);
          }
      }

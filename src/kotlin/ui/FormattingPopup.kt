@@ -23,7 +23,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.appcompat.widget.TooltipCompat
 import desu.inugram.InuConfig
-import desu.inugram.helpers.FormattingPopupConfig
+import desu.inugram.ui.FormattingPopupConfig
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.ui.ActionBar.Theme

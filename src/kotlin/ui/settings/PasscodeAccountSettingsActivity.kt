@@ -5,7 +5,7 @@ import android.text.TextPaint
 import android.view.View
 import android.widget.TextView
 import desu.inugram.helpers.InuUtils
-import desu.inugram.helpers.PasscodeHelper
+import desu.inugram.helpers.security.PasscodeHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ContactsController
 import org.telegram.messenger.Emoji
