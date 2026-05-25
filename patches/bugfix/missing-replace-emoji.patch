@@ -24,9 +24,10 @@ Subject: added some missing Emoji.replaceEmoji calls in various places
  .../org/telegram/ui/MainTabsActivity.java     |  3 ++-
  .../org/telegram/ui/MessageAuthorView.java    |  4 ++-
  .../java/org/telegram/ui/MessageSeenView.java |  7 +++--
+ .../java/org/telegram/ui/PhotoViewer.java     |  1 +
  .../org/telegram/ui/SettingsActivity.java     |  6 +++--
  .../recorder/CaptionContainerView.java        | 13 ++++++++++
- 22 files changed, 114 insertions(+), 37 deletions(-)
+ 23 files changed, 115 insertions(+), 37 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBarMenuItem.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBarMenuItem.java
 index 0000000..0000000 100644
@@ -718,6 +719,18 @@ index 0000000..0000000 100644
              }
  
              if (date <= 0) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java b/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java
+@@ -15449,6 +15449,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+             navigationBar.setBackgroundColor(fancyShadows ? (sendPhotoType == SELECT_TYPE_STICKER ? 0x66000000 : 0) : (sendPhotoType == SELECT_TYPE_STICKER ? 0xFF000000 : 0x7f000000));
+         }
+         if (title != null) {
++            title = Emoji.replaceEmoji(title, actionBarContainer.titleTextView[0].getPaint().getFontMetricsInt(), false);
+             if (animated) {
+                 if (wasIndex == index) {
+                     actionBarContainer.setTitleAnimated(title, true, true);
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
