@@ -69,6 +69,12 @@ class ParanoiaActivity : SettingsPageActivity() {
         )
         items.add(
             UItem.asCheck(
+                TOGGLE_HIDE_FOLDERS,
+                LocaleController.getString(R.string.InuParanoiaHideFolders)
+            ).setChecked(ParanoiaHelper.hideFolders)
+        )
+        items.add(
+            UItem.asCheck(
                 TOGGLE_DISABLE_NOTIFICATIONS,
                 LocaleController.getString(R.string.InuParanoiaDisableNotifications)
             ).setChecked(ParanoiaHelper.disableNotifications)
@@ -99,6 +105,7 @@ class ParanoiaActivity : SettingsPageActivity() {
 
             TOGGLE_DISGUISE -> toggleCheck(view, ParanoiaHelper.disguiseIcon) { ParanoiaHelper.disguiseIcon = it }
             TOGGLE_HIDE_OTHER_ACCOUNTS -> toggleCheck(view, ParanoiaHelper.hideOtherAccounts) { ParanoiaHelper.hideOtherAccounts = it }
+            TOGGLE_HIDE_FOLDERS -> toggleCheck(view, ParanoiaHelper.hideFolders) { ParanoiaHelper.hideFolders = it }
             TOGGLE_DISABLE_NOTIFICATIONS -> toggleCheck(view, ParanoiaHelper.disableNotifications) { ParanoiaHelper.disableNotifications = it }
             TOGGLE_HIDE_SETTINGS -> toggleCheck(view, ParanoiaHelper.hideSettings) { ParanoiaHelper.hideSettings = it }
         }
@@ -176,6 +183,7 @@ class ParanoiaActivity : SettingsPageActivity() {
         private val TOGGLE_WHITELIST = InuUtils.generateId()
         private val TOGGLE_DISGUISE = InuUtils.generateId()
         private val TOGGLE_HIDE_OTHER_ACCOUNTS = InuUtils.generateId()
+        private val TOGGLE_HIDE_FOLDERS = InuUtils.generateId()
         private val TOGGLE_DISABLE_NOTIFICATIONS = InuUtils.generateId()
         private val TOGGLE_HIDE_SETTINGS = InuUtils.generateId()
     }

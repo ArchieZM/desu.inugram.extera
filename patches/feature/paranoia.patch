@@ -14,8 +14,9 @@ Subject: paranoia mode (hide chats, accounts, disguise as stock app)
  .../src/main/java/org/telegram/ui/CallLogActivity.java    | 4 ++++
  .../java/org/telegram/ui/Cells/AppIconsSelectorCell.java  | 1 +
  .../main/java/org/telegram/ui/Components/ShareAlert.java  | 1 +
+ .../src/main/java/org/telegram/ui/DialogsActivity.java    | 4 ++--
  .../java/org/telegram/ui/Stories/StoriesController.java   | 1 +
- 11 files changed, 33 insertions(+), 4 deletions(-)
+ 12 files changed, 35 insertions(+), 6 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
 index 0000000..0000000 100644
@@ -292,6 +293,28 @@ index 0000000..0000000 100644
                  if (!DialogObject.isEncryptedDialog(dialog.id)) {
                      if (DialogObject.isUserDialog(dialog.id)) {
                          if (dialog.folder_id == 1) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+@@ -6820,7 +6820,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+             filterOptions = null;
+         }
+         final ArrayList<MessagesController.DialogFilter> filters = getMessagesController().getDialogFilters();
+-        if (filters.size() > 1) {
++        if (filters.size() > 1 && !desu.inugram.helpers.security.ParanoiaHelper.shouldHideFolders()) {
+             if (force || filterTabsView.getVisibility() != View.VISIBLE) {
+                 boolean animatedUpdateItems = animated;
+                 if (filterTabsView.getVisibility() != View.VISIBLE) {
+@@ -8422,7 +8422,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+         final ArrayList<Long> dialogIdArray = new ArrayList<>();
+         dialogIdArray.add(dialogId);
+ 
+-        boolean hasFolders = getMessagesController().filtersEnabled && getMessagesController().dialogFiltersLoaded && getMessagesController().dialogFilters != null && getMessagesController().dialogFilters.size() > 0;
++        boolean hasFolders = getMessagesController().filtersEnabled && getMessagesController().dialogFiltersLoaded && getMessagesController().dialogFilters != null && getMessagesController().dialogFilters.size() > 0 && !desu.inugram.helpers.security.ParanoiaHelper.shouldHideFolders();
+         final ActionBarPopupWindow.ActionBarPopupWindowLayout[] previewMenu = new ActionBarPopupWindow.ActionBarPopupWindowLayout[1];
+ 
+         LinearLayout foldersMenuView = null;
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java

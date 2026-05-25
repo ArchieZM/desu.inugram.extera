@@ -139,6 +139,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
   - optionally disguise as stock Telegram when enabled
   - optionally silence all notifications while enabled
   - optionally hide all other accounts while enabled
+  - optionally collapse folder tabs (show only All Chats) while enabled
 
 ## behavior
 

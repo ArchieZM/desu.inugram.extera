@@ -479,6 +479,7 @@
     <string name="InuHideInugramSettings">Hide Inugram settings</string>
     <string name="InuParanoiaDisableNotifications">Disable notifications</string>
     <string name="InuParanoiaHideOtherAccounts">Hide other accounts</string>
+    <string name="InuParanoiaHideFolders">Hide folders</string>
     <string name="InuParanoiaDisguise">Disguise as Telegram</string>
     <string name="InuParanoiaDisguiseInfo">Only the launcher icon and name change. Notifications and the in-app name still show \"Inugram\", due to Android limitations.</string>
     <string name="InuDisguiseName" translatable="false">Telegram</string>

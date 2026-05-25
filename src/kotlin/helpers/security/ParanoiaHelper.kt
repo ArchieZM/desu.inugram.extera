@@ -86,6 +86,14 @@ object ParanoiaHelper {
     @JvmStatic
     fun hidesOtherAccounts(): Boolean = isParanoia() && hideOtherAccounts
 
+    var hideFolders: Boolean
+        get() = prefs.getBoolean("hideFolders", false)
+        set(value) = prefs.edit { putBoolean("hideFolders", value) }
+
+    // opt-in: collapse the folder tab strip and "Add to folder" submenu while armed.
+    @JvmStatic
+    fun shouldHideFolders(): Boolean = isParanoia() && hideFolders
+
     var disguiseIcon: Boolean
         get() = prefs.getBoolean("disguiseIcon", false)
         set(value) = prefs.edit { putBoolean("disguiseIcon", value) }
