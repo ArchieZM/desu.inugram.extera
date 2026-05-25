@@ -345,17 +345,18 @@ object ChatHelper {
     }
 
     @JvmStatic
-    @JvmOverloads
-    fun shouldForceHideBottomBar(
-        chat: TLRPC.Chat?,
-        user: TLRPC.User? = null,
-        chatMode: Int = ChatActivity.MODE_DEFAULT
-    ): Boolean {
+    fun shouldForceHideBottomBar(activity: ChatActivity?): Boolean {
+        if (activity == null) return false
+        val chatMode = activity.chatMode
         if (chatMode == ChatActivity.MODE_PINNED) return InuConfig.HIDE_BOTTOM_BAR_PINNED.value
 
+        val user = activity.currentUser
         if (user != null && UserObject.isReplyUser(user) && InuConfig.HIDE_BOTTOM_BAR_REPLIES.value) return true
 
-        if (chat == null) return false
+        val chat = activity.currentChat ?: return false
+        // stock skips the JOIN bar in non-forum threads w/o join_to_send (e.g. channel-post comments) —
+        // don't force-hide there, or we'd also hide the chat input
+        if (activity.isThreadChat && !chat.join_to_send && !ChatObject.isForum(chat)) return false
         val member = ChatObject.isInChat(chat)
         if (
             ChatObject.canSendMessages(chat) &&

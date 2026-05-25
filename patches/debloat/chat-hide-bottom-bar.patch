@@ -28,7 +28,7 @@ index 0000000..0000000 100644
              if (currentChat != null) {
                  headerItem.lazilyAddSubItem(open_direct, R.drawable.msg_markunread, getString(R.string.ChannelOpenDirect));
 -                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id));
-+                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && (ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id) || ChatHelper.shouldForceHideBottomBar(currentChat)));
++                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && (ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id) || ChatHelper.shouldForceHideBottomBar(this)));
              }
              if (currentUser != null && chatMode != MODE_SAVED) {
                  headerItem.lazilyAddSubItem(call, R.drawable.msg_callback, LocaleController.getString(R.string.Call));
@@ -37,7 +37,7 @@ index 0000000..0000000 100644
                      updateSkeletonGradient();
  
 -                    int lastTop = getHeight() - blurredViewBottomOffset - (int) (windowInsetsStateHolder.getAnimatedMaxBottomInset() + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)) - dp(44 + 7 + 9 - 3);
-+                    int lastTop = getHeight() - blurredViewBottomOffset - (int) (windowInsetsStateHolder.getAnimatedMaxBottomInset() + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)) - (ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode) ? 0 : dp(44 + 7 + 9 - 3));
++                    int lastTop = getHeight() - blurredViewBottomOffset - (int) (windowInsetsStateHolder.getAnimatedMaxBottomInset() + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)) - (ChatHelper.shouldForceHideBottomBar(ChatActivity.this) ? 0 : dp(44 + 7 + 9 - 3));
                      int j = 0;
  
                      int childMaxTop = Integer.MAX_VALUE;
@@ -45,7 +45,7 @@ index 0000000..0000000 100644
              }
          });
          bottomChannelButtonsLayout.setButtonOnFullyVisibleListener(ChatActivityChannelButtonsLayout.BUTTON_GIFT, (v, id, firstTime) -> {
-+            if (ChatHelper.shouldForceHideBottomBar(currentChat)) return;
++            if (ChatHelper.shouldForceHideBottomBar(this)) return;
              if (bottomGiftHintView == null && firstTime && (bottomSuggestHintView == null || !bottomSuggestHintView.shown()) && HintsController.Hint.ChannelGiftHint.show()) {
                  AndroidUtilities.runOnUIThread(() -> {
                      if (getContext() == null) return;
@@ -53,7 +53,7 @@ index 0000000..0000000 100644
              }
          });
          bottomChannelButtonsLayout.setButtonOnFullyVisibleListener(ChatActivityChannelButtonsLayout.BUTTON_DIRECT, (v, id, firstTime) -> {
-+            if (ChatHelper.shouldForceHideBottomBar(currentChat)) return;
++            if (ChatHelper.shouldForceHideBottomBar(this)) return;
              if (bottomSuggestHintView == null && firstTime && HintsController.Hint.ChannelSuggestHint.show()) {
                  AndroidUtilities.runOnUIThread(() -> {
                      if (getContext() == null) return;
@@ -62,7 +62,7 @@ index 0000000..0000000 100644
              float canvasOffsetY = chatListView.getY() + cell.getY() + cell.getPaddingTop();
              float alpha = cell.shouldDrawAlphaLayer() ? cell.getAlpha() : 1f;
 -            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - windowInsetsStateHolder.getCurrentMaxBottomInset() - inputIslandHeightCurrent - dp(NonIslandHelper.chatElements() ? 0 : 9));
-+            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - inputIslandHeightCurrent - (ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode) ? 0 : windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 0 : 9)));
++            canvas.clipRect(chatListView.getLeft(), listTop, chatListView.getRight(), chatListView.getY() + chatListView.getMeasuredHeight() - blurredViewBottomOffset - inputIslandHeightCurrent - (ChatHelper.shouldForceHideBottomBar(ChatActivity.this) ? 0 : windowInsetsStateHolder.getCurrentMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 0 : 9)));
              canvas.translate(canvasOffsetX, canvasOffsetY);
              cell.setInvalidatesParent(true);
              if (type == 0) {
@@ -70,7 +70,7 @@ index 0000000..0000000 100644
                                      - inputIslandHeightCurrent
                                      - dp(NonIslandHelper.chatElements() ? 0 : 9)
                                      - (mentionContainer != null ? mentionContainer.clipBottom() : 0);
-+                            if (ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode)) viewClipBottom2 += windowInsetsStateHolder.getCurrentMaxBottomInset();
++                            if (ChatHelper.shouldForceHideBottomBar(ChatActivity.this)) viewClipBottom2 += windowInsetsStateHolder.getCurrentMaxBottomInset();
  
                              canvas.clipRect(0, listTop + (mentionContainer != null ? mentionContainer.clipTop() : 0), getMeasuredWidth(), viewClipBottom2);
                              canvas.translate(0, chatListView.getY());
@@ -78,7 +78,7 @@ index 0000000..0000000 100644
                              - inputIslandHeightCurrent
                              - getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
                              - dp(NonIslandHelper.chatElements() ? 0 : 9);
-+                        if (ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode)) viewClipBottom += windowInsetsStateHolder.getCurrentMaxBottomInset();
++                        if (ChatHelper.shouldForceHideBottomBar(ChatActivity.this)) viewClipBottom += windowInsetsStateHolder.getCurrentMaxBottomInset();
  
                          float clipTop = 0, clipBottom = 0;
                          if (mentionContainer != null) {
@@ -87,7 +87,7 @@ index 0000000..0000000 100644
              }
              if (headerItem != null) {
 -                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id));
-+                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && (ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id) || ChatHelper.shouldForceHideBottomBar(currentChat)));
++                headerItem.setSubItemShown(open_direct, ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) && currentChat.linked_monoforum_id != 0 && (ChatObject.canManageMonoForum(currentAccount, -currentChat.linked_monoforum_id) || ChatHelper.shouldForceHideBottomBar(this)));
              }
          } else if (id == NotificationCenter.didReceiveNewMessages) {
              FileLog.d("ChatActivity didReceiveNewMessages start");
@@ -96,7 +96,7 @@ index 0000000..0000000 100644
          boolean accentTextButton = false;
          boolean forceVisible = false;
 -        boolean forceNoBottom = false;
-+        boolean forceNoBottom = ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode);
++        boolean forceNoBottom = ChatHelper.shouldForceHideBottomBar(this);
 +        if (chatInputViewsContainer != null && chatInputViewsContainer.getFadeView() != null) {
 +            chatInputViewsContainer.getFadeView().setVisibility(forceNoBottom ? View.GONE : View.VISIBLE);
 +        }
@@ -120,7 +120,7 @@ index 0000000..0000000 100644
          }
  
 -        if (!isInsideContainer && !isInPreviewMode()) {
-+        if (!isInsideContainer && !isInPreviewMode() && !ChatHelper.shouldForceHideBottomBar(currentChat, currentUser, chatMode)) {
++        if (!isInsideContainer && !isInPreviewMode() && !ChatHelper.shouldForceHideBottomBar(this)) {
              return lerp(Math.max(lerp(defaultIslandHeight, enterViewIslandHeight, enterViewFactor) * visibility, dp(44)), -dp(7), pollAddVisibility);
          } else {
              return lerp(defaultIslandHeight, enterViewIslandHeight, enterViewFactor) * visibility;
