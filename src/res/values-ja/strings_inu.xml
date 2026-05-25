@@ -480,6 +480,8 @@
     <string name="InuSpoilers">スポイラー</string>
     <string name="InuDisableVolumePlayVideo">音量キーで動画再生を無効化</string>
     <string name="InuDisableVolumePlayVideoInfo">チャットで音量キーを押したときに表示中の動画を音付きで再生しない</string>
+    <string name="InuConfirmInternalLinks">内部リンクを開く前に確認</string>
+    <string name="InuConfirmInternalLinksInfo">tg://、t.me/</string>
     <string name="InuConfirmReactionNonMember">未参加チャットでのリアクションを確認</string>
     <string name="InuConfirmReactionNonMemberInfo">参加していないチャットでリアクションを送る前に確認します</string>
     <string name="InuConfirmReactionTitle">リアクションの確認</string>

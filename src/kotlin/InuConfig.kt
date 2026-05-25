@@ -360,6 +360,9 @@ object InuConfig {
     val CALL_CONFIRMATION = BoolItem("call_confirmation", true)
 
     @JvmField
+    val CONFIRM_INTERNAL_LINKS = BoolItem("confirm_internal_links", false)
+
+    @JvmField
     val CONFIRM_REACTION_NON_MEMBER = BoolItem("confirm_reaction_non_member", false)
 
     @JvmField

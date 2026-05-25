@@ -8,6 +8,7 @@ import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.chat.WebPreviewHelper
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
+import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
@@ -51,6 +52,14 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
                 TOGGLE_CALL_CONFIRMATION,
                 LocaleController.getString(R.string.InuCallConfirmation),
             ).setChecked(InuConfig.CALL_CONFIRMATION.value)
+        )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_CONFIRM_INTERNAL_LINKS,
+                R.string.InuConfirmInternalLinks,
+                R.string.InuConfirmInternalLinksInfo,
+                InuConfig.CONFIRM_INTERNAL_LINKS.value,
+            )
         )
         deleteForBothGroup.addTo(items) { listView.adapter.update(true) }
         items.add(UItem.asShadow(null))
@@ -101,6 +110,11 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
+            TOGGLE_CONFIRM_INTERNAL_LINKS -> {
+                val new = InuConfig.CONFIRM_INTERNAL_LINKS.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             TOGGLE_FASTER_DOWNLOADS -> {
                 val new = InuConfig.FASTER_DOWNLOADS.toggle()
                 (view as? TextCheckCell)?.isChecked = new
@@ -149,6 +163,7 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_DISABLE_CHAT_BUBBLES = InuUtils.generateId()
         private val BUTTON_TEXT_CLASSIFIER_MODE = InuUtils.generateId()
         private val TOGGLE_CALL_CONFIRMATION = InuUtils.generateId()
+        private val TOGGLE_CONFIRM_INTERNAL_LINKS = InuUtils.generateId()
         private val BUTTON_WEB_PREVIEW_REPLACEMENTS = InuUtils.generateId()
         private val TOGGLE_FASTER_DOWNLOADS = InuUtils.generateId()
         private val TOGGLE_FASTER_UPLOADS = InuUtils.generateId()
@@ -168,6 +183,7 @@ class BehaviorSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("disable-chat-bubbles", R.string.InuDisableChatBubbles, TOGGLE_DISABLE_CHAT_BUBBLES),
                 SearchRegistry.Entry("text-classifier-mode", R.string.InuTextClassifierMode, BUTTON_TEXT_CLASSIFIER_MODE),
                 SearchRegistry.Entry("call-confirmation", R.string.InuCallConfirmation, TOGGLE_CALL_CONFIRMATION),
+                SearchRegistry.Entry("confirm-internal-links", R.string.InuConfirmInternalLinks, TOGGLE_CONFIRM_INTERNAL_LINKS),
                 SearchRegistry.Entry("web-preview-replacements", R.string.InuWebPreviewReplacements, BUTTON_WEB_PREVIEW_REPLACEMENTS),
                 SearchRegistry.Entry("faster-downloads", R.string.InuFasterDownloads, TOGGLE_FASTER_DOWNLOADS),
                 SearchRegistry.Entry("faster-uploads", R.string.InuFasterUploads, TOGGLE_FASTER_UPLOADS),

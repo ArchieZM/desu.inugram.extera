@@ -159,3 +159,4 @@ feature/paranoia.patch
 bugfix/expand-emoji-tabs.patch
 bugfix/spoiler-reveal-reply-keep.patch
 feature/reaction-confirm-non-member.patch
+feature/confirm-internal-links.patch
