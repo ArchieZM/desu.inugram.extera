@@ -545,6 +545,16 @@ object InuConfig {
     @JvmField
     val ICON_REPLACEMENT = IconReplacementItem()
 
+    class NotificationIconItem : IntItem("notification_icon", TELEGRAM) {
+        companion object {
+            const val TELEGRAM = 0
+            const val INUGRAM = 1
+        }
+    }
+
+    @JvmField
+    val NOTIFICATION_ICON = NotificationIconItem()
+
     class MapProviderItem : IntItem("map_provider", GOOGLE) {
         companion object {
             const val GOOGLE = 0

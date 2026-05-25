@@ -177,6 +177,9 @@
     <string name="InuCallConfirmation">Ask before calling</string>
     <string name="InuCallConfirmationTitle">Confirm calling</string>
     <string name="InuCallConfirmationText">Call **%1$s**?</string>
+    <string name="InuNotificationIcon">Notification icon</string>
+    <string name="InuNotificationIconTelegram">Telegram</string>
+    <string name="InuNotificationIconInugram">Inugram</string>
     <string name="InuDisableChatBubbles">Disable Android notification bubbles</string>
     <string name="InuInPlaceTranslation">In-place translation</string>
     <string name="InuTranslateWebPreviews">Translate web previews</string>

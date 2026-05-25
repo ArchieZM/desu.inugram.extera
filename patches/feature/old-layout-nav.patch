@@ -130,7 +130,7 @@ index 0000000..0000000 100644
              }
              if (folderId != 0) {
                  actionBar.setTitle(getString(R.string.ArchivedChats));
-@@ -3851,6 +3856,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+@@ -3842,6 +3847,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                      return;
                  }
                  if (id == -1) {
@@ -186,7 +186,7 @@ index 0000000..0000000 100644
  
          switchingAccount = false;
      }
-@@ -3324,12 +3324,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
+@@ -3323,12 +3323,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                      }
                  } else {
                      if (actionBarLayout.getFragmentStack().isEmpty()) {
@@ -200,7 +200,7 @@ index 0000000..0000000 100644
                      }
                  }
              } else {
-@@ -3337,12 +3332,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
+@@ -3336,12 +3331,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                      if (!UserConfig.getInstance(currentAccount).isClientActivated()) {
                          actionBarLayout.addFragmentToStack(getClientNotActivatedFragment(), INavigationLayout.FORCE_NOT_ATTACH_VIEW);
                      } else {

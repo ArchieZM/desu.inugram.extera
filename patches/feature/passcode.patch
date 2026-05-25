@@ -4,7 +4,6 @@ Date: Sun, 17 May 2026 19:22:29 +0400
 Subject: passcode-related features (per-account pin, panic pin, hidden accounts)
 
 ---
- .../org/telegram/messenger/NotificationsController.java  | 2 +-
  .../java/org/telegram/ui/Components/AlertsCreator.java   | 2 +-
  .../java/org/telegram/ui/Components/PasscodeView.java    | 4 ++--
  .../src/main/java/org/telegram/ui/DialogsActivity.java   | 9 +++++++++
@@ -14,21 +13,8 @@ Subject: passcode-related features (per-account pin, panic pin, hidden accounts)
  .../src/main/java/org/telegram/ui/PasscodeActivity.java  | 6 +++++-
  .../src/main/java/org/telegram/ui/SettingsActivity.java  | 2 +-
  .../src/main/java/org/telegram/ui/UserInfoActivity.java  | 2 +-
- 10 files changed, 23 insertions(+), 8 deletions(-)
+ 9 files changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/NotificationsController.java b/TMessagesProj/src/main/java/org/telegram/messenger/NotificationsController.java
-index 0000000..0000000 100644
---- a/TMessagesProj/src/main/java/org/telegram/messenger/NotificationsController.java
-+++ b/TMessagesProj/src/main/java/org/telegram/messenger/NotificationsController.java
-@@ -4049,7 +4049,7 @@ public class NotificationsController extends BaseController {
-     }
- 
-     private void showOrUpdateNotification(boolean notifyAboutLast) {
--        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
-+        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.security.PasscodeHelper.isAccountHidden(currentAccount) || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
-             dismissNotification();
-             return;
-         }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java
@@ -68,7 +54,7 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
-@@ -3832,6 +3832,15 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+@@ -3837,6 +3837,15 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
              imageView.getImageReceiver().setCurrentAccount(currentAccount);
              Drawable thumb = user != null && user.photo != null && user.photo.strippedBitmap != null ? user.photo.strippedBitmap : avatarDrawable;
              imageView.setImage(ImageLocation.getForUserOrChat(currentAccount, user, ImageLocation.TYPE_SMALL), "50_50", ImageLocation.getForUserOrChat(user, ImageLocation.TYPE_STRIPPED), "50_50", thumb, user);
@@ -100,7 +86,7 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/LoginActivity.java b/TM
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/LoginActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/LoginActivity.java
-@@ -1641,6 +1641,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
+@@ -1638,6 +1638,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
      private boolean pendingSwitchingAccount;
  
      private void onAuthSuccess(TLRPC.TL_auth_authorization res, boolean afterSignup) {

@@ -20,6 +20,12 @@ const FG_SAFE = 72
 const SETTINGS_DP = 24
 const SETTINGS_VIEWPORT = 72
 const SETTINGS_SAFE = 80
+// notification small icon: 24dp white silhouette. icon-mono.svg only fills
+// ~56% of its viewBox, so safe overshoots the viewport to bring the glyph up
+// to ~22dp (the Material small-icon target inside a 24dp canvas).
+const NOTIFICATION_DP = 24
+const NOTIFICATION_VIEWPORT = 24
+const NOTIFICATION_SAFE = 39
 const BG_GRADIENT_FROM = '#FFD4A3FF'
 const BG_GRADIENT_TO = '#FFD59EFF'
 // debug badge: a small white square (only its top-left corner rounded) tucked
@@ -147,6 +153,14 @@ function buildSettingsVector(shapes: SvgShape[], srcW: number, srcH: number): st
   })
 }
 
+function buildNotificationVector(shapes: SvgShape[], srcW: number, srcH: number): string {
+  return buildScaledVector(shapes, srcW, srcH, true, {
+    widthDp: NOTIFICATION_DP,
+    viewport: NOTIFICATION_VIEWPORT,
+    safe: NOTIFICATION_SAFE,
+  })
+}
+
 function buildAdaptiveIcon(foreground: string): string {
   return `<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
@@ -207,6 +221,7 @@ const foreground = buildForegroundVector(fg.shapes, fg.srcW, fg.srcH, false)
 const foregroundDebug = buildForegroundVector(fg.shapes, fg.srcW, fg.srcH, false, true)
 const monochrome = buildForegroundVector(mono.shapes, mono.srcW, mono.srcH, true)
 const settingsIcon = buildSettingsVector(mono.shapes, mono.srcW, mono.srcH)
+const notificationIcon = buildNotificationVector(mono.shapes, mono.srcW, mono.srcH)
 const background = buildBackgroundVector()
 const debugIcon = buildAdaptiveIcon('icon_foreground_inu_debug')
 
@@ -219,6 +234,7 @@ const targets: [string, string][] = [
   [`${GEN_DRAWABLE}/icon_foreground_inu_round.xml`, foreground],
   [`${GEN_DRAWABLE}/icon_foreground_inu_debug.xml`, foregroundDebug],
   [`${GEN_DRAWABLE}/icon_settings_inu.xml`, settingsIcon],
+  [`${GEN_DRAWABLE}/icon_notification_inu.xml`, notificationIcon],
   [`${GEN_DEBUG_MIPMAP}/ic_launcher.xml`, debugIcon],
   [`${GEN_DEBUG_MIPMAP}/ic_launcher_round.xml`, debugIcon],
 ]

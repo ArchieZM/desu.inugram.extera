@@ -134,13 +134,11 @@ bugfix/sticker-over-side-controls.patch
 feature/cycle-forward-mode.patch
 feature/long-tap-mention-name.patch
 bugfix/search-emoji-size.patch
-feature/passcode.patch
 bugfix/motion-photo-with-caption.patch
 feature/strip-tracking.patch
 feature/two-finger-select.patch
 hooks/universal-recycler.patch
 debloat/reduce-menu-motion.patch
-feature/paranoia.patch
 feature/md3-switches.patch
 bugfix/universal-fragment-theme-change.patch
 bugfix/sdk33-callback-leak.patch
@@ -155,3 +153,6 @@ feature/round-recorder.patch
 bugfix/cross-peer-reply-stale-quote.patch
 bugfix/phantom-photo-seekbar.patch
 bugfix/phantom-peek-dialogs.patch
+hooks/notifications-controller.patch
+feature/passcode.patch
+feature/paranoia.patch

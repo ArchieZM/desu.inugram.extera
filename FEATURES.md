@@ -13,6 +13,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - monet (material you) theme support - *ported from [NagramX](https://github.com/risin42/NagramX)*, plus a quick switcher in appearance settings (light/dark/amoled/auto)
 - 🐶 non-island ui mode for tab bars, global search and chat elements
 - icon replacement (currently: solar pack, [480 Design](https://t.me/Design480)) - *ported from [NagramX](https://github.com/risin42/NagramX)*
+- notification icon: Telegram (default) or Inugram
 - show seconds in timestamps
 - 🐶 customizable animation speed multiplier (incl. instant)
 - show peer id in profile (telegram id / bot api id)

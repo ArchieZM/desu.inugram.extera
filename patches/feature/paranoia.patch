@@ -7,11 +7,11 @@ Subject: paranoia mode (hide chats, accounts, disguise as stock app)
  .../java/org/telegram/messenger/MediaDataController.java  | 2 ++
  .../java/org/telegram/messenger/MessagesController.java   | 3 +++
  .../main/java/org/telegram/messenger/MessagesStorage.java | 7 +++++++
- .../org/telegram/messenger/NotificationsController.java   | 6 +++++-
+ .../org/telegram/messenger/NotificationsController.java   | 4 ++++
  .../org/telegram/ui/Adapters/DialogsSearchAdapter.java    | 5 +++++
  .../org/telegram/ui/Adapters/SearchAdapterHelper.java     | 8 ++++----
  .../java/org/telegram/ui/Cells/AppIconsSelectorCell.java  | 1 +
- 7 files changed, 27 insertions(+), 5 deletions(-)
+ 7 files changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MediaDataController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MediaDataController.java
 index 0000000..0000000 100644
@@ -143,15 +143,6 @@ index 0000000..0000000 100644
                                  if (DialogObject.isChatDialog(dialog.id)) {
                                      TLRPC.Chat chat = getMessagesController().getChat(-dialog.id);
                                      if (ChatObject.isNotInChat(chat)) {
-@@ -4049,7 +4053,7 @@ public class NotificationsController extends BaseController {
-     }
- 
-     private void showOrUpdateNotification(boolean notifyAboutLast) {
--        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.security.PasscodeHelper.isAccountHidden(currentAccount) || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
-+        if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || desu.inugram.helpers.security.PasscodeHelper.isAccountHidden(currentAccount) || desu.inugram.helpers.security.ParanoiaHelper.shouldSuppressNotifications() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
-             dismissNotification();
-             return;
-         }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Adapters/DialogsSearchAdapter.java b/TMessagesProj/src/main/java/org/telegram/ui/Adapters/DialogsSearchAdapter.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Adapters/DialogsSearchAdapter.java

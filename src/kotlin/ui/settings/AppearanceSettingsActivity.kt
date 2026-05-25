@@ -75,6 +75,16 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         )
         items.add(
             UItem.asButton(
+                BUTTON_NOTIFICATION_ICON,
+                LocaleController.getString(R.string.InuNotificationIcon),
+                when (InuConfig.NOTIFICATION_ICON.value) {
+                    InuConfig.NotificationIconItem.INUGRAM -> LocaleController.getString(R.string.InuNotificationIconInugram)
+                    else -> LocaleController.getString(R.string.InuNotificationIconTelegram)
+                }
+            )
+        )
+        items.add(
+            UItem.asButton(
                 BUTTON_FONT_MODE,
                 LocaleController.getString(R.string.InuFont),
                 when (InuConfig.FONT_MODE.value) {
@@ -233,6 +243,17 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
             ) { which ->
                 InuConfig.ICON_REPLACEMENT.value = which
                 showRestartBulletin()
+            }
+
+            BUTTON_NOTIFICATION_ICON -> RadioItemOptions.show(
+                this, view,
+                listOf(
+                    LocaleController.getString(R.string.InuNotificationIconTelegram),
+                    LocaleController.getString(R.string.InuNotificationIconInugram),
+                ),
+                InuConfig.NOTIFICATION_ICON.value,
+            ) { which ->
+                InuConfig.NOTIFICATION_ICON.value = which
             }
 
             TOGGLE_SHOW_SECONDS -> {
@@ -406,6 +427,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_REDUCE_MENU_MOTION = InuUtils.generateId()
         private val TOGGLE_MATERIAL3_SWITCHES = InuUtils.generateId()
         private val BUTTON_ICON_REPLACEMENT = InuUtils.generateId()
+        private val BUTTON_NOTIFICATION_ICON = InuUtils.generateId()
         private val BUTTON_MAP_PROVIDER = InuUtils.generateId()
         private val BUTTON_MAP_PREVIEW_PROVIDER = InuUtils.generateId()
         private val BUTTON_PREDICTIVE_BACK_MODE = InuUtils.generateId()
@@ -441,6 +463,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("material3-switches", R.string.InuMaterial3Switches, TOGGLE_MATERIAL3_SWITCHES),
                 SearchRegistry.Entry("monet-theme", R.string.InuMonetTheme, BUTTON_MONET_THEME),
                 SearchRegistry.Entry("icon-replacement", R.string.InuIconReplacement, BUTTON_ICON_REPLACEMENT),
+                SearchRegistry.Entry("notification-icon", R.string.InuNotificationIcon, BUTTON_NOTIFICATION_ICON),
                 SearchRegistry.Entry("font", R.string.InuFont, BUTTON_FONT_MODE),
                 SearchRegistry.Entry("map-provider", R.string.InuMapProvider, BUTTON_MAP_PROVIDER),
                 SearchRegistry.Entry("map-preview-provider", R.string.InuMapPreviewProvider, BUTTON_MAP_PREVIEW_PROVIDER),
