@@ -139,7 +139,7 @@ feature/strip-tracking.patch
 feature/two-finger-select.patch
 hooks/universal-recycler.patch
 debloat/reduce-menu-motion.patch
-feature/md3-switches.patch
+feature/md3-components.patch
 bugfix/universal-fragment-theme-change.patch
 bugfix/sdk33-callback-leak.patch
 feature/clickable-web-preview-photos.patch

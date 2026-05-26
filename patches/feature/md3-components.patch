@@ -1,14 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Thu, 21 May 2026 02:21:56 +0400
-Subject: support patch for material 3 switches
+Subject: support patch for material 3 stylized switches and fabs
 
 ---
  .../java/org/telegram/ui/Cells/AvailableReactionCell.java | 2 +-
  .../main/java/org/telegram/ui/Cells/CheckBoxUserCell.java | 2 +-
  .../src/main/java/org/telegram/ui/Cells/TextCell.java     | 2 +-
+ .../telegram/ui/Components/FragmentFloatingButton.java    | 4 ++--
  .../src/main/java/org/telegram/ui/Components/Switch.java  | 8 ++++++++
- 4 files changed, 11 insertions(+), 3 deletions(-)
+ 5 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/AvailableReactionCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/AvailableReactionCell.java
 index 0000000..0000000 100644
@@ -49,6 +50,28 @@ index 0000000..0000000 100644
          }
          setMeasuredDimension(width, height + (needDivider ? 1 : 0));
      }
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/FragmentFloatingButton.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/FragmentFloatingButton.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/FragmentFloatingButton.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/FragmentFloatingButton.java
+@@ -70,7 +70,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
+ 
+         ScaleStateListAnimator.apply(this);
+         if (!isSubButton) {
+-            setOutlineProvider(ViewOutlineProviderImpl.BOUNDS_OVAL);
++            setOutlineProvider(desu.inugram.helpers.theme.M3FabHelper.outlineProvider());
+             setTranslationZ(dpf2(0.5f));
+         }
+ 
+@@ -163,7 +163,7 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
+         } else {
+             imageView.setColorFilter(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider), PorterDuff.Mode.SRC_IN);
+             progressView.setProgressColor(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider));
+-            setBackground(Theme.createSimpleSelectorCircleDrawable(dp(48),
++            setBackground(desu.inugram.helpers.theme.M3FabHelper.makeSelectorBackground(48,
+                 Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider),
+                 Theme.getColor(Theme.key_featuredStickers_addButtonPressed, resourcesProvider)
+             ));
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/Switch.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/Switch.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/Switch.java

@@ -102,6 +102,9 @@ object InuConfig {
     @JvmField
     val MATERIAL3_SWITCHES = BoolItem("material3_switches", false)
 
+    @JvmField
+    val MATERIAL3_FABS = BoolItem("material3_fabs", true)
+
     // snapshot of theme state before Monet was enabled, "day|night|autoNightType"; empty = none
     @JvmField
     val MONET_PREV = StringItem("monet_prev", "", exportable = false)

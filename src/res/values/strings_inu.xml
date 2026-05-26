@@ -35,6 +35,7 @@
     <string name="InuDisableRoundingInfo">1.2K -> 1,234</string>
     <string name="InuMaterial3">Material Design 3</string>
     <string name="InuMaterial3Switches">Switches</string>
+    <string name="InuMaterial3Fabs">Floating buttons</string>
     <string name="InuMonetTheme">Monet theme</string>
     <string name="InuMonetThemeDisabled">Disabled</string>
     <string name="InuMonetThemeLight">Light</string>

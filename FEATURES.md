@@ -24,7 +24,10 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 old (pre-12.6) mention/reaction indicator
 - 🐶 toggleable scrim blur
 - 🐶 reduce menu motion: skip context menu stagger and reaction bar slide-in/scale animations
-- material 3 switches
+- material 3:
+  - switches
+  - fabs
+  - predictive back
 - 🐶 toggle to replace profile photo bottom blur with a plain gradient fade
 - disable number rounding
 - export/import settings to/from json file
@@ -149,7 +152,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 reaction confirmation in non-joined chats
 - 🐶 internal link confirmation (tg://, t.me/…)
 - 🐶 disable swipe-down to minimize the in-app browser (only the minimize button collapses it)
-- predictive back mode selector (off / stock / 🐶 Material 3)
+- predictive back mode selector
 - disable pull-to-next-channel
 - disable swipe-to-unarchive
 - disable instant camera in attachments
@@ -220,3 +223,4 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - cross-peer reply: clear stale quote so a leftover quote-reply target doesn't override the new one at send
 - phantom empty dialog rows after peeking a non-joined channel / discuss group
 - expand emoji tabs when there's enough space to fit without scrolling
+- "pause music on media" now lets external players auto-resume (transient focus instead of indefinite)

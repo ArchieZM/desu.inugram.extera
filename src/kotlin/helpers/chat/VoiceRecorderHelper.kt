@@ -27,6 +27,7 @@ import org.telegram.ui.Components.ChatActivityEnterViewAnimatedIconView
 import org.telegram.ui.Components.ChatAttachAlert
 import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.LayoutHelper
+import desu.inugram.helpers.theme.M3FabHelper
 import desu.inugram.helpers.theme.NonIslandHelper
 
 object VoiceRecorderHelper {
@@ -108,12 +109,12 @@ object VoiceRecorderHelper {
                 )
 
                 val accentColor = Theme.getColor(Theme.key_chat_messagePanelSend, resourcesProvider)
-                val bg = Theme.createSimpleSelectorCircleDrawable(
-                    AndroidUtilities.dp(FAB_SIZE.toFloat()),
+                background = M3FabHelper.makeSelectorBackground(
+                    FAB_SIZE,
                     accentColor,
-                    Theme.blendOver(accentColor, 0x28FFFFFF)
+                    Theme.blendOver(accentColor, 0x28FFFFFF),
                 )
-                background = bg
+                outlineProvider = M3FabHelper.outlineProvider()
                 elevation = AndroidUtilities.dp(4f).toFloat()
             }
 
