@@ -101,6 +101,8 @@ class DrawerActionCell(context: Context) : FrameLayout(context) {
         currentId = id
         try {
             textView.text = text
+            textView.setTextColor(Theme.getColor(Theme.key_chats_menuItemText))
+            imageView.setColorFilter(PorterDuffColorFilter(Theme.getColor(Theme.key_chats_menuItemIcon), PorterDuff.Mode.SRC_IN))
             imageView.setImageResource(resId)
         } catch (e: Throwable) {
             FileLog.e(e)
