@@ -322,7 +322,6 @@
     <string name="InuSearchFilterOnlyMatches">Только совпадения</string>
     <string name="InuShowInChat">Показать в чате</string>
     <string name="InuSelectRange">Выделить диапазон</string>
-    <string name="InuSelectRangeLimit">Выделение ограничено %1$d сообщениями</string>
     <string name="InuEventLogMediaBeforeEdit">Медиа до изменения:</string>
     <string name="InuEventLogBanConfirm">Заблокировать **%1$s**?</string>
     <string name="InuEventLogShowDiff">Показать как diff</string>

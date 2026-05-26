@@ -384,7 +384,6 @@ object ChatActionsHelper {
     }
 
     private fun hasUnselectedGap(activity: ChatActivity): Boolean {
-        if (activity.selectedMessagesIds[0].size() + activity.selectedMessagesIds[1].size() >= 100) return false
         val info = gapInfo(activity) ?: return false
         var found = false
         forEachGapMessage(activity, info) {
@@ -396,46 +395,16 @@ object ChatActionsHelper {
 
     private fun fillSelectionGaps(activity: ChatActivity) {
         val info = gapInfo(activity) ?: return
-        val arr = activity.selectedMessagesIds[info.targetIndex]
         val candidates = ArrayList<MessageObject>()
         forEachGapMessage(activity, info) {
             candidates.add(it)
             true
         }
         if (candidates.isEmpty()) return
-
-        val cap = 100 - arr.size()
-        if (cap <= 0) {
-            showSelectRangeCappedBulletin(activity)
-            return
-        }
-        if (candidates.size <= cap) {
-            for (i in candidates.indices) {
-                activity.addToSelectedMessages(candidates[i], false, i == candidates.size - 1)
-            }
-            activity.updateActionModeTitle()
-            activity.updateVisibleRows()
-            return
-        }
-
-        val edgeIdToRemove = if (candidates[cap].id < candidates[cap - 1].id) info.minId else info.maxId
-        val edgeMsg = arr.get(edgeIdToRemove) ?: run {
-            showSelectRangeCappedBulletin(activity)
-            return
-        }
-        activity.addToSelectedMessages(edgeMsg, false, false)
-        for (i in 0..cap) {
-            activity.addToSelectedMessages(candidates[i], false, i == cap)
+        for (i in candidates.indices) {
+            activity.addToSelectedMessages(candidates[i], false, i == candidates.size - 1)
         }
         activity.updateActionModeTitle()
         activity.updateVisibleRows()
-        activity.scrollToMessageId(candidates[cap].id, 0, false, 0, true, 0)
-        showSelectRangeCappedBulletin(activity)
-    }
-
-    private fun showSelectRangeCappedBulletin(activity: ChatActivity) {
-        BulletinFactory.of(activity)
-            .createSimpleBulletin(R.raw.error, LocaleController.formatString(R.string.InuSelectRangeLimit, 100))
-            .show()
     }
 }

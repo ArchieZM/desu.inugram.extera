@@ -322,7 +322,6 @@
     <string name="InuSearchFilterOnlyMatches">一致のみ</string>
     <string name="InuShowInChat">チャットで表示</string>
     <string name="InuSelectRange">範囲選択</string>
-    <string name="InuSelectRangeLimit">選択は %1$d 件までに制限されています</string>
     <string name="InuEventLogMediaBeforeEdit">編集前のメディア:</string>
     <string name="InuEventLogBanConfirm">**%1$s** を BAN しますか？</string>
     <string name="InuEventLogShowDiff">diff として表示</string>

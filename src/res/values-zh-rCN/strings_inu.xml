@@ -322,7 +322,6 @@
     <string name="InuSearchFilterOnlyMatches">仅匹配项</string>
     <string name="InuShowInChat">在聊天中显示</string>
     <string name="InuSelectRange">范围选择</string>
-    <string name="InuSelectRangeLimit">选择上限为 %1$d 条消息</string>
     <string name="InuEventLogMediaBeforeEdit">编辑前的媒体：</string>
     <string name="InuEventLogBanConfirm">封禁 **%1$s**？</string>
     <string name="InuEventLogShowDiff">以 diff 显示</string>

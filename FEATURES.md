@@ -88,7 +88,8 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - split media restriction toggles for stickers / gifs / games / inline
 - show id in profile, show user json
 - long-tap inline callback button to copy text or callback data
-- "select between messages" (🐶 done right, with proper capping)
+- "select between messages" (🐶 done right)
+- 🐶 lift 100-message selection cap (forwards/saves/deletes are auto-chunked)
 - 🐶 two-finger swipe over messages to select/deselect them
 - more bulk actions in message selection mode
 - in-place message translation, with optional web preview translation
