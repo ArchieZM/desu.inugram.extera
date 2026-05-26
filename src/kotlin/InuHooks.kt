@@ -15,7 +15,9 @@ import desu.inugram.helpers.update.ApkInstaller
 import desu.inugram.helpers.update.UpdateHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController.getString
+import org.telegram.messenger.MessageObject
 import org.telegram.messenger.MessagesController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
 import org.telegram.messenger.Utilities
 import org.telegram.tgnet.TLObject
@@ -44,8 +46,23 @@ object InuHooks {
     }
 
     @JvmStatic
-    fun onMessagesControllerCreated(messagesController: MessagesController) {
+    fun onMessagesControllerCreated(messagesController: MessagesController, account: Int) {
         MapsHelper.syncMapProvider(messagesController)
+        AndroidUtilities.runOnUIThread {
+            NotificationCenter.getInstance(account).addObserver(
+                NotificationCenter.NotificationCenterDelegate { id, acc, args ->
+                    if (id != NotificationCenter.didReceiveNewMessages) return@NotificationCenterDelegate
+                    @Suppress("UNCHECKED_CAST")
+                    val messages = args[1] as? ArrayList<MessageObject> ?: return@NotificationCenterDelegate
+                    for (msg in messages) onNewMessage(msg, acc)
+                },
+                NotificationCenter.didReceiveNewMessages,
+            )
+        }
+    }
+
+    fun onNewMessage(message: MessageObject, account: Int) {
+        if (message.messageOwner != null) UpdateHelper.onNewMessage(message.messageOwner)
     }
 
     @JvmStatic
@@ -62,7 +79,6 @@ object InuHooks {
     @JvmStatic
     fun onUpdate(update: TLObject?, account: Int) {
         LoginHelper.onUpdate(update, account)
-        UpdateHelper.onUpdate(update, account)
     }
 
     @JvmStatic

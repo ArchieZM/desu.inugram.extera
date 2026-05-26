@@ -16,7 +16,6 @@ import org.telegram.messenger.R
 import org.telegram.messenger.SharedConfig
 import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.ConnectionsManager
-import org.telegram.tgnet.TLObject
 import org.telegram.tgnet.TLRPC
 import kotlin.math.max
 import kotlin.math.min
@@ -241,12 +240,9 @@ object UpdateHelper {
         }
     }
 
-    @JvmStatic
-    fun onUpdate(update: TLObject?, account: Int) {
+    fun onNewMessage(msg: TLRPC.Message) {
         if (!InuConfig.UPDATES_ENABLED.value) return
         if (BuildConfig.INU_BUILD_TYPE == "debug") return
-        if (update !is TLRPC.TL_updateNewChannelMessage) return
-        val msg = update.message ?: return
         if (msg.peer_id?.channel_id != CHANNEL_ID) return
         if (msg.message?.contains("#release") != true) return
         val info = extractApkInfo(msg) ?: return
