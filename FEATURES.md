@@ -85,7 +85,11 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - per-message statistics from message menu
 - remove single message's file from cache from the message menu
 - customizable message context menu - reorder and hide items + long-tap forward/reply items
-- customizable chat menu + custom actions: "Recent actions", "Go to beginning", "Go to message by ID"
+- customizable chat menu + extra actions:
+  - Recent actions
+  - Go to beginning
+  - Go to message by ID
+  - Delete my messages
 - 🐶 disable custom wallpaper and theme per chat
 - read-only chat "admin" page for non-admins
 - split media restriction toggles for stickers / gifs / games / inline

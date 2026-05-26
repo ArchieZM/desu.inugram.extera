@@ -230,6 +230,7 @@ New hook → `@JvmStatic fun` on `InuHooks`, one-line call site in the patch, **
 - Kotlin `object` → `InuXxx.INSTANCE.method()` from Java unless `@JvmStatic`.
 - For hooks called from stock Java, default to `@JvmStatic fun foo(...)` on a Kotlin `object` — cleanest call site.
 - Inside stgit patches, the `worktree/` prefix is omitted from paths.
+- `LayoutHelper.createLinear` / `createFrame` margin args are dp either way (both int and float overloads pass through `AndroidUtilities.dp(...)`). But Kotlin won't auto-promote `Int → Float`, and several overloads exist **only in the Float variant** — notably the 6-arg `createLinear(w, h, l, t, r, b)`. Write `12f` not `12` for margins or you'll hit "actual type is Int, but Float was expected".
 
 Don't overuse `@JvmStatic`, only add it if the method/field is actually accessed from Java.
 

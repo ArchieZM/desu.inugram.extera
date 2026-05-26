@@ -42,6 +42,7 @@ object ChatActionsHelper {
     const val ACTION_RECENT_ACTIONS = 513
     const val ACTION_GO_TO_BEGINNING = 514
     const val ACTION_GO_TO_MESSAGE = 515
+    const val ACTION_DELETE_OWN_MESSAGES = 516
 
     // selection action mode
     const val ACTION_SELECT_RANGE = 1500
@@ -83,6 +84,12 @@ object ChatActionsHelper {
             ACTION_GO_TO_MESSAGE, R.drawable.msg_message,
             LocaleController.getString(R.string.InuGoToMessage),
         )
+        if (DeleteOwnMessagesHelper.isApplicable(activity.currentChat)) {
+            headerItem.lazilyAddSubItem(
+                ACTION_DELETE_OWN_MESSAGES, R.drawable.msg_delete,
+                LocaleController.getString(R.string.InuDeleteOwnMessages),
+            )
+        }
     }
 
     @JvmStatic
@@ -96,6 +103,7 @@ object ChatActionsHelper {
 
             ACTION_GO_TO_BEGINNING -> ChatHelper.jumpToBeginning(activity)
             ACTION_GO_TO_MESSAGE -> showGoToMessageDialog(activity)
+            ACTION_DELETE_OWN_MESSAGES -> DeleteOwnMessagesHelper.start(activity)
             ACTION_PINNED_UNPIN_ALL -> activity.bottomOverlayChatText?.callOnClick()
             ACTION_OPEN_IN_DISCUSSION -> openInDiscussionGroup(activity)
 
