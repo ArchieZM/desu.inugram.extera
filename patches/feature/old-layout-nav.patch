@@ -8,12 +8,12 @@ Restore hamburger side drawer for old layout mode (DrawerLayoutContainer)
 Restore hamburger side drawer for old layout mode (DialogsActivity)
 ---
  .../ui/ActionBar/DrawerLayoutContainer.java   | 27 ++++++++++++++++---
- .../java/org/telegram/ui/DialogsActivity.java | 16 ++++++++---
+ .../java/org/telegram/ui/DialogsActivity.java | 18 ++++++++++---
  .../java/org/telegram/ui/LaunchActivity.java  | 24 +++++------------
  .../java/org/telegram/ui/LoginActivity.java   |  9 +++----
  .../ui/TwoStepVerificationActivity.java       |  5 ++--
  .../ui/TwoStepVerificationSetupActivity.java  | 10 +++----
- 6 files changed, 52 insertions(+), 39 deletions(-)
+ 6 files changed, 53 insertions(+), 40 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/DrawerLayoutContainer.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/DrawerLayoutContainer.java
 index 0000000..0000000 100644
@@ -142,6 +142,15 @@ index 0000000..0000000 100644
                      if (rightSlidingDialogContainer != null && rightSlidingDialogContainer.hasFragment()) {
                          if (actionBar.isActionModeShowed()) {
                              if (searchViewPager != null && searchViewPager.getVisibility() == View.VISIBLE && searchViewPager.actionModeShowing()) {
+@@ -5288,7 +5298,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+             }
+         };
+         dialogStoriesCell.setActionBar(actionBar);
+-        dialogStoriesCell.setMenuItemsOffset(isArchive() ? dp(68) : dpf2(16.66f));
++        dialogStoriesCell.setMenuItemsOffset(isArchive() || desu.inugram.InuConfig.NAVIGATION_DRAWER.getValue() ? dp(68) : dpf2(16.66f));
+         dialogStoriesCell.allowGlobalUpdates = false;
+         dialogStoriesCell.setVisibility(View.GONE);
+         animateToHasStories = false;
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/LaunchActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/LaunchActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/LaunchActivity.java
