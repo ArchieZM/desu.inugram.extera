@@ -206,6 +206,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - reactions silently disappearing right after being sent (stale server read race)
 - bubble jump when ime height changes mid send-animation
 - "regular" formatting option with mixed-span selections
+- applying a style over a mixed-span selection smearing one span (e.g. mono) across the whole range
 - photo viewer ui respects litemode blur
 - lazy face detect (only on filters tab)
 - lazy chromecast init in photo viewer
