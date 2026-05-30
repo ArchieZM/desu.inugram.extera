@@ -4,19 +4,28 @@ Date: Fri, 22 May 2026 00:16:18 +0400
 Subject: Configurable text + media spoiler styles, with line-extension toggle
 
 ---
- .../java/org/telegram/ui/Cells/ChatMessageCell.java |  3 +++
+ .../java/org/telegram/ui/Cells/ChatMessageCell.java |  5 ++++-
  .../ui/Components/spoilers/SpoilerEffect.java       | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
+@@ -1284,7 +1284,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+     private int buttonY;
+     private int videoButtonX;
+     private int videoButtonY;
+-    private int buttonState;
++    public int buttonState;
+     private int buttonPressed;
+     private int videoButtonPressed;
+     private int miniButtonPressed;
 @@ -15053,6 +15053,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
      }
  
      public void drawBlurredPhotoParticles(Canvas canvas) {
-+        if (desu.inugram.helpers.chat.SpoilerHelper.drawMediaSpoilerIfOverridden(canvas, photoImage.getImageX(), photoImage.getImageY(), photoImage.getImageX2(), photoImage.getImageY2(), photoImage.getAlpha())) {
++        if (desu.inugram.helpers.chat.SpoilerHelper.drawMediaSpoilerIfOverridden(canvas, this)) {
 +            return;
 +        }
          if (mediaSpoilerEffect2 == null) {

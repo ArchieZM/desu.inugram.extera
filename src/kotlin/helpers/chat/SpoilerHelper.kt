@@ -4,13 +4,19 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.content.ContextCompat
 import desu.inugram.InuConfig
 import org.telegram.messenger.AndroidUtilities.dp
+import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
+import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Cells.ChatMessageCell
 import org.telegram.ui.Components.spoilers.SpoilerEffect
 import java.util.WeakHashMap
@@ -94,14 +100,57 @@ object SpoilerHelper {
     }
 
     @JvmStatic
-    fun drawMediaSpoilerIfOverridden(canvas: Canvas, left: Float, top: Float, right: Float, bottom: Float, alpha: Float): Boolean {
-        if (!InuConfig.SIMPLE_MEDIA_SPOILERS.value) return false
-        val clampedAlpha = alpha.coerceIn(0f, 1f)
+    fun drawMediaSpoilerIfOverridden(canvas: Canvas, cell: ChatMessageCell): Boolean {
+        val mode = InuConfig.MEDIA_SPOILER_MODE.value
+        if (mode == InuConfig.MediaSpoilerModeItem.TELEGRAM) return false
+        val photoImage = cell.photoImage
+        val left = photoImage.imageX
+        val top = photoImage.imageY
+        val right = photoImage.imageX2
+        val bottom = photoImage.imageY2
+        val clampedAlpha = photoImage.alpha.coerceIn(0f, 1f)
+        val resourcesProvider = cell.resourcesProvider
 
         solidPaint.color = Color.BLACK
         solidPaint.alpha = (110 * clampedAlpha).toInt().coerceIn(0, 255)
         canvas.drawRect(left, top, right, bottom, solidPaint)
 
+        // Self-destruct media (view-once / timed) carries its own stock indicator, and
+        // not-yet-downloaded media draws a centered download/loading button — in both cases
+        // our indicator would collide, so keep just the overlay.
+        val msg = cell.messageObject
+        val isSelfDestruct = msg != null && msg.needDrawBluredPreview()
+        val isNotLoaded = cell.buttonState == 0 || cell.buttonState == 1
+        if (isSelfDestruct || isNotLoaded) return true
+
+        // Both styles borrow the stock media preloader's palette.
+        val loaderColor = Theme.getColor(Theme.key_chat_mediaLoaderPhoto, resourcesProvider)
+        val iconColor = Theme.getColor(Theme.key_chat_mediaLoaderPhotoIcon, resourcesProvider)
+        val cx = (left + right) / 2f
+        val cy = (top + bottom) / 2f
+        val pad = dp(8f).toFloat()
+
+        if (mode == InuConfig.MediaSpoilerModeItem.CIRCLE) {
+            // Light translucent disc with a white icon: both take the (white) icon color, the disc
+            // at a low translucent alpha so the dark overlay reads through it as a light scrim, the
+            // icon fully opaque so it stays brighter than the disc.
+            val radius = dp(22f).toFloat()
+            if (right - left >= radius * 2 + pad && bottom - top >= radius * 2 + pad) {
+                solidPaint.color = iconColor
+                solidPaint.alpha = (24 * clampedAlpha).toInt().coerceIn(0, 255)
+                canvas.drawCircle(cx, cy, radius, solidPaint)
+                eyeDrawable.let { eye ->
+                    val s = dp(24f)
+                    eye.setBounds((cx - s / 2f).toInt(), (cy - s / 2f).toInt(), (cx + s / 2f).toInt(), (cy + s / 2f).toInt())
+                    eye.colorFilter = PorterDuffColorFilter(iconColor or 0xFF000000.toInt(), PorterDuff.Mode.SRC_IN)
+                    eye.alpha = (255 * clampedAlpha).toInt().coerceIn(0, 255)
+                    eye.draw(canvas)
+                }
+            }
+            return true
+        }
+
+        // PILL (discord-style): label inside a rounded pill.
         val label = LocaleController.getString(R.string.InuMediaSpoilerLabel).uppercase()
         val padH = dp(16f).toFloat()
         val padV = dp(7f).toFloat()
@@ -110,18 +159,21 @@ object SpoilerHelper {
         val textH = fm.descent - fm.ascent
         val pillW = textW + padH * 2
         val pillH = textH + padV * 2
-        val pad = dp(8f).toFloat()
         if (right - left >= pillW + pad && bottom - top >= pillH + pad) {
-            val cx = (left + right) / 2f
-            val cy = (top + bottom) / 2f
-            solidPaint.color = Color.BLACK
-            solidPaint.alpha = (95 * clampedAlpha).toInt().coerceIn(0, 255)
+            solidPaint.color = loaderColor
+            solidPaint.alpha = (Color.alpha(loaderColor) * clampedAlpha).toInt().coerceIn(0, 255)
             tempRect.set(cx - pillW / 2f, cy - pillH / 2f, cx + pillW / 2f, cy + pillH / 2f)
             canvas.drawRoundRect(tempRect, pillH / 2f, pillH / 2f, solidPaint)
-            labelPaint.alpha = (230 * clampedAlpha).toInt().coerceIn(0, 255)
+            labelPaint.color = iconColor
+            labelPaint.alpha = (Color.alpha(iconColor) * clampedAlpha).toInt().coerceIn(0, 255)
             canvas.drawText(label, cx, cy - (fm.ascent + fm.descent) / 2f, labelPaint)
         }
         return true
+    }
+
+    private val eyeDrawable: Drawable by lazy {
+        val ctx = ApplicationLoader.applicationContext
+        ContextCompat.getDrawable(ctx, R.drawable.menu_hide_gift)!!.mutate()
     }
 
     private fun isOutgoingBubble(view: View?): Boolean {
