@@ -239,7 +239,7 @@
     <string name="InuNonIslandTabBars">タブバー</string>
     <string name="InuNonIslandGlobalSearch">グローバル検索</string>
     <string name="InuNonIslandChatElements">チャット要素</string>
-    <string name="InuNonIslandHint">非アイランド UI モードでは、要素を旧 UI に近づけようとします。最良の体験には、すべて有効か無効に揃えてください。\n視覚的なバグが残っている可能性があるのでご注意ください。</string>
+    <string name="InuNonIslandHint">アイランド UI（「Liquid Glass」とも呼ばれる）は、明らかに iOS に着想を得た新しい (>12.6) UI デザインです。ここではその一部の変更を可能な範囲で元に戻せます。\n視覚的なバグが残っている可能性があるのでご注意ください。</string>
 
     <string name="InuHideFadeView">フェードビューを非表示</string>
 
@@ -530,4 +530,45 @@
     <string name="InuLogsShareError">ログのパッケージ化に失敗しました</string>
     <string name="InuLogsCopySystemInfo">システム情報をコピー</string>
     <string name="InuLogsSystemInfoCopied">システム情報をクリップボードにコピーしました</string>
+
+    <string name="InuLookAndFeel">外観とスタイル</string>
+    <string name="InuMaterial3Fabs">フローティングボタン</string>
+    <string name="InuMaterial3Sections">リスト項目</string>
+    <string name="InuTypographyAndIcons">タイポグラフィとアイコン</string>
+    <string name="InuMotion">モーション</string>
+    <string name="InuFormatting">書式設定</string>
+    <string name="InuChatActions">チャットアクション</string>
+    <string name="InuLinksAndBrowser">リンクとブラウザ</string>
+    <string name="InuStickers">スタンプ</string>
+    <string name="InuReactions">リアクション</string>
+    <string name="InuDelay">遅延</string>
+
+    <string name="InuDisableQuickShare">クイック共有を無効化</string>
+    <string name="InuDisableQuickShareInfo">共有ボタン（チャンネルメッセージの横）を長押ししたときに頻繁な連絡先を表示しない；確認なしで送信されます</string>
+    <string name="InuDisableBrowserSwipeCollapse">下スワイプでのブラウザ最小化を無効化</string>
+    <string name="InuGifSeekbar">GIF のシークバー</string>
+    <string name="InuGifSeekbarInfo">注：「新しい」GIF（つまり無音 MP4）にのみ対応</string>
+    <string name="InuDisableGlassGlare">ガラスのグレアを無効化</string>
+
+    <string name="InuStripTrackingParamsOnOpen">リンクを開くとき</string>
+    <string name="InuStripTrackingParamsOnPaste">貼り付け時</string>
+    <string name="InuStripTrackingParamsSourceRow">フィルターソース</string>
+
+    <string name="InuSimulateOom">OOM クラッシュをシミュレート</string>
+    <string name="InuCrashTitleError">Inugram がクラッシュしました: %1$s</string>
+    <string name="InuCrashTitleOom">Inugram のメモリが不足しました</string>
+    <string name="InuCrashDescHeapDump">ヒープダンプも保存されました。クラッシュログと一緒に共有することで問題の特定に役立ちます。ヒープダンプは大きく、プライベートな情報を含む可能性があります！</string>
+    <string name="InuCrashShareHeapDump">ヒープダンプを保存</string>
+
+    <string name="InuDeleteOwnMessages">自分のメッセージを削除</string>
+    <string name="InuDeleteOwnMessagesSearching">あなたのメッセージを検索中…</string>
+    <string name="InuDeleteOwnMessagesFoundProgress">%1$d / %2$d 件見つかりました</string>
+    <string name="InuDeleteOwnMessagesNone">このチャットにあなたのメッセージはありません</string>
+    <string name="InuDeleteOwnMessagesConfirm_one">あなたの %d 件のメッセージを削除しますか？取り消せません。</string>
+    <string name="InuDeleteOwnMessagesConfirm_other">あなたの %d 件のメッセージを削除しますか？取り消せません。</string>
+    <string name="InuDeleteOwnMessagesDeleting">%1$d / %2$d 件削除しました</string>
+    <string name="InuDeleteOwnMessagesDone_one">%d 件のメッセージを削除しました</string>
+    <string name="InuDeleteOwnMessagesDone_other">%d 件のメッセージを削除しました</string>
+    <string name="InuDeleteOwnMessagesError">エラー: %1$s</string>
+    <string name="InuDeleteOwnMessagesFloodWait">レート制限中、%d 秒待機…</string>
 </resources>

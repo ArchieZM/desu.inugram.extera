@@ -239,7 +239,7 @@
     <string name="InuNonIslandTabBars">标签栏</string>
     <string name="InuNonIslandGlobalSearch">全局搜索</string>
     <string name="InuNonIslandChatElements">聊天元素</string>
-    <string name="InuNonIslandHint">在非「岛」界面模式下，会尝试调整元素以更接近旧版界面。为获得最佳体验，请整体启用或整体禁用。\n可能仍有视觉缺陷，请知悉。</string>
+    <string name="InuNonIslandHint">「岛」界面（也叫「Liquid Glass」）是新的 (>12.6) 界面设计，明显受 iOS 启发。在这里可以尽力撤销其中部分改动。\n可能仍有视觉缺陷，请知悉。</string>
 
     <string name="InuHideFadeView">隐藏渐隐视图</string>
 
@@ -530,4 +530,45 @@
     <string name="InuLogsShareError">打包日志失败</string>
     <string name="InuLogsCopySystemInfo">复制系统信息</string>
     <string name="InuLogsSystemInfoCopied">系统信息已复制到剪贴板</string>
+
+    <string name="InuLookAndFeel">外观与样式</string>
+    <string name="InuMaterial3Fabs">悬浮按钮</string>
+    <string name="InuMaterial3Sections">列表项</string>
+    <string name="InuTypographyAndIcons">字体与图标</string>
+    <string name="InuMotion">动画</string>
+    <string name="InuFormatting">格式化</string>
+    <string name="InuChatActions">聊天操作</string>
+    <string name="InuLinksAndBrowser">链接与浏览器</string>
+    <string name="InuStickers">贴纸</string>
+    <string name="InuReactions">回应</string>
+    <string name="InuDelay">延迟</string>
+
+    <string name="InuDisableQuickShare">禁用快速分享</string>
+    <string name="InuDisableQuickShareInfo">长按分享按钮（频道消息旁边）时不显示常用联系人；会直接发送，无需确认</string>
+    <string name="InuDisableBrowserSwipeCollapse">禁用下滑最小化浏览器</string>
+    <string name="InuGifSeekbar">GIF 进度条</string>
+    <string name="InuGifSeekbarInfo">注意：仅对「新」GIF（即静音 MP4）生效</string>
+    <string name="InuDisableGlassGlare">禁用玻璃眩光</string>
+
+    <string name="InuStripTrackingParamsOnOpen">打开链接时</string>
+    <string name="InuStripTrackingParamsOnPaste">粘贴时</string>
+    <string name="InuStripTrackingParamsSourceRow">过滤器源</string>
+
+    <string name="InuSimulateOom">模拟 OOM 崩溃</string>
+    <string name="InuCrashTitleError">Inugram 崩溃了: %1$s</string>
+    <string name="InuCrashTitleOom">Inugram 内存不足</string>
+    <string name="InuCrashDescHeapDump">同时保存了堆转储。可以与崩溃日志一起分享以帮助诊断问题。堆转储可能很大，且包含隐私数据！</string>
+    <string name="InuCrashShareHeapDump">保存堆转储</string>
+
+    <string name="InuDeleteOwnMessages">删除我的消息</string>
+    <string name="InuDeleteOwnMessagesSearching">正在查找你的消息…</string>
+    <string name="InuDeleteOwnMessagesFoundProgress">找到 %1$d / %2$d</string>
+    <string name="InuDeleteOwnMessagesNone">此聊天中没有你的消息</string>
+    <string name="InuDeleteOwnMessagesConfirm_one">删除你的 %d 条消息？此操作无法撤销。</string>
+    <string name="InuDeleteOwnMessagesConfirm_other">删除你的 %d 条消息？此操作无法撤销。</string>
+    <string name="InuDeleteOwnMessagesDeleting">已删除 %1$d / %2$d</string>
+    <string name="InuDeleteOwnMessagesDone_one">已删除 %d 条消息</string>
+    <string name="InuDeleteOwnMessagesDone_other">已删除 %d 条消息</string>
+    <string name="InuDeleteOwnMessagesError">错误: %1$s</string>
+    <string name="InuDeleteOwnMessagesFloodWait">速率受限，等待 %d 秒…</string>
 </resources>

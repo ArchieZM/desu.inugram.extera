@@ -239,7 +239,7 @@
     <string name="InuNonIslandTabBars">Панели вкладок</string>
     <string name="InuNonIslandGlobalSearch">Глобальный поиск</string>
     <string name="InuNonIslandChatElements">Элементы чата</string>
-    <string name="InuNonIslandHint">В режиме не-«островного» интерфейса элементы подгоняются под старый стиль. Для лучшего результата включайте или отключайте всё вместе.\nВероятно, остались визуальные баги — имейте в виду.</string>
+    <string name="InuNonIslandHint">«Островной» интерфейс (он же «Liquid Glass») — это новый дизайн (>12.6), явно вдохновлённый iOS. Здесь можно откатить часть этих изменений (по мере возможности).\nВероятно, остались визуальные баги — имейте в виду.</string>
 
     <string name="InuHideFadeView">Скрыть градиенты затухания</string>
 
@@ -534,4 +534,49 @@
     <string name="InuLogsShareError">Не удалось упаковать логи</string>
     <string name="InuLogsCopySystemInfo">Копировать системную информацию</string>
     <string name="InuLogsSystemInfoCopied">Системная информация скопирована в буфер обмена</string>
+
+    <string name="InuLookAndFeel">Внешний вид и стиль</string>
+    <string name="InuMaterial3Fabs">Плавающие кнопки</string>
+    <string name="InuMaterial3Sections">Элементы списка</string>
+    <string name="InuTypographyAndIcons">Шрифты и иконки</string>
+    <string name="InuMotion">Анимации</string>
+    <string name="InuFormatting">Форматирование</string>
+    <string name="InuChatActions">Действия в чате</string>
+    <string name="InuLinksAndBrowser">Ссылки и браузер</string>
+    <string name="InuStickers">Стикеры</string>
+    <string name="InuReactions">Реакции</string>
+    <string name="InuDelay">Задержка</string>
+
+    <string name="InuDisableQuickShare">Отключить быструю отправку</string>
+    <string name="InuDisableQuickShareInfo">Не показывать частые контакты при долгом нажатии кнопки «Поделиться» (рядом с сообщениями каналов); отправка без подтверждения</string>
+    <string name="InuDisableBrowserSwipeCollapse">Отключить свайп вниз для сворачивания браузера</string>
+    <string name="InuGifSeekbar">Полоса перемотки для GIF</string>
+    <string name="InuGifSeekbarInfo">Работает только для «новых» GIF (т.е. беззвучных MP4)</string>
+    <string name="InuDisableGlassGlare">Отключить блик стекла</string>
+
+    <string name="InuStripTrackingParamsOnOpen">При открытии ссылок</string>
+    <string name="InuStripTrackingParamsOnPaste">При вставке</string>
+    <string name="InuStripTrackingParamsSourceRow">Источник фильтра</string>
+
+    <string name="InuSimulateOom">Симулировать OOM-краш</string>
+    <string name="InuCrashTitleError">Inugram упал: %1$s</string>
+    <string name="InuCrashTitleOom">Inugram исчерпал память</string>
+    <string name="InuCrashDescHeapDump">Также сохранён дамп кучи. Вы можете отправить его вместе с логом краша, чтобы помочь диагностировать проблему. Дамп может быть большим и содержит личные данные!</string>
+    <string name="InuCrashShareHeapDump">Сохранить дамп кучи</string>
+
+    <string name="InuDeleteOwnMessages">Удалить мои сообщения</string>
+    <string name="InuDeleteOwnMessagesSearching">Поиск ваших сообщений…</string>
+    <string name="InuDeleteOwnMessagesFoundProgress">Найдено %1$d / %2$d</string>
+    <string name="InuDeleteOwnMessagesNone">В этом чате нет ваших сообщений</string>
+    <string name="InuDeleteOwnMessagesConfirm_one">Удалить %d ваше сообщение? Это нельзя отменить.</string>
+    <string name="InuDeleteOwnMessagesConfirm_few">Удалить %d ваших сообщения? Это нельзя отменить.</string>
+    <string name="InuDeleteOwnMessagesConfirm_many">Удалить %d ваших сообщений? Это нельзя отменить.</string>
+    <string name="InuDeleteOwnMessagesConfirm_other">Удалить %d ваших сообщений? Это нельзя отменить.</string>
+    <string name="InuDeleteOwnMessagesDeleting">Удалено %1$d / %2$d</string>
+    <string name="InuDeleteOwnMessagesDone_one">Удалено %d сообщение</string>
+    <string name="InuDeleteOwnMessagesDone_few">Удалено %d сообщения</string>
+    <string name="InuDeleteOwnMessagesDone_many">Удалено %d сообщений</string>
+    <string name="InuDeleteOwnMessagesDone_other">Удалено %d сообщений</string>
+    <string name="InuDeleteOwnMessagesError">Ошибка: %1$s</string>
+    <string name="InuDeleteOwnMessagesFloodWait">Лимит запросов, ожидаем %d с…</string>
 </resources>
