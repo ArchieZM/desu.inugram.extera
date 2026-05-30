@@ -1,5 +1,6 @@
 package desu.inugram.helpers
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,8 +14,10 @@ import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.BuildConfig
 import org.telegram.messenger.BuildVars
 import org.telegram.messenger.LocaleController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
 import org.telegram.ui.LaunchActivity
+import android.os.Debug
 import java.io.File
 import java.io.PrintWriter
 import java.io.RandomAccessFile
@@ -23,16 +26,18 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 object CrashReporter {
     private const val LOG_FILE = "last_crash.log"
+    private const val HEAP_DUMP_FILE = "last_heap_dump.hprof"
     private const val TAIL_BYTES = 200 * 1024L
     private const val RESTART_LOOP_GUARD_MS = 30_000L
     private const val RESTART_CHANNEL_ID = "inu_crash_restart"
     private const val RESTART_NOTIFICATION_ID = 0x1e75
+    private const val SAVE_HEAP_DUMP_REQUEST = 0x1e76
     private val installed = AtomicBoolean(false)
     private val sheetShown = AtomicBoolean(false)
     private var previousCrashMtime = 0L
 
     fun install() {
-        if (BuildConfig.INU_BUILD_TYPE == "debug") return
+        // if (BuildConfig.INU_BUILD_TYPE == "debug") return
         if (!installed.compareAndSet(false, true)) return
         // force BuildVars static init so our handler wraps stock's FileLog.fatal chain
         @Suppress("UNUSED_EXPRESSION") BuildVars.LOGS_ENABLED
@@ -48,10 +53,40 @@ object CrashReporter {
         return File(dir, LOG_FILE)
     }
 
+    fun getHeapDumpFile(): File {
+        val dir = File(ApplicationLoader.getFilesDirFixed(), "logs")
+        dir.mkdirs()
+        return File(dir, HEAP_DUMP_FILE)
+    }
+
     fun isCrashed(): Boolean = getLogFile().let { it.exists() && it.length() > 0 }
+
+    fun hasHeapDump(): Boolean = BuildVars.LOGS_ENABLED && getHeapDumpFile().let { it.exists() && it.length() > 0 }
+
+    fun getCrashErrorName(): String? {
+        val file = getLogFile()
+        if (!file.exists() || file.length() == 0L) return null
+        return try {
+            RandomAccessFile(file, "r").use { raf ->
+                val len = minOf(raf.length(), 2048L).toInt()
+                val bytes = ByteArray(len)
+                raf.readFully(bytes)
+                val head = String(bytes, Charsets.UTF_8)
+                val sep = head.indexOf("\n\n")
+                if (sep < 0) return null
+                val line = head.substring(sep + 2).lineSequence().firstOrNull { it.isNotBlank() } ?: return null
+                val colonIdx = line.indexOf(':')
+                val fullClass = (if (colonIdx > 0) line.substring(0, colonIdx) else line).trim()
+                fullClass.substringAfterLast('.')
+            }
+        } catch (_: Throwable) {
+            null
+        }
+    }
 
     fun deleteCrashLog() {
         getLogFile().delete()
+        getHeapDumpFile().delete()
     }
 
     fun maybeShowReportSheet(activity: LaunchActivity) {
@@ -72,6 +107,39 @@ object CrashReporter {
         SharePicker.shareFile(activity, shareable, "text/plain", onSent = ::deleteCrashLog)
     }
 
+    fun saveHeapDump(activity: LaunchActivity) {
+        val src = getHeapDumpFile()
+        if (!src.exists()) return
+
+        val observer = object : NotificationCenter.NotificationCenterDelegate {
+            override fun didReceivedNotification(id: Int, account: Int, vararg args: Any?) {
+                val reqCode = args[0] as Int
+                if (reqCode != SAVE_HEAP_DUMP_REQUEST) return
+                NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.onActivityResultReceived)
+                val resultCode = args[1] as Int
+                if (resultCode != Activity.RESULT_OK) return
+                val uri = (args[2] as? Intent)?.data ?: return
+                Thread {
+                    try {
+                        activity.contentResolver.openOutputStream(uri)?.use { out ->
+                            src.inputStream().use { inp -> inp.copyTo(out) }
+                        }
+                        AndroidUtilities.runOnUIThread { deleteCrashLog() }
+                    } catch (_: Throwable) {}
+                }.start()
+            }
+        }
+        NotificationCenter.getGlobalInstance().addObserver(observer, NotificationCenter.onActivityResultReceived)
+
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/octet-stream"
+            putExtra(Intent.EXTRA_TITLE, "inugram-heap-dump.hprof")
+        }
+        @Suppress("DEPRECATION")
+        activity.startActivityForResult(intent, SAVE_HEAP_DUMP_REQUEST)
+    }
+
     private class Handler(
         private val chain: Thread.UncaughtExceptionHandler?,
     ) : Thread.UncaughtExceptionHandler {
@@ -89,6 +157,12 @@ object CrashReporter {
                 }
                 getLogFile().writeText(body)
             } catch (_: Throwable) {
+            }
+            if (e is OutOfMemoryError && BuildVars.LOGS_ENABLED) {
+                try {
+                    Debug.dumpHprofData(getHeapDumpFile().absolutePath)
+                } catch (_: Throwable) {
+                }
             }
             val crashLoop = previousCrashMtime > 0 &&
                 System.currentTimeMillis() - previousCrashMtime < RESTART_LOOP_GUARD_MS

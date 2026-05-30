@@ -531,9 +531,14 @@
     <string name="InuBotSettings">Bot Settings</string>
     <string name="InuBotHelp">Bot Help</string>
 
+    <string name="InuSimulateOom">Simulate OOM crash</string>
     <string name="InuCrashTitle">Inugram crashed last time</string>
+    <string name="InuCrashTitleError">Inugram crashed: %1$s</string>
+    <string name="InuCrashTitleOom">Inugram ran out of memory</string>
     <string name="InuCrashDesc">Sorry about that. You can share the crash log with the developer to help fix it.</string>
+    <string name="InuCrashDescHeapDump">A heap dump was also saved. You can share it along with the crash log to help diagnose the issue. The heap dump may be large and contains private data!.</string>
     <string name="InuCrashShare">Share crash log</string>
+    <string name="InuCrashShareHeapDump">Save heap dump</string>
     <string name="InuCrashDiscard">Discard</string>
     <string name="InuCrashChannel">Crash recovery</string>
     <string name="InuCrashNotifTitle">Inugram crashed</string>
