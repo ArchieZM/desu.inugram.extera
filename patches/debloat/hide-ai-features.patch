@@ -6,8 +6,10 @@ Subject: hide ai features
 ---
  TMessagesProj/src/main/java/org/telegram/ui/ArticleViewer.java  | 1 +
  .../src/main/java/org/telegram/ui/Cells/ChatMessageCell.java    | 2 +-
+ .../java/org/telegram/ui/Components/CaptionPhotoViewer.java     | 2 +-
  .../java/org/telegram/ui/Components/ChatActivityEnterView.java  | 2 +-
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ .../main/java/org/telegram/ui/Components/ChatAttachAlert.java   | 2 +-
+ 5 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ArticleViewer.java b/TMessagesProj/src/main/java/org/telegram/ui/ArticleViewer.java
 index 0000000..0000000 100644
@@ -34,6 +36,19 @@ index 0000000..0000000 100644
              hasReplyQuote = false;
              isReplyQuote = false;
              isReplyTaskOrPollOption = false;
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/CaptionPhotoViewer.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/CaptionPhotoViewer.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/CaptionPhotoViewer.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/CaptionPhotoViewer.java
+@@ -531,7 +531,7 @@ public class CaptionPhotoViewer extends CaptionContainerView {
+ 
+     private boolean shownAiButton;
+     private void showAiButton(boolean show_) {
+-        final boolean show = show_;
++        final boolean show = show_ && !desu.inugram.InuConfig.HIDE_AI_EDITOR.getValue();
+ 
+         if (shownAiButton == show) return;
+         if (show) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
@@ -44,6 +59,19 @@ index 0000000..0000000 100644
      private void showAiButton(boolean show_) {
 -        final boolean show = show_ && parentFragment != null && !parentFragment.isSecretChat();
 +        final boolean show = show_ && parentFragment != null && !parentFragment.isSecretChat() && !desu.inugram.InuConfig.HIDE_AI_EDITOR.getValue();
+ 
+         if (shownAiButton == show) return;
+         if (show) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatAttachAlert.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatAttachAlert.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatAttachAlert.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatAttachAlert.java
+@@ -6119,7 +6119,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
+ 
+     private boolean shownAiButton;
+     private void showAiButton(boolean show_) {
+-        final boolean show = show_ && (baseFragment instanceof ChatActivity && !((ChatActivity) baseFragment).isSecretChat());
++        final boolean show = show_ && (baseFragment instanceof ChatActivity && !((ChatActivity) baseFragment).isSecretChat()) && !desu.inugram.InuConfig.HIDE_AI_EDITOR.getValue();
  
          if (shownAiButton == show) return;
          if (show) {
