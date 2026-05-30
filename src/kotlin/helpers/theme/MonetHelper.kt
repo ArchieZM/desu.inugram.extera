@@ -207,10 +207,9 @@ object MonetHelper {
             put("monetAvatarNameDarkCyan", -0xcf6146)
             put("monetAvatarNameDarkBlue", -0xc9752f)
             put("monetAvatarNameDarkPink", -0x38af75)
-            put("monetRedLight", 0xB3261E)
-            put("monetRedDark", 0xF2B8B5)
             put("monetRedCall", 0xEF5350)
-            put("monetGreenCall", 0x4CAF50)
+            put("monetGreen", 0x4CAF50)
+            put("monetYellow", 0xFFB74D)
         }
     }
     private var lastMonetColor = 0

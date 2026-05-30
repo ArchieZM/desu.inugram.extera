@@ -172,3 +172,4 @@ bugfix/painter-pan-bounds.patch
 feature/linked-channel-in-profile.patch
 bugfix/statistics-shared-message-text.patch
 feature/keep-search-peer-select.patch
+bugfix/theme-tint.patch
