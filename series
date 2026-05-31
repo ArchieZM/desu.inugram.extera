@@ -177,3 +177,4 @@ bugfix/sheet-bg-bottom-gap.patch
 bugfix/message-persist-transient.patch
 bugfix/audio-alert-search.patch
 bugfix/music-bar-dismiss-scroll-jump.patch
+bugfix/photo-viewer-apply-caption.patch
