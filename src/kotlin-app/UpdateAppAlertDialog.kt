@@ -10,7 +10,6 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -227,7 +226,7 @@ class UpdateAppAlertDialog(
             background = Theme.createSimpleSelectorRoundRectDrawable(
                 AndroidUtilities.dp(radius), 0, Theme.getColor(Theme.key_listSelector),
             ),
-            textColor = Theme.getColor(Theme.key_featuredStickers_addButton),
+            textColor = Theme.getColor(Theme.key_featuredStickers_buttonText),
             bold = false,
         ) {
             UpdateHelper.clearPending()

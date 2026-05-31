@@ -66,7 +66,12 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
                 val start = descText.length
                 descText.append(errorName)
                 descText.setSpan(StyleSpan(Typeface.BOLD), start, descText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                descText.setSpan(ForegroundColorSpan(Theme.getColor(Theme.key_dialogTextBlack)), start, descText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                descText.setSpan(
+                    ForegroundColorSpan(Theme.getColor(Theme.key_dialogTextBlack)),
+                    start,
+                    descText.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
                 descText.append("\n\n")
             }
             descText.append(LocaleController.getString(R.string.InuCrashDesc))
@@ -83,7 +88,7 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
             background = Theme.createSimpleSelectorRoundRectDrawable(
                 AndroidUtilities.dp(21f), 0, Theme.getColor(Theme.key_listSelector),
             ),
-            textColor = Theme.getColor(Theme.key_featuredStickers_addButton),
+            textColor = Theme.getColor(Theme.key_featuredStickers_buttonText),
             bold = false,
         ) {
             CrashReporter.deleteCrashLog()
@@ -106,9 +111,11 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
             })
             addView(shareBtn, LinearLayout.LayoutParams(0, AndroidUtilities.dp(42f), 1f))
         }
-        container.addView(buttonRow, LayoutHelper.createLinear(
-            LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 16, 0, 16, if (hasHeapDump) 8 else 16,
-        ))
+        container.addView(
+            buttonRow, LayoutHelper.createLinear(
+                LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 16, 0, 16, if (hasHeapDump) 8 else 16,
+            )
+        )
 
         if (hasHeapDump) {
             val heapDumpBtn = makeButton(
@@ -122,9 +129,11 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
                 val activity = (context as? LaunchActivity) ?: return@makeButton
                 CrashReporter.saveHeapDump(activity)
             }
-            container.addView(heapDumpBtn, LayoutHelper.createLinear(
-                LayoutHelper.MATCH_PARENT, 42, 0, 16, 0, 16, 16,
-            ))
+            container.addView(
+                heapDumpBtn, LayoutHelper.createLinear(
+                    LayoutHelper.MATCH_PARENT, 42, 0, 16, 0, 16, 16,
+                )
+            )
         }
 
         setCustomView(NestedScrollView(context).apply { addView(container) })
