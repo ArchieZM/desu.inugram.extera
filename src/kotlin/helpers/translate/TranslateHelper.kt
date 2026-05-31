@@ -4,9 +4,9 @@ import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import androidx.core.content.ContextCompat
 import desu.inugram.InuConfig
+import desu.inugram.helpers.InuUtils
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
-import org.telegram.messenger.FileLog
 import org.telegram.messenger.LanguageDetector
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
@@ -16,7 +16,6 @@ import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.ConnectionsManager
-import org.telegram.tgnet.NativeByteBuffer
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.Cells.TextSelectionHelper
 import org.telegram.ui.ChatActivity
@@ -28,8 +27,13 @@ import org.telegram.ui.RestrictedLanguagesSelectActivity
 import java.util.concurrent.ConcurrentHashMap
 
 object TranslateHelper {
+    private const val ORIGINAL_SEPARATOR = "\n\n--------\n\n"
+
     // dialog id -> message ids whose body is manually translated
     private val manual = ConcurrentHashMap<Long, MutableSet<Int>>()
+
+    // dialog id -> message id -> translated text with original appended (per-session)
+    private val bodies = ConcurrentHashMap<Long, ConcurrentHashMap<Int, TLRPC.TL_textWithEntities>>()
 
     // dialog id -> message id -> translated webpage clone
     private val webPages = ConcurrentHashMap<Long, ConcurrentHashMap<Int, TLRPC.TL_webPage>>()
@@ -162,8 +166,12 @@ object TranslateHelper {
                 return@pushToTranslate
             }
             owner.translatedToLanguage = lang
-            if (isTranscription) owner.translatedVoiceTranscription = text
-            else owner.translatedText = text
+            if (isTranscription) {
+                owner.translatedVoiceTranscription = text
+            } else {
+                owner.translatedText = text
+                storeMergedBody(target, text)
+            }
             owner.translatedPoll = null
             MessagesStorage.getInstance(account).updateMessageCustomParams(dialogId, owner)
             NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.messageTranslated, target)
@@ -267,18 +275,8 @@ object TranslateHelper {
         }
     }
 
-    private fun cloneWebPage(wp: TLRPC.TL_webPage): TLRPC.TL_webPage? {
-        return try {
-            val buf = NativeByteBuffer(wp.objectSize)
-            wp.serializeToStream(buf)
-            buf.position(0)
-            val constructor = buf.readInt32(false)
-            TLRPC.WebPage.TLdeserialize(buf, constructor, false) as? TLRPC.TL_webPage
-        } catch (e: Exception) {
-            FileLog.e(e)
-            null
-        }
-    }
+    private fun cloneWebPage(wp: TLRPC.TL_webPage): TLRPC.TL_webPage? =
+        InuUtils.cloneTLObject(wp, TLRPC.WebPage::TLdeserialize) as? TLRPC.TL_webPage
 
     private fun bodyTranslated(msg: MessageObject?): Boolean {
         if (msg == null || !msg.translated) return false
@@ -360,6 +358,7 @@ object TranslateHelper {
     @JvmStatic
     fun revert(activity: ChatActivity, msg: MessageObject) {
         manual[msg.dialogId]?.remove(msg.id)
+        bodies[msg.dialogId]?.remove(msg.id)
         if (webPages[msg.dialogId]?.remove(msg.id) != null) {
             msg.linkDescription = null
         }
@@ -370,8 +369,51 @@ object TranslateHelper {
 
     fun resetForDialog(dialogId: Long) {
         manual.remove(dialogId)
+        bodies.remove(dialogId)
         webPages.remove(dialogId)
         webPagesLoading.remove(dialogId)
         webPagesLangs.remove(dialogId)
     }
+
+    /** Returns the translated body with original appended when the toggle is on; otherwise [original]. */
+    @JvmStatic
+    fun viewTranslatedText(
+        msg: MessageObject?,
+        original: TLRPC.TL_textWithEntities?,
+    ): TLRPC.TL_textWithEntities? {
+        if (msg == null || original == null) return original
+        if (!InuConfig.KEEP_ORIGINAL_AFTER_TRANSLATION.value) return original
+        val cached = bodies[msg.dialogId]?.get(msg.id) ?: return original
+        // owner.translatedText may have been replaced by a different translation
+        // (e.g. stock chat-translate flipping language). drop the stale merge.
+        if (original.text == null || !cached.text.startsWith(original.text + ORIGINAL_SEPARATOR)) {
+            bodies[msg.dialogId]?.remove(msg.id)
+            return original
+        }
+        return cached
+    }
+
+    private fun storeMergedBody(target: MessageObject, translated: TLRPC.TL_textWithEntities) {
+        val originalText = target.messageOwner?.message
+        if (translated.text.isNullOrEmpty() || originalText.isNullOrEmpty()) {
+            bodies[target.dialogId]?.remove(target.id)
+            return
+        }
+        val merged = TLRPC.TL_textWithEntities()
+        merged.text = translated.text + ORIGINAL_SEPARATOR + originalText
+        val shift = translated.text.length + ORIGINAL_SEPARATOR.length
+        val originalEntities = target.messageOwner?.entities
+        merged.entities = ArrayList(translated.entities.size + (originalEntities?.size ?: 0))
+        merged.entities.addAll(translated.entities)
+        originalEntities?.forEach { e ->
+            cloneEntity(e)?.also {
+                it.offset += shift
+                merged.entities.add(it)
+            }
+        }
+        bodies.computeIfAbsent(target.dialogId) { ConcurrentHashMap() }[target.id] = merged
+    }
+
+    private fun cloneEntity(e: TLRPC.MessageEntity): TLRPC.MessageEntity? =
+        InuUtils.cloneTLObject(e, TLRPC.MessageEntity::TLdeserialize)
 }

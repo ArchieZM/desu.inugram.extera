@@ -669,6 +669,9 @@ object InuConfig {
     val TRANSLATE_WEB_PREVIEWS = BoolItem("translate_web_previews", true)
 
     @JvmField
+    val KEEP_ORIGINAL_AFTER_TRANSLATION = BoolItem("keep_original_after_translation", false)
+
+    @JvmField
     val ACCOUNT_ORDER = StringItem("account_order", "", exportable = false)
 
     @JvmField

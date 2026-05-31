@@ -4,19 +4,28 @@ Date: Fri, 8 May 2026 13:52:58 +0200
 Subject: translator-related features
 
 ---
- .../org/telegram/messenger/MessageObject.java |  3 +-
+ .../org/telegram/messenger/MessageObject.java | 13 +++---
  .../messenger/TranslateController.java        |  7 +--
  .../java/org/telegram/ui/ArticleViewer.java   | 21 ++++++---
  .../telegram/ui/Cells/ChatMessageCell.java    | 34 +++++++++++---
  .../ui/Cells/TextSelectionHelper.java         |  1 +
  .../java/org/telegram/ui/ChatActivity.java    | 45 ++++++++++++-------
  .../org/telegram/ui/web/WebActionBar.java     |  3 ++
- 7 files changed, 85 insertions(+), 29 deletions(-)
+ 7 files changed, 91 insertions(+), 33 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
+@@ -3627,7 +3627,7 @@ public class MessageObject {
+     public boolean updateTranslation(boolean force) {
+         boolean replyUpdated = replyMessageObject != null && replyMessageObject != this && replyMessageObject.updateTranslation(force);
+         TranslateController translateController = MessagesController.getInstance(currentAccount).getTranslateController();
+-        final TLRPC.TL_textWithEntities translatedText = messageOwner != null ? (messageOwner.voiceTranscriptionOpen ? messageOwner.translatedVoiceTranscription : messageOwner.translatedText) : null;
++        final TLRPC.TL_textWithEntities translatedText = messageOwner != null ? (messageOwner.voiceTranscriptionOpen ? messageOwner.translatedVoiceTranscription : desu.inugram.helpers.translate.TranslateHelper.viewTranslatedText(this, messageOwner.translatedText)) : null;
+         final TLRPC.TL_textWithEntities summarizedText = messageOwner != null && messageOwner.summarizedOpen ? messageOwner.summaryText : null;
+         final TLRPC.TL_textWithEntities summarizeTranslatedText = messageOwner != null && messageOwner.summarizedOpen ? messageOwner.translatedSummaryText : null;
+         if (
 @@ -3663,6 +3663,7 @@ public class MessageObject {
              generateCaption();
              return replyUpdated || true;
@@ -34,6 +43,28 @@ index 0000000..0000000 100644
                  String siteName = getMedia(messageOwner).webpage.site_name;
                  if (siteName != null) {
                      siteName = siteName.toLowerCase();
+@@ -7228,8 +7229,9 @@ public class MessageObject {
+         } else if (messageOwner.translatedText != null && translated) {
+             captionSummarized = false;
+             captionTranslated = true;
+-            text = messageOwner.translatedText.text;
+-            entities = messageOwner.translatedText.entities;
++            TLRPC.TL_textWithEntities inu_tt = desu.inugram.helpers.translate.TranslateHelper.viewTranslatedText(this, messageOwner.translatedText);
++            text = inu_tt.text;
++            entities = inu_tt.entities;
+         } else {
+             captionSummarized = false;
+             captionTranslated = false;
+@@ -7577,7 +7579,8 @@ public class MessageObject {
+             if (messageOwner.voiceTranscriptionOpen) {
+                 return messageOwner.translatedVoiceTranscription != null ? messageOwner.translatedVoiceTranscription.entities : null;
+             } else {
+-                return messageOwner.translatedText != null ? messageOwner.translatedText.entities : null;
++                TLRPC.TL_textWithEntities inu_tt = desu.inugram.helpers.translate.TranslateHelper.viewTranslatedText(this, messageOwner.translatedText);
++                return inu_tt != null ? inu_tt.entities : null;
+             }
+         }
+         return messageOwner.entities;
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/TranslateController.java b/TMessagesProj/src/main/java/org/telegram/messenger/TranslateController.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/TranslateController.java

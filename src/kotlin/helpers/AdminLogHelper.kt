@@ -6,6 +6,7 @@ import android.widget.TextView
 import desu.inugram.InuConfig
 import desu.inugram.core.diff.DiffKind
 import desu.inugram.core.diff.WordDiff
+import desu.inugram.helpers.InuUtils
 import desu.inugram.ui.MessageDetailsActivity
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ContactsController
@@ -14,7 +15,6 @@ import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MediaController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
-import org.telegram.tgnet.NativeByteBuffer
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ActionBar.ActionBarMenu
 import org.telegram.ui.ActionBar.ActionBarMenuSubItem
@@ -279,19 +279,6 @@ object AdminLogHelper {
         }
     }
 
-    private fun cloneEntity(e: TLRPC.MessageEntity): TLRPC.MessageEntity? {
-        return try {
-            val buf = NativeByteBuffer(e.objectSize)
-            try {
-                e.serializeToStream(buf)
-                buf.position(0)
-                val constructor = buf.readInt32(false)
-                TLRPC.MessageEntity.TLdeserialize(buf, constructor, false)
-            } finally {
-                buf.reuse()
-            }
-        } catch (_: Exception) {
-            null
-        }
-    }
+    private fun cloneEntity(e: TLRPC.MessageEntity): TLRPC.MessageEntity? =
+        InuUtils.cloneTLObject(e, TLRPC.MessageEntity::TLdeserialize)
 }
