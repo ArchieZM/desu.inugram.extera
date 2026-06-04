@@ -4,14 +4,31 @@ Date: Mon, 25 May 2026 04:05:46 +0400
 Subject: prevent web preview from refetching the same link when typing
 
 ---
- .../java/org/telegram/ui/ChatActivity.java     | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ .../java/org/telegram/ui/ChatActivity.java    | 32 ++++++++++++++-----
+ .../ui/Components/ChatActivityEnterView.java  |  2 +-
+ 2 files changed, 25 insertions(+), 9 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
-@@ -13837,7 +13837,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -13795,6 +13795,15 @@ public class ChatActivity extends BaseFragment implements
+         }
+     }
+ 
++    public void inu_clearLinkPreviewState() {
++        waitingForWebpageId++;
++        cancelSearchLinks();
++        linkSearchRequestId = 0;
++        pendingLinkSearchString = null;
++        foundUrls = null;
++        foundWebPage = null;
++    }
++
+     private void editResetMediaManual() {
+         if (editingMessageObject != null && editingMessageObject.messageOwner != null && editingMessageObject.messageOwner.media != null) {
+             editingMessageObject.messageOwner.media.manual = false;
+@@ -13837,7 +13846,7 @@ public class ChatActivity extends BaseFragment implements
              return;
          }
          checkEditLinkRemoved(charSequence);
@@ -20,7 +37,7 @@ index 0000000..0000000 100644
              if (foundWebPage.url != null) {
                  int index = TextUtils.indexOf(charSequence, foundWebPage.url);
                  char lastChar = 0;
-@@ -13870,12 +13870,6 @@ public class ChatActivity extends BaseFragment implements
+@@ -13870,12 +13879,6 @@ public class ChatActivity extends BaseFragment implements
          }
          final MessagesController messagesController = getMessagesController();
          Utilities.searchQueue.postRunnable(() -> {
@@ -33,7 +50,7 @@ index 0000000..0000000 100644
              ArrayList<CharSequence> urls = null;
              CharSequence textToCheck;
              try {
-@@ -13909,10 +13903,14 @@ public class ChatActivity extends BaseFragment implements
+@@ -13909,10 +13912,14 @@ public class ChatActivity extends BaseFragment implements
                              clear = false;
                          }
                      }
@@ -49,7 +66,7 @@ index 0000000..0000000 100644
                  foundUrls = urls;
                  if (urls == null) {
                      AndroidUtilities.runOnUIThread(() -> {
-@@ -13932,6 +13930,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -13932,9 +13939,14 @@ public class ChatActivity extends BaseFragment implements
                      });
                      return;
                  }
@@ -60,3 +77,31 @@ index 0000000..0000000 100644
                  textToCheck = charSequence;
              }
              final String firstUrl = urls == null || urls.isEmpty() ? null : urls.get(0).toString();
++            final ArrayList<CharSequence> requestUrls = urls;
+ 
+             if (currentEncryptedChat != null && messagesController.secretWebpagePreview == 2) {
+                 AndroidUtilities.runOnUIThread(() -> {
+@@ -13970,6 +13982,10 @@ public class ChatActivity extends BaseFragment implements
+                 if (waitingForWebpageId != myId) {
+                     return;
+                 }
++                CharSequence currentText = chatActivityEnterView != null ? chatActivityEnterView.getFieldText() : null;
++                if (TextUtils.isEmpty(currentText) || requestUrls != null && !desu.inugram.helpers.chat.WebPreviewHelper.allUrlsPresent(requestUrls, currentText) || requestUrls == null && !TextUtils.equals(currentText, charSequence)) {
++                    return;
++                }
+                 if (success) {
+                     foundWebPage = webpage;
+                     foundWebPage.display_url = req.message;
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java
+@@ -7597,7 +7597,7 @@ public class ChatActivityEnterView extends FrameLayout implements
+                 }
+                 if (parentFragment != null) {
+                     parentFragment.editingMessageObject = null;
+-                    parentFragment.foundWebPage = null;
++                    parentFragment.inu_clearLinkPreviewState();
+                     if (parentFragment.messagePreviewParams != null) {
+                         parentFragment.messagePreviewParams.updateLink(currentAccount, null, "", null, null, null);
+                     }

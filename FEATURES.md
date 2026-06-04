@@ -238,3 +238,4 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - "pause music on media" now lets external players auto-resume (transient focus instead of indefinite)
 - chat title avatar observer leak
 - reply box right padding when the sender-name line is wider than the message text line
+- fix lingering webpage when quickly sending
