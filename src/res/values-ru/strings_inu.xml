@@ -147,6 +147,7 @@
     <string name="InuDisableChatBubbles">Отключить пузыри уведомлений Android</string>
     <string name="InuInPlaceTranslation">Перевод на месте</string>
     <string name="InuTranslateWebPreviews">Переводить превью ссылок</string>
+    <string name="InuKeepOriginalAfterTranslation">Показывать оригинал</string>
     <string name="InuTranslateInstantView">Перевести страницу</string>
     <string name="InuInstantViewShowOriginal">Показать оригинал</string>
     <string name="InuTranslating">Перевод…</string>
@@ -192,6 +193,9 @@
     <string name="InuMapPreviewProviderYandex">Яндекс</string>
 
     <string name="InuReplyIn">Ответить в…</string>
+    <string name="InuDeletedMessage">Удалённое сообщение</string>
+    <string name="InuDeletedMessageIdFormat">ID %1$d</string>
+    <string name="InuClosestToDeletedReply">Оригинальное сообщение удалено, показано ближайшее</string>
     <string name="InuMessageDetails">Подробности</string>
     <string name="InuMsgDetailScheduled">Запланировано</string>
     <string name="InuMsgDetailScheduledDate">Дата отправки</string>
@@ -482,6 +486,10 @@
     <string name="InuMediaSpoilerModeTelegram">Telegram</string>
     <string name="InuMediaSpoilerModePill">Плашка</string>
     <string name="InuMediaSpoilerModeCircle">Кружок</string>
+    <string name="InuBlockedMessagesMode">Сообщения от заблокированных пользователей</string>
+    <string name="InuBlockedMessagesModeOff">Выкл.</string>
+    <string name="InuBlockedMessagesModeSpoiler">Спойлер</string>
+    <string name="InuBlockedMessagesModeHide">Скрывать</string>
     <string name="InuSpoilers">Спойлеры</string>
     <string name="InuDisableVolumePlayVideo">Отключить запуск видео клавишами громкости</string>
     <string name="InuDisableVolumePlayVideoInfo">Не запускать видимое видео со звуком при нажатии клавиш громкости в чате</string>
@@ -561,7 +569,7 @@
     <string name="InuSimulateOom">Симулировать OOM-краш</string>
     <string name="InuCrashTitleError">Inugram упал: %1$s</string>
     <string name="InuCrashTitleOom">Inugram исчерпал память</string>
-    <string name="InuCrashDescHeapDump">Также сохранён дамп кучи. Вы можете отправить его вместе с логом краша, чтобы помочь диагностировать проблему. Дамп может быть большим и содержит личные данные!</string>
+    <string name="InuCrashDescHeapDump">Также сохранён дамп кучи. НЕ ОТПРАВЛЯЙТЕ ЕГО! Он содержит личные данные! Можете посмотреть его сами и поделиться находками — это сильно поможет.</string>
     <string name="InuCrashShareHeapDump">Сохранить дамп кучи</string>
 
     <string name="InuDeleteOwnMessages">Удалить мои сообщения</string>

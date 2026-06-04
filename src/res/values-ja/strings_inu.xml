@@ -147,6 +147,7 @@
     <string name="InuDisableChatBubbles">Android の通知バブルを無効化</string>
     <string name="InuInPlaceTranslation">その場で翻訳</string>
     <string name="InuTranslateWebPreviews">ウェブプレビューを翻訳</string>
+    <string name="InuKeepOriginalAfterTranslation">原文を表示</string>
     <string name="InuTranslateInstantView">ページを翻訳</string>
     <string name="InuInstantViewShowOriginal">原文を表示</string>
     <string name="InuTranslating">翻訳中…</string>
@@ -183,7 +184,7 @@
     <string name="InuIconReplacementSolar">Solar by @Design480</string>
 
     <string name="InuMapsHeader">地図</string>
-    <string name="InuMapProvider">地図プロバイダー</string>
+    <string name="InuMapProvider">地図ビューのプロバイダー</string>
     <string name="InuMapProviderGoogle">Google マップ</string>
     <string name="InuMapProviderOsm">OpenStreetMap</string>
     <string name="InuMapPreviewProvider">地図プレビューのプロバイダー</string>
@@ -192,6 +193,9 @@
     <string name="InuMapPreviewProviderYandex">Yandex</string>
 
     <string name="InuReplyIn">…で返信</string>
+    <string name="InuDeletedMessage">削除されたメッセージ</string>
+    <string name="InuDeletedMessageIdFormat">ID %1$d</string>
+    <string name="InuClosestToDeletedReply">元のメッセージは削除されています。最も近いものを表示します</string>
     <string name="InuMessageDetails">詳細</string>
     <string name="InuMsgDetailScheduled">予約済み</string>
     <string name="InuMsgDetailScheduledDate">予約日時</string>
@@ -478,6 +482,10 @@
     <string name="InuMediaSpoilerModeTelegram">Telegram</string>
     <string name="InuMediaSpoilerModePill">ピル</string>
     <string name="InuMediaSpoilerModeCircle">円形インジケーター</string>
+    <string name="InuBlockedMessagesMode">ブロックしたユーザーのメッセージ</string>
+    <string name="InuBlockedMessagesModeOff">無効</string>
+    <string name="InuBlockedMessagesModeSpoiler">スポイラー</string>
+    <string name="InuBlockedMessagesModeHide">非表示</string>
     <string name="InuSpoilers">スポイラー</string>
     <string name="InuDisableVolumePlayVideo">音量キーで動画再生を無効化</string>
     <string name="InuDisableVolumePlayVideoInfo">チャットで音量キーを押したときに表示中の動画を音付きで再生しない</string>
@@ -557,7 +565,7 @@
     <string name="InuSimulateOom">OOM クラッシュをシミュレート</string>
     <string name="InuCrashTitleError">Inugram がクラッシュしました: %1$s</string>
     <string name="InuCrashTitleOom">Inugram のメモリが不足しました</string>
-    <string name="InuCrashDescHeapDump">ヒープダンプも保存されました。クラッシュログと一緒に共有することで問題の特定に役立ちます。ヒープダンプは大きく、プライベートな情報を含む可能性があります！</string>
+    <string name="InuCrashDescHeapDump">ヒープダンプも保存されました。共有しないでください！プライベートな情報が含まれています！自分で確認して、気づいたことを教えていただけると、大変助かります。</string>
     <string name="InuCrashShareHeapDump">ヒープダンプを保存</string>
 
     <string name="InuDeleteOwnMessages">自分のメッセージを削除</string>

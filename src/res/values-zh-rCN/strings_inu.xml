@@ -147,6 +147,7 @@
     <string name="InuDisableChatBubbles">禁用 Android 通知气泡</string>
     <string name="InuInPlaceTranslation">就地翻译</string>
     <string name="InuTranslateWebPreviews">翻译网页预览</string>
+    <string name="InuKeepOriginalAfterTranslation">显示原文</string>
     <string name="InuTranslateInstantView">翻译页面</string>
     <string name="InuInstantViewShowOriginal">显示原文</string>
     <string name="InuTranslating">翻译中…</string>
@@ -183,7 +184,7 @@
     <string name="InuIconReplacementSolar">Solar by @Design480</string>
 
     <string name="InuMapsHeader">地图</string>
-    <string name="InuMapProvider">地图提供方</string>
+    <string name="InuMapProvider">地图视图提供方</string>
     <string name="InuMapProviderGoogle">Google 地图</string>
     <string name="InuMapProviderOsm">OpenStreetMap</string>
     <string name="InuMapPreviewProvider">地图预览提供方</string>
@@ -192,6 +193,9 @@
     <string name="InuMapPreviewProviderYandex">Yandex</string>
 
     <string name="InuReplyIn">在…中回复</string>
+    <string name="InuDeletedMessage">已删除的消息</string>
+    <string name="InuDeletedMessageIdFormat">ID %1$d</string>
+    <string name="InuClosestToDeletedReply">原消息已被删除，显示最接近的一条</string>
     <string name="InuMessageDetails">详情</string>
     <string name="InuMsgDetailScheduled">已计划</string>
     <string name="InuMsgDetailScheduledDate">计划时间</string>
@@ -478,6 +482,10 @@
     <string name="InuMediaSpoilerModeTelegram">Telegram</string>
     <string name="InuMediaSpoilerModePill">胶囊</string>
     <string name="InuMediaSpoilerModeCircle">圆形指示器</string>
+    <string name="InuBlockedMessagesMode">来自被屏蔽用户的消息</string>
+    <string name="InuBlockedMessagesModeOff">关闭</string>
+    <string name="InuBlockedMessagesModeSpoiler">剧透</string>
+    <string name="InuBlockedMessagesModeHide">隐藏</string>
     <string name="InuSpoilers">剧透</string>
     <string name="InuDisableVolumePlayVideo">禁用音量键播放视频</string>
     <string name="InuDisableVolumePlayVideoInfo">在聊天中按音量键时不让可见视频开始有声播放</string>
@@ -557,7 +565,7 @@
     <string name="InuSimulateOom">模拟 OOM 崩溃</string>
     <string name="InuCrashTitleError">Inugram 崩溃了: %1$s</string>
     <string name="InuCrashTitleOom">Inugram 内存不足</string>
-    <string name="InuCrashDescHeapDump">同时保存了堆转储。可以与崩溃日志一起分享以帮助诊断问题。堆转储可能很大，且包含隐私数据！</string>
+    <string name="InuCrashDescHeapDump">同时保存了堆转储。请勿分享！里面包含隐私数据！如果愿意，可以自己查看一下，并把你的发现告诉开发者——会非常有帮助。</string>
     <string name="InuCrashShareHeapDump">保存堆转储</string>
 
     <string name="InuDeleteOwnMessages">删除我的消息</string>
