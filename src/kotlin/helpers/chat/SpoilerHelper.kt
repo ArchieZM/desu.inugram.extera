@@ -9,6 +9,8 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.text.TextPaint
+import android.text.style.MetricAffectingSpan
 import android.view.View
 import androidx.core.content.ContextCompat
 import desu.inugram.InuConfig
@@ -18,6 +20,7 @@ import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Cells.ChatMessageCell
+import org.telegram.ui.Components.TextStyleSpan
 import org.telegram.ui.Components.spoilers.SpoilerEffect
 import java.util.WeakHashMap
 import kotlin.math.abs
@@ -279,4 +282,17 @@ object SpoilerHelper {
             }
         }
     }
+
+    // fix for a stock-ish bug causing the layout to be incorrectly calculated which resurfaced with our simple spoilers
+    class TransparentMetricSpan(private val source: TextStyleSpan) : MetricAffectingSpan() {
+        override fun updateMeasureState(p: TextPaint) {
+            source.updateMeasureState(p);
+        }
+
+        override fun updateDrawState(p: TextPaint) {
+            source.updateDrawState(p);
+            p.setColor(Color.TRANSPARENT);
+            p.setAlpha(0);
+        }
+    };
 }
