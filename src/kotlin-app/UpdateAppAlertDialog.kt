@@ -224,9 +224,9 @@ class UpdateAppAlertDialog(
         val scheduleButton = makeButton(
             R.string.AppUpdateRemindMeLater,
             background = Theme.createSimpleSelectorRoundRectDrawable(
-                AndroidUtilities.dp(radius), 0, Theme.getColor(Theme.key_listSelector),
+                AndroidUtilities.dp(radius), 0, Theme.getColor(Theme.key_dialogButtonSelector),
             ),
-            textColor = Theme.getColor(Theme.key_featuredStickers_buttonText),
+            textColor = Theme.getColor(Theme.key_dialogTextBlack),
             bold = false,
         ) {
             UpdateHelper.clearPending()

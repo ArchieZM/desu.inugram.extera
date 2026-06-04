@@ -86,9 +86,9 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
         val discardBtn = makeButton(
             context, R.string.InuCrashDiscard,
             background = Theme.createSimpleSelectorRoundRectDrawable(
-                AndroidUtilities.dp(21f), 0, Theme.getColor(Theme.key_listSelector),
+                AndroidUtilities.dp(21f), 0, Theme.getColor(Theme.key_dialogButtonSelector),
             ),
-            textColor = Theme.getColor(Theme.key_featuredStickers_buttonText),
+            textColor = Theme.getColor(Theme.key_dialogTextBlack),
             bold = false,
         ) {
             CrashReporter.deleteCrashLog()
@@ -121,9 +121,9 @@ class CrashReportBottomSheet(context: Context) : BottomSheet(context, false) {
             val heapDumpBtn = makeButton(
                 context, R.string.InuCrashShareHeapDump,
                 background = Theme.createSimpleSelectorRoundRectDrawable(
-                    AndroidUtilities.dp(21f), 0, Theme.getColor(Theme.key_listSelector),
+                    AndroidUtilities.dp(21f), 0, Theme.getColor(Theme.key_dialogButtonSelector),
                 ),
-                textColor = Theme.getColor(Theme.key_featuredStickers_addButton),
+                textColor = Theme.getColor(Theme.key_dialogTextBlack),
                 bold = false,
             ) {
                 val activity = (context as? LaunchActivity) ?: return@makeButton
