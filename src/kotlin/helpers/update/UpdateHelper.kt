@@ -34,7 +34,8 @@ object UpdateHelper {
             0
         )
     }
-    private val stockVersionName by lazy {
+    @JvmStatic
+    val stockVersionName by lazy {
         pInfo.versionName?.replace(Regex("-[0-9a-f]{7}$"), "") ?: ""
     }
 

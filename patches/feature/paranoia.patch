@@ -13,10 +13,12 @@ Subject: paranoia mode (hide chats, accounts, disguise as stock app)
  .../org/telegram/ui/Adapters/SearchAdapterHelper.java     | 8 ++++----
  .../src/main/java/org/telegram/ui/CallLogActivity.java    | 4 ++++
  .../java/org/telegram/ui/Cells/AppIconsSelectorCell.java  | 1 +
+ .../src/main/java/org/telegram/ui/Cells/SessionCell.java  | 4 ++++
  .../main/java/org/telegram/ui/Components/ShareAlert.java  | 1 +
  .../src/main/java/org/telegram/ui/DialogsActivity.java    | 4 ++--
+ .../src/main/java/org/telegram/ui/SessionBottomSheet.java | 3 +++
  .../java/org/telegram/ui/Stories/StoriesController.java   | 1 +
- 12 files changed, 34 insertions(+), 6 deletions(-)
+ 14 files changed, 41 insertions(+), 6 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
 index 0000000..0000000 100644
@@ -273,6 +275,21 @@ index 0000000..0000000 100644
          if (MessagesController.getInstance(currentAccount).premiumFeaturesBlocked()) {
              for (int i = 0; i < availableIcons.size(); i++) {
                  if (availableIcons.get(i).premium) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/SessionCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/SessionCell.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Cells/SessionCell.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Cells/SessionCell.java
+@@ -231,6 +231,10 @@ public class SessionCell extends FrameLayout {
+             stringBuilder.append(session.app_name);
+             stringBuilder.append(" ").append(session.app_version);
+ 
++            if (session.current && desu.inugram.helpers.security.ParanoiaHelper.isDisguised()) {
++                stringBuilder = new StringBuilder("Telegram Android " + desu.inugram.helpers.update.UpdateHelper.getStockVersionName());
++            }
++
+             detailTextView.setText(stringBuilder);
+         } else if (object instanceof TLRPC.TL_webAuthorization) {
+             TLRPC.TL_webAuthorization session = (TLRPC.TL_webAuthorization) object;
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/ShareAlert.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/ShareAlert.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/ShareAlert.java
@@ -307,6 +324,20 @@ index 0000000..0000000 100644
          final ActionBarPopupWindow.ActionBarPopupWindowLayout[] previewMenu = new ActionBarPopupWindow.ActionBarPopupWindowLayout[1];
  
          LinearLayout foldersMenuView = null;
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SessionBottomSheet.java b/TMessagesProj/src/main/java/org/telegram/ui/SessionBottomSheet.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/SessionBottomSheet.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/SessionBottomSheet.java
+@@ -112,6 +112,9 @@ public class SessionBottomSheet extends BottomSheet {
+         stringBuilder = new StringBuilder();
+         stringBuilder.append(session.app_name);
+         stringBuilder.append(" ").append(session.app_version);
++        if (session.current && desu.inugram.helpers.security.ParanoiaHelper.isDisguised()) {
++            stringBuilder = new StringBuilder("Telegram Android " + desu.inugram.helpers.update.UpdateHelper.getStockVersionName());
++        }
+         applicationItemView.valueText.setText(stringBuilder);
+         Drawable drawable = ContextCompat.getDrawable(context, R.drawable.menu_devices).mutate();
+         drawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayIcon), PorterDuff.Mode.SRC_IN));
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java b/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Stories/StoriesController.java
