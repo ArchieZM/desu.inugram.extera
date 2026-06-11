@@ -2,6 +2,7 @@ package desu.inugram.helpers.media
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
@@ -12,6 +13,7 @@ import org.telegram.messenger.FileLoader
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.ImageLocation
 import org.telegram.messenger.LocaleController
+import org.telegram.messenger.MediaController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
 import org.telegram.tgnet.TLRPC
@@ -19,6 +21,7 @@ import org.telegram.ui.ActionBar.ActionBarMenuItem
 import org.telegram.ui.ActionBar.ActionBarMenuSubItem
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.PhotoViewer
+import org.telegram.ui.Stories.recorder.StoryEntry
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -204,5 +207,34 @@ object PhotoViewerHelper {
                 .createCopyBulletin(LocaleController.getString(bulletinRes))
                 .show()
         }
+    }
+
+    // applyCurrentEditMode bakes the crop into entry.imagePath from centerImage's bitmap; when
+    // that bitmap is unavailable the bake used to fail silently *after* makeCrop committed
+    // entry.cropState, so the viewer kept rendering the crop while the un-cropped original got
+    // sent (still photos are sent from imagePath alone — cropState is video-only at send time).
+    // These decode the source from disk instead, like stock PhotoEntry.rebuildPhoto does.
+    // (part of bugfix__photo-crop-not-applied-on-send)
+    @JvmStatic
+    fun loadEditSourceBitmap(entry: MediaController.MediaEditState, orientation: IntArray): Bitmap? {
+        val path = entry.filterPath?.takeIf { it.isNotEmpty() } ?: entry.path
+        if (path.isNullOrEmpty() || !File(path).exists()) return null
+        val exif = AndroidUtilities.getImageOrientation(path)
+        orientation[0] = exif.first
+        orientation[1] = exif.second
+        return StoryEntry.getScaledBitmap(
+            { opts -> BitmapFactory.decodeFile(path, opts) },
+            AndroidUtilities.getPhotoSize(), AndroidUtilities.getPhotoSize(), false, true,
+        )
+    }
+
+    @JvmStatic
+    fun rebakeCroppedBitmap(entry: MediaController.MediaEditState): Bitmap? {
+        val cropState = entry.cropState ?: return null
+        val orientation = IntArray(2)
+        val bitmap = loadEditSourceBitmap(entry, orientation) ?: return null
+        val cropped = PhotoViewer.createCroppedBitmap(bitmap, cropState, orientation, true)
+        bitmap.recycle()
+        return cropped
     }
 }
