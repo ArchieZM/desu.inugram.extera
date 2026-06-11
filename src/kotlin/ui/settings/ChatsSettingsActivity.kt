@@ -76,6 +76,12 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 InuConfig.CHAT_TWO_FINGER_SELECT.value,
             )
         )
+        items.add(
+            UItem.asCheck(
+                TOGGLE_DISABLE_BOT_DRAFT_TOP,
+                LocaleController.getString(R.string.InuDisableBotDraftTop),
+            ).setChecked(InuConfig.DISABLE_BOT_DRAFT_TOP.value)
+        )
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuAttachmentSheet)))
@@ -263,6 +269,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
             TOGGLE_DISABLE_PULL_TO_NEXT -> (view as? TextCheckCell)?.isChecked = InuConfig.DISABLE_PULL_TO_NEXT.toggle()
             TOGGLE_CHAT_ALWAYS_SHOW_DOWN -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_ALWAYS_SHOW_DOWN.toggle()
             TOGGLE_CHAT_TWO_FINGER_SELECT -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_TWO_FINGER_SELECT.toggle()
+            TOGGLE_DISABLE_BOT_DRAFT_TOP -> (view as? TextCheckCell)?.isChecked = InuConfig.DISABLE_BOT_DRAFT_TOP.toggle()
             TOGGLE_SHOW_ALL_RECENT_STICKERS -> (view as? TextCheckCell)?.isChecked = InuConfig.SHOW_ALL_RECENT_STICKERS.toggle()
             TOGGLE_DISABLE_INSTANT_CAMERA -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.DISABLE_INSTANT_CAMERA.toggle()
             TOGGLE_CHAT_VOICE_IN_ATTACH -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.CHAT_VOICE_IN_ATTACH.toggle()
@@ -316,6 +323,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_DISABLE_PULL_TO_NEXT = InuUtils.generateId()
         private val TOGGLE_CHAT_ALWAYS_SHOW_DOWN = InuUtils.generateId()
         private val TOGGLE_CHAT_TWO_FINGER_SELECT = InuUtils.generateId()
+        private val TOGGLE_DISABLE_BOT_DRAFT_TOP = InuUtils.generateId()
         private val TOGGLE_SHOW_ALL_RECENT_STICKERS = InuUtils.generateId()
         private val TOGGLE_DISABLE_INSTANT_CAMERA = InuUtils.generateId()
         private val TOGGLE_CHAT_VOICE_IN_ATTACH = InuUtils.generateId()
@@ -354,6 +362,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("disable-pull-to-next", R.string.InuDisablePullToNext, TOGGLE_DISABLE_PULL_TO_NEXT),
                 SearchRegistry.Entry("chat-always-show-down", R.string.InuChatAlwaysShowDown, TOGGLE_CHAT_ALWAYS_SHOW_DOWN),
                 SearchRegistry.Entry("chat-two-finger-select", R.string.InuChatTwoFingerSelect, TOGGLE_CHAT_TWO_FINGER_SELECT),
+                SearchRegistry.Entry("disable-bot-draft-top", R.string.InuDisableBotDraftTop, TOGGLE_DISABLE_BOT_DRAFT_TOP),
                 SearchRegistry.Entry("disable-instant-camera", R.string.InuDisableInstantCamera, TOGGLE_DISABLE_INSTANT_CAMERA),
                 SearchRegistry.Entry("chat-voice-in-attach", R.string.InuChatVoiceInAttach, TOGGLE_CHAT_VOICE_IN_ATTACH),
                 SearchRegistry.Entry("simple-attach-popup-animation", R.string.InuSimpleAttachPopupAnimation, TOGGLE_SIMPLE_ATTACH_POPUP_ANIMATION),

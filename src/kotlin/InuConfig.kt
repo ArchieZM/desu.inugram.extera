@@ -244,6 +244,9 @@ object InuConfig {
     val CHAT_REMEMBER_ALL_REPLIES = BoolItem("chat_remember_all_replies", true)
 
     @JvmField
+    val DISABLE_BOT_DRAFT_TOP = BoolItem("disable_bot_draft_top", true)
+
+    @JvmField
     val HIDE_BOTTOM_BAR_JOINED = BoolItem("hide_bottom_bar_joined", false)
 
     @JvmField

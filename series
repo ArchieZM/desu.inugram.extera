@@ -191,3 +191,4 @@ feature/original-video-quality.patch
 bugfix/correct-folder-pin-count.patch
 bugfix/photo-crop-not-applied-on-send.patch
 bugfix/media-cancel-race.patch
+debloat/keep-bot-drafts-at-bottom.patch

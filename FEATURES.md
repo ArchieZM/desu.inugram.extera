@@ -68,6 +68,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - 🐶 jump-to-discussion button from comments
 - jump-to-beginning button in calendar popup - *ported from [Nekogram](https://github.com/Nekogram/Nekogram)*
 - remember all clicked replies when jumping back via the down-button
+- 🐶 keep bot draft messages at the bottom
 - 🐶 long-press reply panel in "Replies" chat opens discussion group
 - show a "Deleted message" placeholder + message ID in the reply box when the replied-to message was deleted; tapping it scrolls to roughly where that message used to be
 - hide pinned panel
