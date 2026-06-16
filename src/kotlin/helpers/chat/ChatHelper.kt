@@ -1052,7 +1052,9 @@ object ChatHelper {
         (swb.linearLayout.layoutParams as? FrameLayout.LayoutParams)?.gravity = Gravity.TOP
         swipeBack.inu_pinnedScrimForegroundIndex = foregroundIndex
 
-        swb.setMinWidth((anchorCell.width / AndroidUtilities.density).roundToInt())
+        // anchorCell may be a narrow bottom-row button; size the submenu to the full menu width
+        val menuWidthPx = popupLayout.measuredWidth - popupLayout.paddingLeft - popupLayout.paddingRight
+        swb.setMinWidth((menuWidthPx / AndroidUtilities.density).roundToInt())
         swb.add(R.drawable.ic_ab_back, LocaleController.getString(R.string.Back)) { swipeBack.closeForeground() }
         swb.addGap()
         fill(swb)
