@@ -243,4 +243,5 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - fix lingering webpage when quickly sending
 - fix sponsored message media not respecting data saver
 - fix non-joined channels history getting stuck in the past
+- fix stuck red snapshot box when the frame capture fails/times out on enter in pip
 - a bunch of stock memory/resource leaks
