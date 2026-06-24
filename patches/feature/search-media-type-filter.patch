@@ -174,7 +174,7 @@ index 0000000..0000000 100644
                      if (chatAdapter.isFiltered) {
                          updateFilteredMessages(true);
                      } else {
-@@ -35107,6 +35114,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -35108,6 +35115,7 @@ public class ChatActivity extends BaseFragment implements
              if (searchUserButton != null) {
                  searchUserButton.setVisibility(View.GONE);
              }
@@ -182,7 +182,7 @@ index 0000000..0000000 100644
          }
          if (searchItem != null) {
              preventReopenSearchWithText = true;
-@@ -35166,6 +35174,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -35167,6 +35175,7 @@ public class ChatActivity extends BaseFragment implements
              if (searchUserButton != null) {
                  searchUserButton.setVisibility(View.GONE);
              }
@@ -190,7 +190,7 @@ index 0000000..0000000 100644
          }
          if (searchItem != null) {
              preventReopenSearchWithText = true;
-@@ -38338,6 +38347,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -38339,6 +38348,11 @@ public class ChatActivity extends BaseFragment implements
              if (searchUserButton != null) {
                  searchUserButton.setVisibility(View.VISIBLE);
              }
@@ -202,7 +202,7 @@ index 0000000..0000000 100644
              if (searchingForUser) {
                  mentionContainer.getAdapter().searchUsernameOrHashtag(null, 0, null, false, true);
                  searchingForUser = false;
-@@ -38623,6 +38637,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -38624,6 +38638,7 @@ public class ChatActivity extends BaseFragment implements
                  if (searchUserButton != null) {
                      searchUserButton.setVisibility(View.VISIBLE);
                  }
@@ -210,7 +210,7 @@ index 0000000..0000000 100644
                  searchingUserMessages = null;
                  searchingChatMessages = null;
              }
-@@ -40713,6 +40728,8 @@ public class ChatActivity extends BaseFragment implements
+@@ -40714,6 +40729,8 @@ public class ChatActivity extends BaseFragment implements
                  } else if (chatMode == MODE_PINNED || chatMode == MODE_SCHEDULED) {
                      chatActivityDelegate.openReplyMessage(id);
                      finishFragment();
@@ -219,7 +219,7 @@ index 0000000..0000000 100644
                  } else {
                      if (option_id != null) {
                          highlightPollOptionId = option_id;
-@@ -43990,7 +44007,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -43991,7 +44008,7 @@ public class ChatActivity extends BaseFragment implements
          int lastBottom;
      }
  
@@ -228,7 +228,7 @@ index 0000000..0000000 100644
          public RecyclerListViewInternal(Context context, ThemeDelegate themeDelegate) {
              super(context, themeDelegate);
          }
-@@ -46908,7 +46925,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -46909,7 +46926,7 @@ public class ChatActivity extends BaseFragment implements
          );
      }
  
