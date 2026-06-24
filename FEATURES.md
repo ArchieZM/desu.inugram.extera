@@ -110,6 +110,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - show original time/date in "forwarded from" header
 - long-tap forward bar (above input) to cycle between regular / without sender / without caption
 - long-tap a mention in a message to insert a name-mention into the input with custom text
+- 🐶 restrict/ban menu items the avatar long-tap menu
 - hide messages from blocked users: with a spoiler or completely - *partially ported from [Nekogram](https://github.com/Nekogram/Nekogram)*
 
 ## message input / formatting

@@ -13,6 +13,7 @@ import androidx.core.content.edit
 import desu.inugram.InuConfig
 import desu.inugram.helpers.menu.ChatMenuConfig
 import desu.inugram.helpers.menu.reorderByMenu
+import desu.inugram.helpers.translate.TranslateHelper
 import desu.inugram.ui.showInputDialog
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.BuildVars
@@ -27,16 +28,18 @@ import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ActionBar.ActionBarMenu
 import org.telegram.ui.ActionBar.ActionBarMenuItem
 import org.telegram.ui.ActionBar.AlertDialog
+import org.telegram.ui.ActionBar.Theme
+import org.telegram.ui.AvatarPreviewer
 import org.telegram.ui.BasePermissionsActivity
 import org.telegram.ui.Cells.CheckBoxCell
 import org.telegram.ui.ChannelAdminLogActivity
 import org.telegram.ui.ChatActivity
+import org.telegram.ui.ChatRightsEditActivity
 import org.telegram.ui.Components.BulletinFactory
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.LayoutHelper
 import org.telegram.ui.Components.TranslateAlert2
 import org.telegram.ui.RestrictedLanguagesSelectActivity
-import org.telegram.ui.ActionBar.Theme
-import desu.inugram.helpers.translate.TranslateHelper
 
 /**
  * Owns the customizable chat-header overflow menu, the message-selection action bar
@@ -419,10 +422,12 @@ object ChatActionsHelper {
             chat != null -> msg.dialogId == activity.dialogId &&
                 ChatObject.canPinMessages(chat) &&
                 !chat.monoforum
+
             activity.currentEncryptedChat == null -> {
                 val info = activity.getCurrentUserInfo()
                 !UserObject.isDeleted(user) && info != null && info.can_pin_message
             }
+
             else -> false
         }
         if (UserObject.isReplyUser(activity.dialogId) || activity.dialogId == UserObject.VERIFY) return false
@@ -468,7 +473,12 @@ object ChatActionsHelper {
             val cell = CheckBoxCell(parent, 1, activity.themeDelegate)
             cell.background = Theme.getSelectorDrawable(false)
             cell.setText(text, "", checks[checkIndex], false)
-            cell.setPadding(AndroidUtilities.dp(if (LocaleController.isRTL) 16f else 8f), 0, AndroidUtilities.dp(if (LocaleController.isRTL) 8f else 16f), 0)
+            cell.setPadding(
+                AndroidUtilities.dp(if (LocaleController.isRTL) 16f else 8f),
+                0,
+                AndroidUtilities.dp(if (LocaleController.isRTL) 8f else 16f),
+                0
+            )
             frameLayout.addView(cell, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.TOP or Gravity.LEFT))
             cell.setOnClickListener {
                 checks[checkIndex] = !checks[checkIndex]
@@ -568,5 +578,103 @@ object ChatActionsHelper {
         }
         activity.updateActionModeTitle()
         activity.updateVisibleRows()
+    }
+
+    // -- avatar long tap actions --
+    private class AvatarModeration(val canRestrict: Boolean, val canBan: Boolean)
+
+    private fun resolveModeration(activity: ChatActivity, peerId: Long): AvatarModeration {
+        val chat = activity.currentChat
+        if (chat == null || !ChatObject.canBlockUsers(chat)) return AvatarModeration(false, false)
+        // can't moderate yourself, nor the chat posting as itself
+        if (peerId == UserConfig.getInstance(activity.currentAccount).clientUserId || peerId == -chat.id) {
+            return AvatarModeration(false, false)
+        }
+        // the linked broadcast channel (its auto-forwarded posts + comments) isn't a moderable member
+        if (peerId < 0 && activity.currentChatInfo?.linked_chat_id == -peerId) return AvatarModeration(false, false)
+        // never offer moderation on admins/owners
+        val isPrivileged = run {
+            if (ChatObject.isChannel(chat)) return@run activity.messagesController.getAdminInChannel(peerId, chat.id) != null
+            val participant = activity.currentChatInfo?.participants?.participants
+                ?.firstOrNull { it.user_id == peerId }
+            return@run participant is TLRPC.TL_chatParticipantAdmin || participant is TLRPC.TL_chatParticipantCreator
+        }
+        if (isPrivileged) return AvatarModeration(false, false)
+        // channel senders can only be banned
+        val canRestrict = peerId > 0 && ChatObject.isChannel(chat) && chat.megagroup && !chat.gigagroup
+        return AvatarModeration(canRestrict = canRestrict, canBan = true)
+    }
+
+    @JvmStatic
+    fun avatarMenuExtras(activity: ChatActivity, peerId: Long): Array<AvatarPreviewer.MenuItem> {
+        val moderation = resolveModeration(activity, peerId)
+        val items = ArrayList<AvatarPreviewer.MenuItem>(2)
+        if (moderation.canRestrict) items.add(AvatarPreviewer.MenuItem.INU_RESTRICT)
+        if (moderation.canBan) items.add(AvatarPreviewer.MenuItem.INU_BAN)
+        return items.toTypedArray()
+    }
+
+    @JvmStatic
+    fun handleAvatarMenuClick(item: AvatarPreviewer.MenuItem, activity: ChatActivity, peerId: Long, name: String): Boolean {
+        when (item) {
+            AvatarPreviewer.MenuItem.INU_RESTRICT -> restrictPeer(activity, peerId)
+            AvatarPreviewer.MenuItem.INU_BAN -> banPeer(activity, peerId, name)
+            else -> return false
+        }
+        return true
+    }
+
+    @JvmStatic
+    fun finalizeAvatarMenu(options: ItemOptions, activity: ChatActivity, peerId: Long, name: String): ItemOptions {
+        val moderation = resolveModeration(activity, peerId)
+        options.addIf(moderation.canRestrict, R.drawable.msg_block, LocaleController.getString(R.string.Restrict)) {
+            restrictPeer(activity, peerId)
+        }
+        options.addIf(moderation.canBan, R.drawable.msg_user_remove, LocaleController.getString(R.string.BanUser), true) {
+            banPeer(activity, peerId, name)
+        }
+        return options
+    }
+
+    private fun restrictPeer(activity: ChatActivity, peerId: Long) {
+        val chat = activity.currentChat ?: return
+        val req = TLRPC.TL_channels_getParticipant()
+        req.channel = MessagesController.getInputChannel(chat)
+        req.participant = activity.messagesController.getInputPeer(peerId)
+        activity.connectionsManager.sendRequest(req) { response, _ ->
+            AndroidUtilities.runOnUIThread {
+                val banned = (response as? TLRPC.TL_channels_channelParticipant)?.participant?.banned_rights
+                openRightsEditor(activity, peerId, banned)
+            }
+        }
+    }
+
+    private fun openRightsEditor(activity: ChatActivity, peerId: Long, bannedRights: TLRPC.TL_chatBannedRights?) {
+        val chat = activity.currentChat ?: return
+        val fragment = ChatRightsEditActivity(
+            peerId, chat.id, null, chat.default_banned_rights, bannedRights, "",
+            ChatRightsEditActivity.TYPE_BANNED, true, false, null,
+        )
+        activity.presentFragment(fragment)
+    }
+
+    private fun banPeer(activity: ChatActivity, peerId: Long, name: String) {
+        val parentActivity = activity.parentActivity ?: return
+        val chat = activity.currentChat ?: return
+        AlertDialog.Builder(parentActivity, activity.resourceProvider)
+            .setTitle(LocaleController.getString(R.string.BanUser))
+            .setMessage(LocaleController.formatString(R.string.InuBanUserConfirm, name))
+            .setPositiveButton(LocaleController.getString(R.string.BanUser)) { _, _ ->
+                activity.messagesController.deleteParticipantFromChat(chat.id, activity.messagesController.getInputPeer(peerId))
+                if (BulletinFactory.canShowBulletin(activity)) {
+                    val text = AndroidUtilities.replaceTags(
+                        LocaleController.formatString(R.string.UserRemovedFromChatHint, name, chat.title),
+                    )
+                    BulletinFactory.of(activity).createSimpleBulletin(R.raw.ic_ban, text).show()
+                }
+            }
+            .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
+            .show()
+            .redPositive()
     }
 }
