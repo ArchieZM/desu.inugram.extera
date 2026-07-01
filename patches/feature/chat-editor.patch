@@ -4,11 +4,11 @@ Date: Wed, 29 Apr 2026 01:08:23 +0300
 Subject: chat editor improvements: - make it available for everyone (as a read-only view) - split media restrictions for stickers/gifs/games/inline
 
 ---
- .../org/telegram/ui/ChatEditActivity.java     | 34 ++++++-
+ .../org/telegram/ui/ChatEditActivity.java     | 38 ++++++--
  .../org/telegram/ui/ChatUsersActivity.java    | 90 ++++++++++++++-----
  .../ui/Components/SlideChooseView.java        |  3 +
  .../java/org/telegram/ui/ProfileActivity.java |  2 +-
- 4 files changed, 102 insertions(+), 27 deletions(-)
+ 4 files changed, 104 insertions(+), 29 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatEditActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatEditActivity.java
 index 0000000..0000000 100644
@@ -32,6 +32,17 @@ index 0000000..0000000 100644
                  infoContainer.setVisibility(View.GONE);
                  settingsTopSectionCell.setVisibility(View.GONE);
              }
+@@ -1935,8 +1935,8 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
+     }
+ 
+     private int getAdminCount() {
+-        if (info == null) {
+-            return 1;
++        if (info == null || info.participants == null) {
++            return info == null ? 1 : 0;
+         }
+         int count = 0;
+         for (int a = 0, N = info.participants.participants.size(); a < N; a++) {
 @@ -1945,10 +1945,32 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
                      chatParticipant instanceof TLRPC.TL_chatParticipantCreator) {
                  count++;
