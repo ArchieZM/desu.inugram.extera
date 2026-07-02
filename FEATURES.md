@@ -261,3 +261,4 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - phantom message selection after back-gesture swipe over a reply header (leaked long-press timer)
 - fix deeplinking to a non-primary album member sometimes mis-anchoring
 - a bunch of stock memory/resource leaks
+- correctly handle "Open in..." in ChatAttachAlert: open editor before sending + support multi-attach
