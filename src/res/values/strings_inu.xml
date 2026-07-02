@@ -402,6 +402,8 @@
     <string name="InuOldMentionIndicator">Legacy mention indicator</string>
 
     <string name="InuShowForwardTime">Show forward time</string>
+    <string name="InuCompactEdited">Compact edit indicator</string>
+    <string name="InuCompactEditedInfo">Show a pencil icon instead of the "edited" label</string>
 
     <string name="InuAddToStickersGifs">Add to Stickers/GIFs</string>
     <string name="InuLongTapAction">Long-tap action</string>

@@ -543,6 +543,9 @@ object InuConfig {
     val SHOW_FORWARD_TIME = BoolItem("show_forward_time", true)
 
     @JvmField
+    val COMPACT_EDITED = BoolItem("compact_edited", false)
+
+    @JvmField
     val INTERACTIVE_CHAT_PREVIEW = BoolItem("disable_chat_preview_expand", true)
 
     @JvmField

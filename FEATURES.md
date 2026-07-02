@@ -66,6 +66,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - show all recent stickers
 - minimize sticker creator button in recent stickers
 - sticker time overlay modes: show / 🐶 hide time / 🐶 hide on incoming / hide completely
+- compact edited indicator: pencil icon instead of the "edited" label
 - 🐶 jump-to-discussion button from comments
 - jump-to-beginning button in calendar popup - *ported from [Nekogram](https://github.com/Nekogram/Nekogram)*
 - remember all clicked replies when jumping back via the down-button

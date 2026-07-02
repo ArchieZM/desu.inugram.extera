@@ -7,11 +7,11 @@ Subject: translator-related features
  .../org/telegram/messenger/MessageObject.java |  13 +-
  .../messenger/TranslateController.java        |   7 +-
  .../java/org/telegram/ui/ArticleViewer.java   |  17 +-
- .../telegram/ui/Cells/ChatMessageCell.java    |  39 +++-
+ .../telegram/ui/Cells/ChatMessageCell.java    |  41 ++++-
  .../ui/Cells/TextSelectionHelper.java         |   1 +
  .../java/org/telegram/ui/ChatActivity.java    | 170 ++----------------
  .../org/telegram/ui/web/WebActionBar.java     |   3 +
- 7 files changed, 81 insertions(+), 169 deletions(-)
+ 7 files changed, 82 insertions(+), 170 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessageObject.java
 index 0000000..0000000 100644
@@ -277,13 +277,22 @@ index 0000000..0000000 100644
          final boolean shouldSummarize = currentMessageObject != null && currentMessageObject.messageOwner.summarizedOpen;
          final boolean isFinal = shouldTranslate == (currentMessageObject != null && currentMessageObject.translated) && shouldSummarize == (currentMessageObject != null && currentMessageObject.summarized);
          if (origin == !isFinal) {
+@@ -18384,7 +18410,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+         } else if (currentMessageObject.isRepostPreview) {
+             timeString = LocaleController.formatSmallDateChat(messageObject.messageOwner.date) + ", " + LocaleController.getInstance().getFormatterDay().format((long) (messageObject.messageOwner.date) * 1000);
+         } else if (edited) {
+-            timeString = getString(R.string.EditedMessage) + " " + LocaleController.getInstance().getFormatterDay().format((long) (messageObject.messageOwner.date) * 1000);
++            timeString = (desu.inugram.InuConfig.COMPACT_EDITED.getValue() ? "" : getString(R.string.EditedMessage) + " ") + LocaleController.getInstance().getFormatterDay().format((long) (messageObject.messageOwner.date) * 1000);
+         } else if (currentMessageObject.isSaved && currentMessageObject.messageOwner.fwd_from != null && (currentMessageObject.messageOwner.fwd_from.date != 0 || currentMessageObject.messageOwner.fwd_from.saved_date != 0)) {
+             int date = currentMessageObject.messageOwner.fwd_from.saved_date;
+             if (date == 0) {
 @@ -18437,7 +18463,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                  currentTimeString = TextUtils.concat(formatString(R.string.MessageScheduledRepeatSeconds, period), ", ", currentTimeString);
              }
          }
 -        timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length()));
-+        currentTimeString = desu.inugram.helpers.chat.ChatHelper.timePrefix(currentMessageObject, currentTimeString);
-+        timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length())) + desu.inugram.helpers.chat.ChatHelper.extraTimeWidth(currentMessageObject);
++        currentTimeString = desu.inugram.helpers.chat.ChatHelper.timePrefix(currentMessageObject, currentTimeString, edited);
++        timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length())) + desu.inugram.helpers.chat.ChatHelper.extraTimeWidth(currentMessageObject, edited);
          if (currentMessageObject.scheduled && currentMessageObject.messageOwner.date == 0x7FFFFFFE || currentMessageObject.notime) {
              timeWidth -= dp(8);
          }

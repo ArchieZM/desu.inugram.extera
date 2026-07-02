@@ -167,6 +167,14 @@ class MessagesSettingsActivity : SettingsPageActivity() {
             ).setChecked(InuConfig.SHOW_FORWARD_TIME.value)
         )
         items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_COMPACT_EDITED,
+                R.string.InuCompactEdited,
+                R.string.InuCompactEditedInfo,
+                InuConfig.COMPACT_EDITED.value,
+            )
+        )
+        items.add(
             UItem.asButton(
                 BUTTON_BLOCKED_MESSAGES_MODE,
                 LocaleController.getString(R.string.InuBlockedMessagesMode),
@@ -257,6 +265,11 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 (view as? TextCheckCell)?.isChecked = new
             }
 
+            TOGGLE_COMPACT_EDITED -> {
+                val new = InuConfig.COMPACT_EDITED.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             TOGGLE_SPOILER_EXTEND_TO_LINE_END -> {
                 val new = InuConfig.SPOILER_EXTEND_TO_LINE_END.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
@@ -334,6 +347,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_CONFIRM_REACTION_NON_MEMBER = InuUtils.generateId()
         private val TOGGLE_CHAT_REMEMBER_ALL_REPLIES = InuUtils.generateId()
         private val TOGGLE_SHOW_FORWARD_TIME = InuUtils.generateId()
+        private val TOGGLE_COMPACT_EDITED = InuUtils.generateId()
         private val BUTTON_DOUBLE_TAP_INCOMING = InuUtils.generateId()
         private val BUTTON_DOUBLE_TAP_OUTGOING = InuUtils.generateId()
         private val BUTTON_TEXT_SPOILER_MODE = InuUtils.generateId()
@@ -376,6 +390,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("message-menu-order", R.string.InuMessageMenuOrder, BUTTON_MESSAGE_MENU_ORDER),
                 SearchRegistry.Entry("chat-remember-all-replies", R.string.InuChatRememberAllReplies, TOGGLE_CHAT_REMEMBER_ALL_REPLIES),
                 SearchRegistry.Entry("show-forward-time", R.string.InuShowForwardTime, TOGGLE_SHOW_FORWARD_TIME),
+                SearchRegistry.Entry("compact-edited", R.string.InuCompactEdited, TOGGLE_COMPACT_EDITED),
                 SearchRegistry.Entry("double-tap-incoming", R.string.InuIncomingMessages, BUTTON_DOUBLE_TAP_INCOMING),
                 SearchRegistry.Entry("double-tap-outgoing", R.string.InuOutgoingMessages, BUTTON_DOUBLE_TAP_OUTGOING),
                 SearchRegistry.Entry("text-spoiler-mode", R.string.InuTextSpoilerMode, BUTTON_TEXT_SPOILER_MODE),

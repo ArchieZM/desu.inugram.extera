@@ -101,7 +101,7 @@ object ChatHelper {
     }
 
     @JvmStatic
-    fun extraTimeWidth(msg: MessageObject?): Int {
+    fun extraTimeWidth(msg: MessageObject?, edited: Boolean = false): Int {
         var width = 0
         if (msg != null && TranslateHelper.hasTimeAddition(msg)) {
             width += TranslateHelper.extraTimeWidth(msg)
@@ -109,16 +109,23 @@ object ChatHelper {
         if (BlockedMessagesHelper.shouldSpoil(msg)) {
             width += AndroidUtilities.dp(13f)
         }
+        if (edited && InuConfig.COMPACT_EDITED.value) {
+            width += AndroidUtilities.dp(13f)
+        }
         return width
     }
 
     @JvmStatic
-    fun timePrefix(msg: MessageObject?, time: CharSequence?): CharSequence? {
+    fun timePrefix(msg: MessageObject?, time: CharSequence?, edited: Boolean = false): CharSequence? {
         if (time == null || msg == null) return time
         val sb = SpannableStringBuilder()
         TranslateHelper.appendTimePrefix(sb, msg)
         if (BlockedMessagesHelper.shouldSpoil(msg)) {
             appendTimeIcon(sb, R.drawable.msg_block, sizeDp = 11f, translateYDp = 1f)
+            sb.append(" ")
+        }
+        if (edited && InuConfig.COMPACT_EDITED.value) {
+            appendTimeIcon(sb, R.drawable.group_edit, sizeDp = 11f)
             sb.append(" ")
         }
         return if (sb.isEmpty()) time else sb.append(time)
