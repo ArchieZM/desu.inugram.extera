@@ -106,7 +106,12 @@ class SearchFilterHelper(
         button.layoutParams = lp
     }
 
-    fun getFilter(): MessagesFilter = when (selection) {
+    private fun isSearchingByUser(): Boolean =
+        fragment.searchingUserMessages != null || fragment.searchingChatMessages != null
+
+    fun getFilter(): MessagesFilter = if (isSearchingByUser()) {
+        TLRPC.TL_inputMessagesFilterEmpty()
+    } else when (selection) {
         setOf(FilterItem.GIFS) -> TLRPC.TL_inputMessagesFilterGif()
         setOf(FilterItem.MUSIC) -> TLRPC.TL_inputMessagesFilterMusic()
         setOf(FilterItem.PHOTOS) -> TLRPC.TL_inputMessagesFilterPhotos()
@@ -203,14 +208,16 @@ class SearchFilterHelper(
             .setDismissWithButtons(false)
             .setMinWidth(180)
             .setGravity(Gravity.LEFT)
+            .forceTop(true)
 
-        val subItems = MENU_ORDER.map { item ->
+        val byUser = isSearchingByUser()
+        val subItems = if (byUser) emptyList() else MENU_ORDER.map { item ->
             val sub = options.addChecked()
             moveCheckRight(sub)
             sub.setText(LocaleController.getString(item.labelRes))
             item to sub
         }
-        options.addGap()
+        if (!byUser) options.addGap()
         val onlyMatchesSub = options.addChecked()
         moveCheckRight(onlyMatchesSub)
         onlyMatchesSub.setText(LocaleController.getString(R.string.InuSearchFilterOnlyMatches))
