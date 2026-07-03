@@ -116,14 +116,16 @@ object ChatActionsHelper {
                 LocaleController.getString(R.string.Statistics),
             )
         }
-        headerItem.lazilyAddSubItem(
-            ACTION_ADMINISTRATORS, R.drawable.msg_admins,
-            LocaleController.getString(R.string.ChannelAdministrators),
-        )
-        headerItem.lazilyAddSubItem(
-            ACTION_PERMISSIONS, R.drawable.msg_permissions,
-            LocaleController.getString(R.string.ChannelPermissions),
-        )
+        if (activity.currentChat != null) {
+            headerItem.lazilyAddSubItem(
+                ACTION_ADMINISTRATORS, R.drawable.msg_admins,
+                LocaleController.getString(R.string.ChannelAdministrators),
+            )
+            headerItem.lazilyAddSubItem(
+                ACTION_PERMISSIONS, R.drawable.msg_permissions,
+                LocaleController.getString(R.string.ChannelPermissions),
+            )
+        }
         if (canViewInviteLinks(activity)) {
             headerItem.lazilyAddSubItem(
                 ACTION_INVITE_LINKS, R.drawable.msg_link2,
