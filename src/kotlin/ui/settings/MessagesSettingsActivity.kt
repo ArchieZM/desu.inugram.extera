@@ -1,10 +1,12 @@
 package desu.inugram.ui.settings
 
+import android.os.Bundle
 import android.view.View
 import desu.inugram.InuConfig
 import desu.inugram.InuHooks
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
+import desu.inugram.helpers.chat.BlockedMessagesHelper
 import desu.inugram.helpers.chat.DoubleTapAction
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
@@ -12,6 +14,7 @@ import org.telegram.ui.Cells.NotificationsCheckCell
 import org.telegram.ui.Cells.TextCheckCell
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
+import org.telegram.ui.GroupCreateActivity
 
 class MessagesSettingsActivity : SettingsPageActivity() {
 
@@ -174,6 +177,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 InuConfig.COMPACT_EDITED.value,
             )
         )
+        items.add(UItem.asShadow(null))
         items.add(
             UItem.asButton(
                 BUTTON_BLOCKED_MESSAGES_MODE,
@@ -181,6 +185,18 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 blockedMessagesModeLabel(InuConfig.BLOCKED_MESSAGES_MODE.value),
             )
         )
+        if (BlockedMessagesHelper.isEnabled()) {
+            items.add(
+                UItem.asButton(
+                    BUTTON_BLOCKED_MESSAGES_EXTRA,
+                    LocaleController.getString(R.string.InuBlockedMessagesExtra),
+                    LocaleController.formatString(
+                        R.string.InuBlockedMessagesExtraCount,
+                        BlockedMessagesHelper.getExtraHidden(currentAccount).size,
+                    ),
+                )
+            )
+        }
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuDoubleTapActions)))
@@ -312,7 +328,10 @@ class MessagesSettingsActivity : SettingsPageActivity() {
             ) { which ->
                 if (InuConfig.BLOCKED_MESSAGES_MODE.value == which) return@show
                 InuConfig.BLOCKED_MESSAGES_MODE.value = which
+                listView.adapter.update(true)
             }
+
+            BUTTON_BLOCKED_MESSAGES_EXTRA -> openBlockedExtraPicker()
 
             BUTTON_PINNED_REACTIONS -> presentFragment(PinnedReactionsActivity())
 
@@ -321,6 +340,21 @@ class MessagesSettingsActivity : SettingsPageActivity() {
             BUTTON_DOUBLE_TAP_INCOMING -> showDoubleTapSelector(view, false)
             BUTTON_DOUBLE_TAP_OUTGOING -> showDoubleTapSelector(view, true)
         }
+    }
+
+    private fun openBlockedExtraPicker() {
+        val args = Bundle().apply {
+            putBoolean("isNeverShare", true)
+            putInt("chatAddType", 2)
+            putBoolean("inu_allowChannels", true)
+        }
+        val fragment = GroupCreateActivity(args)
+        fragment.select(ArrayList(BlockedMessagesHelper.getExtraHidden(currentAccount)), false, false)
+        fragment.setDelegate { _, _, ids ->
+            BlockedMessagesHelper.setExtraHidden(currentAccount, ids)
+            listView.adapter.update(true)
+        }
+        presentFragment(fragment)
     }
 
     private fun showDoubleTapSelector(anchor: View, outgoing: Boolean) {
@@ -354,6 +388,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_SPOILER_EXTEND_TO_LINE_END = InuUtils.generateId()
         private val BUTTON_MEDIA_SPOILER_MODE = InuUtils.generateId()
         private val BUTTON_BLOCKED_MESSAGES_MODE = InuUtils.generateId()
+        private val BUTTON_BLOCKED_MESSAGES_EXTRA = InuUtils.generateId()
 
         private fun textSpoilerModeLabel(value: Int): String = when (value) {
             InuConfig.TextSpoilerModeItem.SIMPLE -> LocaleController.getString(R.string.InuTextSpoilerModeSimple)
@@ -397,6 +432,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("spoiler-extend-to-line-end", R.string.InuSpoilerExtendToLineEnd, TOGGLE_SPOILER_EXTEND_TO_LINE_END),
                 SearchRegistry.Entry("media-spoiler-mode", R.string.InuMediaSpoilerMode, BUTTON_MEDIA_SPOILER_MODE),
                 SearchRegistry.Entry("blocked-messages-mode", R.string.InuBlockedMessagesMode, BUTTON_BLOCKED_MESSAGES_MODE),
+                SearchRegistry.Entry("blocked-messages-extra", R.string.InuBlockedMessagesExtra, BUTTON_BLOCKED_MESSAGES_EXTRA),
             ),
         )
     }

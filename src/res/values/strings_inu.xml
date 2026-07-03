@@ -122,6 +122,10 @@
     <string name="InuBlockedMessagesModeOff">Off</string>
     <string name="InuBlockedMessagesModeSpoiler">Spoiler</string>
     <string name="InuBlockedMessagesModeHide">Hide</string>
+    <string name="InuBlockedMessagesExtra">Also hide messages from</string>
+    <string name="InuBlockedMessagesExtraCount">%1$d peers</string>
+    <string name="InuHideMessages">Hide messages</string>
+    <string name="InuShowHiddenMessages">Show messages</string>
     <string name="InuSpoilers">Spoilers</string>
     <string name="InuHideAiFeatures">Hide AI features</string>
     <string name="InuHideAiEditor">AI editor button</string>

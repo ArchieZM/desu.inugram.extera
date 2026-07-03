@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.collection.LongSparseArray
 import androidx.core.graphics.ColorUtils
 import desu.inugram.InuConfig
+import desu.inugram.helpers.WebAppHelper
+import desu.inugram.helpers.chat.BlockedMessagesHelper
+import desu.inugram.helpers.chat.ChatHelper
 import org.json.JSONArray
 import org.telegram.messenger.AccountInstance
-import org.telegram.messenger.support.LongSparseLongArray
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.BuildVars
@@ -24,6 +26,7 @@ import org.telegram.messenger.MessagesController
 import org.telegram.messenger.MessagesStorage
 import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
+import org.telegram.messenger.support.LongSparseLongArray
 import org.telegram.tgnet.TLObject
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ActionBar.ActionBarMenuItem
@@ -36,12 +39,11 @@ import org.telegram.ui.Components.ProfileGalleryView
 import org.telegram.ui.Stars.StarsController
 import org.telegram.ui.Stories.StoriesController
 import java.util.Date
-import desu.inugram.helpers.chat.ChatHelper
-import desu.inugram.helpers.WebAppHelper
 
 object ProfileHelper {
     const val ACTION_TOGGLE_HIDE_WALLPAPER = 505
     const val ACTION_TOGGLE_HIDE_THEME = 506
+    const val ACTION_TOGGLE_HIDE_MESSAGES = 507
     const val ACTION_DEBUG_CLEAR_CACHE = 599
 
     private const val GRADIENT_FADE_DARK = 0x80000000.toInt()
@@ -74,7 +76,12 @@ object ProfileHelper {
     }
 
     @JvmStatic
-    fun effectiveChipExpand(playProfileAnimation: Int, avatarAnimationProgress: Float, currentExpandAnimatorValue: Float, openAnimationInProgress: Boolean): Float = when {
+    fun effectiveChipExpand(
+        playProfileAnimation: Int,
+        avatarAnimationProgress: Float,
+        currentExpandAnimatorValue: Float,
+        openAnimationInProgress: Boolean
+    ): Float = when {
         playProfileAnimation == 2 -> 1f
         // during the normal open animation stock reuses currentExpandAnimatorValue as the open progress (= avatarAnimationProgress), not the real pull-down expand — trusting it makes the chips jump by 8dp on the last frame before it resets
         openAnimationInProgress -> 0f
@@ -83,9 +90,19 @@ object ProfileHelper {
     }
 
     @JvmStatic
-    fun expandedActionsOffset(playProfileAnimation: Int, avatarAnimationProgress: Float, currentExpandAnimatorValue: Float, openAnimationInProgress: Boolean): Float {
+    fun expandedActionsOffset(
+        playProfileAnimation: Int,
+        avatarAnimationProgress: Float,
+        currentExpandAnimatorValue: Float,
+        openAnimationInProgress: Boolean
+    ): Float {
         if (!useProfilePhotoGradientFade()) return 0f
-        return AndroidUtilities.dpf2(8f) * effectiveChipExpand(playProfileAnimation, avatarAnimationProgress, currentExpandAnimatorValue, openAnimationInProgress)
+        return AndroidUtilities.dpf2(8f) * effectiveChipExpand(
+            playProfileAnimation,
+            avatarAnimationProgress,
+            currentExpandAnimatorValue,
+            openAnimationInProgress
+        )
     }
 
     @JvmStatic
@@ -203,6 +220,15 @@ object ProfileHelper {
                 LocaleController.getString(label),
             )
         }
+        if (BlockedMessagesHelper.isEnabled() && canHideMessagesFrom(currentAccount, dialogId)) {
+            val hidden = BlockedMessagesHelper.isExtraHidden(currentAccount, dialogId)
+            val label = if (hidden) R.string.InuShowHiddenMessages else R.string.InuHideMessages
+            otherItem.addSubItem(
+                ACTION_TOGGLE_HIDE_MESSAGES,
+                R.drawable.menu_hide_gift,
+                LocaleController.getString(label),
+            )
+        }
         if (BuildVars.DEBUG_PRIVATE_VERSION) {
             otherItem.addSubItem(
                 ACTION_DEBUG_CLEAR_CACHE,
@@ -212,11 +238,18 @@ object ProfileHelper {
         }
     }
 
+    private fun canHideMessagesFrom(currentAccount: Int, dialogId: Long): Boolean {
+        if (dialogId > 0) return dialogId != UserConfig.getInstance(currentAccount).clientUserId
+        val chat = MessagesController.getInstance(currentAccount).getChat(-dialogId)
+        return ChatObject.isChannelAndNotMegaGroup(chat)
+    }
+
     @JvmStatic
     fun handleMenuClick(id: Int, currentAccount: Int, dialogId: Long): Boolean {
         when (id) {
             ACTION_TOGGLE_HIDE_WALLPAPER -> ChatHelper.toggleRemoveWallpaper(currentAccount, dialogId)
             ACTION_TOGGLE_HIDE_THEME -> ChatHelper.toggleRemoveTheme(currentAccount, dialogId)
+            ACTION_TOGGLE_HIDE_MESSAGES -> BlockedMessagesHelper.toggleExtraHidden(currentAccount, dialogId)
             ACTION_DEBUG_CLEAR_CACHE -> debugClearProfileCache(currentAccount, dialogId)
             else -> return false
         }

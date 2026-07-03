@@ -1,12 +1,46 @@
 package desu.inugram.helpers.chat
 
+import androidx.core.content.edit
 import desu.inugram.InuConfig
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.MessagesController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ChatActivity
 
 object BlockedMessagesHelper {
+    private val extraHiddenCache = HashMap<Int, Set<Long>>()
+
+    private fun getExtraHiddenKey(account: Int) = "blocked_messages_extra:$account"
+
+    fun getExtraHidden(account: Int): Set<Long> {
+        synchronized(extraHiddenCache) {
+            extraHiddenCache[account]?.let { return it }
+            val stored = InuConfig.prefs.getStringSet(getExtraHiddenKey(account), null)
+            val set = stored?.mapNotNullTo(HashSet(), String::toLongOrNull) ?: emptySet()
+            extraHiddenCache[account] = set
+            return set
+        }
+    }
+
+    fun setExtraHidden(account: Int, ids: Collection<Long>) {
+        synchronized(extraHiddenCache) {
+            extraHiddenCache[account] = HashSet(ids)
+        }
+        InuConfig.prefs.edit { putStringSet(getExtraHiddenKey(account), ids.map(Long::toString).toHashSet()) }
+        NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.blockedUsersDidLoad)
+    }
+
+    fun isExtraHidden(account: Int, dialogId: Long): Boolean = getExtraHidden(account).contains(dialogId)
+
+    fun toggleExtraHidden(account: Int, dialogId: Long): Boolean {
+        val set = HashSet(getExtraHidden(account))
+        val added = set.add(dialogId)
+        if (!added) set.remove(dialogId)
+        setExtraHidden(account, set)
+        return added
+    }
+
     @JvmStatic
     fun isEnabled(): Boolean {
         return InuConfig.BLOCKED_MESSAGES_MODE.value != InuConfig.BlockedMessagesModeItem.OFF
@@ -112,6 +146,7 @@ object BlockedMessagesHelper {
     }
 
     private fun isBlockedPeer(currentAccount: Int, peerId: Long): Boolean {
+        if (isExtraHidden(currentAccount, peerId)) return true
         val controller = MessagesController.getInstance(currentAccount)
         val userFull = if (peerId > 0) controller.getUserFull(peerId) else null
         return userFull?.blocked == true || controller.blockePeers.indexOfKey(peerId) >= 0
