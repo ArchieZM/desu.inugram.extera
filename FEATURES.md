@@ -256,6 +256,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - fix lingering webpage when quickly sending
 - fix sponsored message media not respecting data saver
 - fix non-joined channels history getting stuck in the past
+- expandable switch cell (e.g. admin rights groups) counter badge overlapping the switch on long titles
 - fix stuck red snapshot box when the frame capture fails/times out on enter in pip
 - heads-up notifications show only the new message instead of the whole group, on the correct channel (Private Chats/Groups/Channels) instead of "Internal notifications" (visible since android 16 forced grouping)
 - fix npe checking admin/owner when channel admins not yet loaded
