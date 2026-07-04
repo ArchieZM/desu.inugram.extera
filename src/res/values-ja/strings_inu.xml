@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="InuOpenInDiscussion">ディスカッションで開く</string>
+    <string name="InuBanUserConfirm">%1$s をこのグループから BAN しますか？</string>
     <string name="InuSettings">Inugram 設定</string>
     <string name="InuSettingsInfo">犬は何してるの？</string>
     <string name="InuExperimental">実験的機能</string>
@@ -116,6 +117,7 @@
     <string name="InuChatAlwaysShowDownInfo">上にスクロールしているときも</string>
     <string name="InuChatTwoFingerSelect">2本指スワイプで選択</string>
     <string name="InuChatTwoFingerSelectInfo">2本指でメッセージをなぞって選択/解除（iOS風）</string>
+    <string name="InuDisableBotDraftTop">ボットの下書きを下部に留める</string>
     <string name="InuChatRememberAllReplies">タップしたすべての返信を記憶</string>
     <string name="InuSaveToSavedMessages">保存</string>
     <string name="InuHideSuggestions">提案を非表示</string>
@@ -148,9 +150,12 @@
     <string name="InuInPlaceTranslation">その場で翻訳</string>
     <string name="InuTranslateWebPreviews">ウェブプレビューを翻訳</string>
     <string name="InuKeepOriginalAfterTranslation">原文を表示</string>
+    <string name="InuTranslateAutoDetectLang">メッセージメニューで DNT を尊重</string>
+    <string name="InuTranslateAutoDetectLangInfo">メッセージの言語が DNT リストに含まれる場合、その言語は自動検出され、メニュー項目は非表示になります。\nこれによりメニューを開く動作がやや遅くなることがあります。</string>
     <string name="InuTranslateInstantView">ページを翻訳</string>
     <string name="InuInstantViewShowOriginal">原文を表示</string>
     <string name="InuTranslating">翻訳中…</string>
+    <string name="InuAlreadyInTargetLanguage">このメッセージはすでに %1$s です。</string>
     <string name="InuTranslateInstantViewSkipped">元の言語は「翻訳しない」リストに含まれています。</string>
     <string name="InuTranslateInstantViewPartial">一部のセクションを翻訳できませんでした。</string>
     <string name="InuTranslator">翻訳</string>
@@ -166,9 +171,52 @@
     <string name="InuDisableChatPreviewExpand">インタラクティブなチャットプレビュー</string>
     <string name="InuDisableChatPreviewExpandInfo">タップで展開する動作を無効化し、代わりにバブルを操作可能にする</string>
     <string name="InuHideMyPhoneNumber">自分の電話番号を非表示</string>
+    <string name="InuFonts">フォント</string>
+    <string name="InuAppFont">アプリのフォント</string>
+    <string name="InuAppFontInfo">アプリ全体のインターフェースで使用するフォントです。</string>
+    <string name="InuAvailableFonts">利用可能なフォント</string>
+    <string name="InuFontsInfo">表示中のフォントはメディアエディターのテキストツールで使用できます。ドラッグで並べ替え、目のアイコンで非表示、インポートしたフォントをタップで削除できます。</string>
+    <string name="InuFontAdd">フォントを追加</string>
+    <string name="InuFontResetOrder">順序をリセット</string>
+    <string name="InuFontRemove">削除</string>
+    <string name="InuFontSetAsApp">アプリのフォントに設定</string>
+    <string name="InuFontHide">非表示</string>
+    <string name="InuFontShow">表示</string>
     <string name="InuFontDefault">デフォルト</string>
     <string name="InuFontSystem">システム</string>
     <string name="InuFontImportFailed">フォントをインポートできませんでした。TTF/OTF/TTC ファイルか確認してください。</string>
+    <string name="InuFontInstall">インストール</string>
+    <string name="InuFontReinstall">再インストール</string>
+    <string name="InuFontAddToFamily">%1$s に追加</string>
+    <string name="InuFontInstalled">フォントをインストールしました</string>
+    <string name="InuFontOpenIn">開く…</string>
+    <string name="InuFontOpenInFailed">このファイルを開けるアプリがありません</string>
+    <string name="InuFontPreviewSample">The quick brown fox jumps over the lazy dog</string>
+    <string name="InuFontVariableSlant">可変フォント (%1$s)</string>
+    <string name="InuFontStyleRegular">レギュラー</string>
+    <string name="InuFontStyleItalic">イタリック</string>
+    <string name="InuFontStyleItalicSuffix">%1$s イタリック</string>
+    <string name="InuFontIncludeSystem">システムフォントを含める</string>
+    <string name="InuFontIncludeSystemInfo">下のリストにシステム提供のフォントを表示します</string>
+    <string name="InuFontTagStock">標準</string>
+    <string name="InuFontTagSystem">システム</string>
+    <string name="InuFontTagCustom">カスタム</string>
+    <string name="InuMonoFont">等幅フォント</string>
+    <string name="InuMonoFontInfo">インラインコードやコードブロックなど、等幅ブロックに使用されるフォントです。</string>
+    <string name="InuAppFontStack">フォントスタック</string>
+    <string name="InuAppFontStackInfo">最上段が主要な UI フォントで、以下は主要フォントに無い文字（CJK など）のためのフォールバックです。ドラッグで並べ替え。</string>
+    <string name="InuFontStackAdd">フォントを追加</string>
+    <string name="InuFontStackChoose">フォントを選択</string>
+    <string name="InuFontStackApply">適用して再起動</string>
+    <string name="InuFontStackMakePrimary">主要フォントにする</string>
+    <string name="InuFontStackPrimary">主要</string>
+    <string name="InuFontStackFallback">フォールバック</string>
+    <string name="InuFontStackWarnBold">スタックにボールド書体がありません — 太字は合成されます。</string>
+    <string name="InuFontStackWarnItalic">スタックにイタリック書体がありません — 斜体は合成されます。</string>
+    <string name="InuFontStackWarnBoldOnly">スタックにレギュラーウェイトがありません — 通常のテキストが太字で表示されます。</string>
+    <string name="InuFontStackWarnItalicOnly">スタックに直立書体がありません — 通常のテキストが斜体で表示されます。</string>
+    <string name="InuFontStackWarnScript">%1$s のテキストはこのスタックでカバーされていないため、他のフォントにフォールバックします。</string>
+    <string name="InuFontScriptLatin">ラテン文字</string>
     <string name="InuProfileIdMode">プロフィールに ID を表示</string>
     <string name="InuProfileIdModeOff">オフ</string>
     <string name="InuProfileIdModeTelegram">Telegram ID</string>
@@ -205,6 +253,7 @@
     <string name="InuMsgDetailDate">日付</string>
     <string name="InuMsgDetailWhenOnline">オンライン時</string>
     <string name="InuMsgDetailEdited">編集済み</string>
+    <string name="InuMsgDetailAutoDelete">自動削除</string>
     <string name="InuMsgDetailForwardFrom">転送元</string>
     <string name="InuMsgDetailRestrictionReason">制限の理由</string>
     <string name="InuMsgDetailFileName">ファイル名</string>
@@ -234,7 +283,7 @@
 
     <string name="InuProfilePhotoGradientFade">プロフィール写真のぼかしを無効化</string>
 
-    <string name="InuNonIslandUI">非アイランド UI</string>
+    <string name="InuNonIslandUI">クラシック UI</string>
     <string name="InuAnimationSpeed">アニメーション速度</string>
     <string name="InuAnimationSpeedInstant">瞬時</string>
     <string name="InuAnimationSpeedInfo">注：スプリングベースのアニメーション（ボトムシート、ポップアップ、一部の遷移）と一部のアニメーションは影響を受けません。</string>
@@ -242,7 +291,7 @@
     <string name="InuNonIslandSharedMediaTabs">共有メディアのタブ</string>
     <string name="InuNonIslandGlobalSearch">グローバル検索</string>
     <string name="InuNonIslandChatElements">チャット要素</string>
-    <string name="InuNonIslandHint">アイランド UI（「Liquid Glass」とも呼ばれる）は、明らかに iOS に着想を得た新しい (>12.6) UI デザインです。ここではその一部の変更を可能な範囲で元に戻せます。\n視覚的なバグが残っている可能性があるのでご注意ください。</string>
+    <string name="InuNonIslandHint">クラシック UI は、新しい (>12.6) 「Liquid Glass」UI の変更の一部を、可能な範囲で以前のフラットなデザインに戻します。\n視覚的なバグがいくつか残っている可能性があるのでご注意ください。</string>
 
     <string name="InuHideFadeView">フェードビューを非表示</string>
 
@@ -282,6 +331,8 @@
     <string name="InuOldMentionIndicator">従来のメンション表示</string>
 
     <string name="InuShowForwardTime">転送時刻を表示</string>
+    <string name="InuCompactEdited">コンパクトな編集インジケーター</string>
+    <string name="InuCompactEditedInfo">「編集済み」ラベルの代わりに鉛筆アイコンを表示します</string>
 
     <string name="InuAddToStickersGifs">ステッカー/GIFに追加</string>
     <string name="InuLongTapAction">長押し動作</string>
@@ -290,6 +341,7 @@
     <string name="InuForwardLongTapOff">オフ</string>
     <string name="InuLongTapChooseMode">毎回確認</string>
     <string name="InuForwardNoQuote">引用なしで転送</string>
+    <string name="InuRepeat">繰り返し</string>
     <string name="InuReplyInDms">DMで返信</string>
     <string name="InuHiddenCaptionDescription">キャプションを削除しました</string>
 
@@ -311,6 +363,7 @@
     <string name="InuFormattingPopupReset">デフォルトに戻す</string>
     <string name="InuFormattingPopupDivider">——————</string>
     <string name="InuCut">切り取り</string>
+    <string name="InuCodeLanguage">コードの言語</string>
     <string name="InuVersion">Inugram v%1$s (%2$s ベース, ビルド %3$s)</string>
 
     <string name="InuSearchFilter">メディアで絞り込み</string>
@@ -325,6 +378,7 @@
     <string name="InuSearchFilterOnlyMatches">一致のみ</string>
     <string name="InuShowInChat">チャットで表示</string>
     <string name="InuSelectRange">範囲選択</string>
+    <string name="InuPinMessagesAlert">%1$d 件のメッセージをピン留めしますか？</string>
     <string name="InuEventLogMediaBeforeEdit">編集前のメディア:</string>
     <string name="InuEventLogBanConfirm">**%1$s** を BAN しますか？</string>
     <string name="InuEventLogShowDiff">diff として表示</string>
@@ -363,6 +417,7 @@
     <string name="InuBackupImportNoChanges">このファイルは現在の設定と一致しています</string>
     <string name="InuBackupImportSheetChanges_one">**%1$d** 件の変更が現在の設定に適用されます。</string>
     <string name="InuBackupImportSheetChanges_other">**%1$d** 件の変更が現在の設定に適用されます。</string>
+    <string name="InuFontStyles_other">%1$d 個のスタイル</string>
     <string name="InuBackupImportSheetApply">はい、適用する</string>
     <string name="InuBackupImportSheetCancel">いいえ、そのままにする</string>
     <string name="InuCloudSync">設定を同期</string>
@@ -394,6 +449,7 @@
     <string name="InuCopyCallbackData">コールバックデータをコピー</string>
     <string name="InuCallbackDataCopied">コールバックデータをコピーしました</string>
     <string name="InuNetwork">ネットワーク</string>
+    <string name="InuAutoDisableProxyOnVpn">VPN 使用時はプロキシを無効化</string>
     <string name="InuFasterDownloads">ダウンロード高速化</string>
     <string name="InuFasterUploads">アップロード高速化</string>
     <string name="InuFasterTransfersInfo">チャンクサイズと並列リクエスト数を増やします。スループットが上がる場合もあれば、逆に下がる場合もあります (特に Premium 以外のユーザー)</string>
@@ -423,8 +479,20 @@
     <string name="InuPasscodePanicInfo">ロック画面で入力されると、パニックコードはオプトインしたすべてのアカウントをログアウトし、アプリをロックされた状態にします。</string>
     <string name="InuMessageMenuOrder">メッセージメニュー</string>
     <string name="InuMessageMenuItems">項目</string>
-    <string name="InuMessageMenuOrderInfo">メッセージのコンテキストメニューの項目を並べ替えたり非表示にできます。ハンドルをドラッグして並べ替え、スイッチで非表示を切り替えます。</string>
+    <string name="InuMessageMenuBottomGroup">クイックアクション行</string>
+    <string name="InuMessageMenuBottomRow">クイックアクション行を表示</string>
+    <string name="InuMessageMenuBottomRowInfo">メッセージメニュー内の、手の届くクイックアクション行です。</string>
+    <string name="InuMessageMenuQuickActionsPlacement">配置</string>
+    <string name="InuPlacementTop">上</string>
+    <string name="InuPlacementBottom">下</string>
+    <string name="InuMessageMenuOrderInfo">メッセージのコンテキストメニューの項目を並べ替えたり非表示にできます。ハンドルをドラッグして並べ替え、タップで表示/非表示を切り替えます。</string>
+    <string name="InuMessageMenuOrderInfoBottom">項目を長押しするとクイックアクション行に移動します</string>
     <string name="InuMessageMenuReset">デフォルトに戻す</string>
+    <string name="InuMenuSlotDelete">削除 / リンクをコピー</string>
+    <string name="InuMenuSlotEditForward">編集 / 転送</string>
+    <string name="InuMenuMoveToBottomRow">クイックアクション行に移動</string>
+    <string name="InuMenuMoveFromBottomRow">メニューに戻す</string>
+    <string name="InuMenuBottomRowFull">クイックアクション行は満杯です（最大 4 件）</string>
     <string name="InuPrivacySecurity">プライバシーとセキュリティ</string>
     <string name="InuPerAccountPasscode">アカウントごとのパスコード</string>
     <string name="InuHideInugramSettings">inugram の設定を非表示</string>
@@ -434,6 +502,8 @@
     <string name="InuParanoiaDisguiseInfo">ランチャーのアイコンと名前のみが変わります。Android の制限により、通知やアプリ内の名前は引き続き「Inugram」と表示されます。</string>
     <string name="InuParanoiaMode">パラノイアモード</string>
     <string name="InuParanoiaModeInfo">パラノイアモードでは、「危険な」チャットを隠し、必要に応じて標準アプリに偽装することで、誰かに端末を見られる事態に「備える」ことができます。</string>
+    <string name="InuParanoiaLauncherShortcut">ランチャーショートカット</string>
+    <string name="InuParanoiaLauncherShortcutInfo">アプリアイコンの長押しでパラノイアモードにすばやく入るショートカットを追加します。有効化中は非表示になります。</string>
     <string name="InuParanoiaSelect">隠すチャット</string>
     <string name="InuParanoiaSelectInfo">シークレットチャットは常に隠されます。サービス通知は表示されたままです。</string>
     <string name="InuParanoiaCount">%1$d 件のチャット</string>
@@ -485,6 +555,10 @@
     <string name="InuBlockedMessagesModeOff">無効</string>
     <string name="InuBlockedMessagesModeSpoiler">スポイラー</string>
     <string name="InuBlockedMessagesModeHide">非表示</string>
+    <string name="InuBlockedMessagesExtra">次のユーザーからのメッセージも非表示にする</string>
+    <string name="InuBlockedMessagesExtraCount">%1$d 人</string>
+    <string name="InuHideMessages">メッセージを非表示にする</string>
+    <string name="InuShowHiddenMessages">メッセージを表示する</string>
     <string name="InuSpoilers">スポイラー</string>
     <string name="InuDisableVolumePlayVideo">音量キーで動画再生を無効化</string>
     <string name="InuDisableVolumePlayVideoInfo">チャットで音量キーを押したときに表示中の動画を音付きで再生しない</string>
@@ -520,15 +594,16 @@
 
     <string name="InuCrashTitle">前回 Inugram がクラッシュしました</string>
     <string name="InuCrashDesc">ご迷惑をおかけしました。修正に役立てるため、クラッシュログを開発者と共有できます。</string>
+    <string name="InuCrashDescOom">ご迷惑をおかけしました。メモリ不足の問題にはクラッシュログはあまり役立ちません — ヒープダンプの方が有用です。</string>
     <string name="InuCrashShare">クラッシュログを共有</string>
     <string name="InuCrashDiscard">破棄</string>
     <string name="InuCrashChannel">クラッシュリカバリー</string>
     <string name="InuCrashNotifTitle">Inugram がクラッシュしました</string>
     <string name="InuCrashNotifText">タップで再起動</string>
 
-    <string name="InuLogs">ログ</string>
-    <string name="InuLogsEnabled">ログを有効化</string>
-    <string name="InuLogsSize">サイズ: %1$s</string>
+    <string name="InuLogs">デバッグ</string>
+    <string name="InuLogsEnabled">デバッグモード</string>
+    <string name="InuLogsSize">ログサイズ: %1$s</string>
     <string name="InuLogsShare">ログを共有</string>
     <string name="InuLogsShareZip">全ログ (.zip)</string>
     <string name="InuLogsShareCurrent">現在のログ (.txt)</string>
@@ -537,10 +612,15 @@
     <string name="InuLogsShareError">ログのパッケージ化に失敗しました</string>
     <string name="InuLogsCopySystemInfo">システム情報をコピー</string>
     <string name="InuLogsSystemInfoCopied">システム情報をクリップボードにコピーしました</string>
+    <string name="InuLogsHeapUsage">ヒープ: %1$s / %2$s</string>
+    <string name="InuLogsMakeHeapDump">ヒープダンプを作成</string>
+    <string name="InuLogsMakingHeapDump">ヒープダンプを作成中…</string>
+    <string name="InuLogsHeapDumpWarning">.hprof ファイルは**絶対に**誰とも共有しないでください — アプリのメモリのスナップショットであり、**メッセージやトークンなどの機密情報を含みます**。\n\n**自分だけで**確認してください。\n\nアプリはしばらくフリーズします。</string>
 
     <string name="InuLookAndFeel">外観とスタイル</string>
     <string name="InuMaterial3Fabs">フローティングボタン</string>
     <string name="InuMaterial3Sections">リスト項目</string>
+    <string name="InuMaterial3Avatars">アバター</string>
     <string name="InuTypographyAndIcons">タイポグラフィとアイコン</string>
     <string name="InuMotion">モーション</string>
     <string name="InuFormatting">書式設定</string>
@@ -562,9 +642,9 @@
     <string name="InuStripTrackingParamsSourceRow">フィルターソース</string>
 
     <string name="InuSimulateOom">OOM クラッシュをシミュレート</string>
-    <string name="InuCrashTitleError">Inugram がクラッシュしました: %1$s</string>
     <string name="InuCrashTitleOom">Inugram のメモリが不足しました</string>
     <string name="InuCrashDescHeapDump">ヒープダンプも保存されました。共有しないでください！プライベートな情報が含まれています！自分で確認して、気づいたことを教えていただけると、大変助かります。</string>
+    <string name="InuCrashOomEnableLogs">Inugram 設定 > アプリについて でデバッグモードを有効にすると、次回以降の OOM 発生時にヒープダンプを作成します。</string>
     <string name="InuCrashShareHeapDump">ヒープダンプを保存</string>
 
     <string name="InuDeleteOwnMessages">自分のメッセージを削除</string>
@@ -578,4 +658,12 @@
     <string name="InuDeleteOwnMessagesDone_other">%d 件のメッセージを削除しました</string>
     <string name="InuDeleteOwnMessagesError">エラー: %1$s</string>
     <string name="InuDeleteOwnMessagesFloodWait">レート制限中、%d 秒待機…</string>
+    <string name="InuBiometricConfirm">生体認証による確認</string>
+    <string name="InuBiometricConfirmTitle">本人確認</string>
+    <string name="InuBiometricConfirmDeleteChat">チャット削除の確認</string>
+    <string name="InuBiometricConfirmDeleteChatInfo">チャットを削除またはクリアする前に生体認証による確認を求めます。</string>
+    <string name="InuBiometricConfirmLogout">ログアウトの確認</string>
+    <string name="InuBiometricConfirmLogoutInfo">アカウントからログアウトする前に生体認証による確認を求めます。</string>
+    <string name="InuBiometricAllowDeviceCredential">デバイスの PIN/パターンを許可</string>
+    <string name="InuBiometricAllowDeviceCredentialInfo">生体認証が登録されていない場合、デバイスの PIN、パターン、またはパスワードにフォールバックします。</string>
 </resources>

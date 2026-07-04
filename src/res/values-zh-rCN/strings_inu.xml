@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="InuOpenInDiscussion">在讨论中打开</string>
+    <string name="InuBanUserConfirm">将 %1$s 从本群封禁？</string>
     <string name="InuSettings">Inugram 设置</string>
     <string name="InuSettingsInfo">汪汪在干啥？</string>
     <string name="InuExperimental">实验性</string>
@@ -116,6 +117,7 @@
     <string name="InuChatAlwaysShowDownInfo">即使在向上滚动时</string>
     <string name="InuChatTwoFingerSelect">双指滑动选择</string>
     <string name="InuChatTwoFingerSelectInfo">用两根手指在消息上滑动以选择/取消选择（类似 iOS）</string>
+    <string name="InuDisableBotDraftTop">将机器人草稿保持在底部</string>
     <string name="InuChatRememberAllReplies">记住所有点击过的回复</string>
     <string name="InuSaveToSavedMessages">保存</string>
     <string name="InuHideSuggestions">隐藏建议</string>
@@ -148,6 +150,8 @@
     <string name="InuInPlaceTranslation">就地翻译</string>
     <string name="InuTranslateWebPreviews">翻译网页预览</string>
     <string name="InuKeepOriginalAfterTranslation">显示原文</string>
+    <string name="InuTranslateAutoDetectLang">在消息菜单中遵循「不翻译」列表</string>
+    <string name="InuTranslateAutoDetectLangInfo">当消息语言在「不翻译」列表中时，会自动检测其语言并隐藏该菜单项。\n这可能会让菜单打开得稍慢一些。</string>
     <string name="InuTranslateInstantView">翻译页面</string>
     <string name="InuInstantViewShowOriginal">显示原文</string>
     <string name="InuTranslating">翻译中…</string>
@@ -166,9 +170,52 @@
     <string name="InuDisableChatPreviewExpand">交互式聊天预览</string>
     <string name="InuDisableChatPreviewExpandInfo">禁用点击展开，改为让气泡可交互</string>
     <string name="InuHideMyPhoneNumber">隐藏我的手机号</string>
+    <string name="InuFonts">字体</string>
+    <string name="InuAppFont">应用字体</string>
+    <string name="InuAppFontInfo">整个应用界面使用的字体。</string>
+    <string name="InuAvailableFonts">可用字体</string>
+    <string name="InuFontsInfo">可见字体可在媒体编辑器的文字工具中使用。拖动以重新排序，点击眼睛图标隐藏；点击已导入的字体可将其移除。</string>
+    <string name="InuFontAdd">添加字体</string>
+    <string name="InuFontResetOrder">重置顺序</string>
+    <string name="InuFontRemove">移除</string>
+    <string name="InuFontSetAsApp">设为应用字体</string>
+    <string name="InuFontHide">隐藏</string>
+    <string name="InuFontShow">显示</string>
     <string name="InuFontDefault">默认</string>
     <string name="InuFontSystem">系统</string>
     <string name="InuFontImportFailed">无法导入字体。请确认是 TTF/OTF/TTC 文件。</string>
+    <string name="InuFontInstall">安装</string>
+    <string name="InuFontReinstall">重新安装</string>
+    <string name="InuFontAddToFamily">添加到 %1$s</string>
+    <string name="InuFontInstalled">字体已安装</string>
+    <string name="InuFontOpenIn">打开方式…</string>
+    <string name="InuFontOpenInFailed">没有应用可以打开此文件</string>
+    <string name="InuFontPreviewSample">The quick brown fox jumps over the lazy dog</string>
+    <string name="InuFontVariableSlant">可变字体 (%1$s)</string>
+    <string name="InuFontStyleRegular">常规</string>
+    <string name="InuFontStyleItalic">斜体</string>
+    <string name="InuFontStyleItalicSuffix">%1$s 斜体</string>
+    <string name="InuFontIncludeSystem">包含系统字体</string>
+    <string name="InuFontIncludeSystemInfo">在下方列表中显示系统提供的字体</string>
+    <string name="InuFontTagStock">原版</string>
+    <string name="InuFontTagSystem">系统</string>
+    <string name="InuFontTagCustom">自定义</string>
+    <string name="InuMonoFont">等宽字体</string>
+    <string name="InuMonoFontInfo">用于等宽区块的字体 —— 行内代码和代码块。</string>
+    <string name="InuAppFontStack">字体栈</string>
+    <string name="InuAppFontStackInfo">最上方的字体是主界面字体；下方的是后备字体，用于主字体缺失的字符 (CJK 等)。拖动以重新排序。</string>
+    <string name="InuFontStackAdd">添加字体</string>
+    <string name="InuFontStackChoose">选择字体</string>
+    <string name="InuFontStackApply">应用并重启</string>
+    <string name="InuFontStackMakePrimary">设为主字体</string>
+    <string name="InuFontStackPrimary">主字体</string>
+    <string name="InuFontStackFallback">后备字体</string>
+    <string name="InuFontStackWarnBold">字体栈中没有粗体字形 —— 粗体文本将被合成。</string>
+    <string name="InuFontStackWarnItalic">字体栈中没有斜体字形 —— 斜体文本将被合成。</string>
+    <string name="InuFontStackWarnBoldOnly">字体栈中没有常规字重 —— 普通文本将显示为粗体。</string>
+    <string name="InuFontStackWarnItalicOnly">字体栈中没有直立字形 —— 普通文本将显示为斜体。</string>
+    <string name="InuFontStackWarnScript">%1$s 文本不在此字体栈的覆盖范围内，将回退到其他字体。</string>
+    <string name="InuFontScriptLatin">拉丁文</string>
     <string name="InuProfileIdMode">在资料中显示 ID</string>
     <string name="InuProfileIdModeOff">关闭</string>
     <string name="InuProfileIdModeTelegram">Telegram ID</string>
@@ -205,6 +252,7 @@
     <string name="InuMsgDetailDate">日期</string>
     <string name="InuMsgDetailWhenOnline">上线时</string>
     <string name="InuMsgDetailEdited">已编辑</string>
+    <string name="InuMsgDetailAutoDelete">自动删除</string>
     <string name="InuMsgDetailForwardFrom">转发自</string>
     <string name="InuMsgDetailRestrictionReason">限制原因</string>
     <string name="InuMsgDetailFileName">文件名</string>
@@ -234,7 +282,7 @@
 
     <string name="InuProfilePhotoGradientFade">禁用资料头像模糊</string>
 
-    <string name="InuNonIslandUI">非「岛」界面</string>
+    <string name="InuNonIslandUI">经典界面</string>
     <string name="InuAnimationSpeed">动画速度</string>
     <string name="InuAnimationSpeedInstant">瞬间</string>
     <string name="InuAnimationSpeedInfo">注意：基于弹簧的动画（底部弹层、弹窗、部分过渡）和某些动画不受影响。</string>
@@ -242,7 +290,7 @@
     <string name="InuNonIslandSharedMediaTabs">共享媒体标签</string>
     <string name="InuNonIslandGlobalSearch">全局搜索</string>
     <string name="InuNonIslandChatElements">聊天元素</string>
-    <string name="InuNonIslandHint">「岛」界面（也叫「Liquid Glass」）是新的 (>12.6) 界面设计，明显受 iOS 启发。在这里可以尽力撤销其中部分改动。\n可能仍有视觉缺陷，请知悉。</string>
+    <string name="InuNonIslandHint">经典界面会将新版 (>12.6) 「Liquid Glass」界面的部分改动尽力还原为旧的扁平设计。\n可能仍有一些视觉缺陷，请知悉。</string>
 
     <string name="InuHideFadeView">隐藏渐隐视图</string>
 
@@ -282,6 +330,8 @@
     <string name="InuOldMentionIndicator">旧版提及指示器</string>
 
     <string name="InuShowForwardTime">显示转发时间</string>
+    <string name="InuCompactEdited">紧凑编辑指示器</string>
+    <string name="InuCompactEditedInfo">用铅笔图标代替「已编辑」文字</string>
 
     <string name="InuAddToStickersGifs">添加到贴纸/GIF</string>
     <string name="InuLongTapAction">长按操作</string>
@@ -290,6 +340,7 @@
     <string name="InuForwardLongTapOff">关闭</string>
     <string name="InuLongTapChooseMode">每次询问</string>
     <string name="InuForwardNoQuote">无引用转发</string>
+    <string name="InuRepeat">重复</string>
     <string name="InuReplyInDms">在私信中回复</string>
     <string name="InuHiddenCaptionDescription">说明已移除</string>
 
@@ -311,6 +362,7 @@
     <string name="InuFormattingPopupReset">恢复默认</string>
     <string name="InuFormattingPopupDivider">——————</string>
     <string name="InuCut">剪切</string>
+    <string name="InuCodeLanguage">代码语言</string>
     <string name="InuVersion">Inugram v%1$s (基于 %2$s, 构建 %3$s)</string>
 
     <string name="InuSearchFilter">按媒体过滤</string>
@@ -325,6 +377,7 @@
     <string name="InuSearchFilterOnlyMatches">仅匹配项</string>
     <string name="InuShowInChat">在聊天中显示</string>
     <string name="InuSelectRange">范围选择</string>
+    <string name="InuPinMessagesAlert">置顶 %1$d 条消息？</string>
     <string name="InuEventLogMediaBeforeEdit">编辑前的媒体：</string>
     <string name="InuEventLogBanConfirm">封禁 **%1$s**？</string>
     <string name="InuEventLogShowDiff">以 diff 显示</string>
@@ -363,6 +416,7 @@
     <string name="InuBackupImportNoChanges">该文件与当前设置一致</string>
     <string name="InuBackupImportSheetChanges_one">将对当前设置应用 **%1$d** 项更改。</string>
     <string name="InuBackupImportSheetChanges_other">将对当前设置应用 **%1$d** 项更改。</string>
+    <string name="InuFontStyles_other">%1$d 种样式</string>
     <string name="InuBackupImportSheetApply">是，应用</string>
     <string name="InuBackupImportSheetCancel">否，保持不变</string>
     <string name="InuCloudSync">同步设置</string>
@@ -394,6 +448,7 @@
     <string name="InuCopyCallbackData">复制回调数据</string>
     <string name="InuCallbackDataCopied">回调数据已复制</string>
     <string name="InuNetwork">网络</string>
+    <string name="InuAutoDisableProxyOnVpn">VPN 激活时禁用代理</string>
     <string name="InuFasterDownloads">加速下载</string>
     <string name="InuFasterUploads">加速上传</string>
     <string name="InuFasterTransfersInfo">提高分块大小和并行请求数。可能提升吞吐，也可能产生反效果 (尤其对非 Premium 用户)</string>
@@ -423,8 +478,20 @@
     <string name="InuPasscodePanicInfo">在锁屏输入紧急密码时，会登出所有选择参与的账号并让应用保持锁定。</string>
     <string name="InuMessageMenuOrder">消息菜单</string>
     <string name="InuMessageMenuItems">项目</string>
-    <string name="InuMessageMenuOrderInfo">重新排序或隐藏消息上下文菜单中的项目。拖动手柄进行排序，使用开关进行隐藏。</string>
+    <string name="InuMessageMenuBottomGroup">快捷操作栏</string>
+    <string name="InuMessageMenuBottomRow">显示快捷操作栏</string>
+    <string name="InuMessageMenuBottomRowInfo">消息菜单中一个可触及的快捷操作栏。</string>
+    <string name="InuMessageMenuQuickActionsPlacement">位置</string>
+    <string name="InuPlacementTop">顶部</string>
+    <string name="InuPlacementBottom">底部</string>
+    <string name="InuMessageMenuOrderInfo">重新排序或隐藏消息上下文菜单中的项目。拖动手柄进行排序，点按以显示/隐藏</string>
+    <string name="InuMessageMenuOrderInfoBottom">长按某一项以将其移到快捷操作栏</string>
     <string name="InuMessageMenuReset">重置为默认</string>
+    <string name="InuMenuSlotDelete">删除 / 复制链接</string>
+    <string name="InuMenuSlotEditForward">编辑 / 转发</string>
+    <string name="InuMenuMoveToBottomRow">移到快捷操作栏</string>
+    <string name="InuMenuMoveFromBottomRow">移回菜单</string>
+    <string name="InuMenuBottomRowFull">快捷操作栏已满 (最多 4 个)</string>
     <string name="InuPrivacySecurity">隐私与安全</string>
     <string name="InuPerAccountPasscode">每个账号独立密码</string>
     <string name="InuHideInugramSettings">隐藏 inugram 设置</string>
@@ -434,6 +501,8 @@
     <string name="InuParanoiaDisguiseInfo">仅更改启动器图标和名称。由于 Android 限制，通知和应用内名称仍显示「Inugram」。</string>
     <string name="InuParanoiaMode">偏执模式</string>
     <string name="InuParanoiaModeInfo">偏执模式让你为他人查看手机做好「准备」：隐藏任何「危险」聊天，并可选择伪装成原版应用。</string>
+    <string name="InuParanoiaLauncherShortcut">启动器快捷方式</string>
+    <string name="InuParanoiaLauncherShortcutInfo">在应用图标上添加长按快捷方式，以快速进入偏执模式。激活时该快捷方式会隐藏。</string>
     <string name="InuParanoiaSelect">要隐藏的聊天</string>
     <string name="InuParanoiaSelectInfo">私密聊天始终隐藏。服务通知保持可见。</string>
     <string name="InuParanoiaCount">%1$d 个聊天</string>
@@ -485,6 +554,10 @@
     <string name="InuBlockedMessagesModeOff">关闭</string>
     <string name="InuBlockedMessagesModeSpoiler">剧透</string>
     <string name="InuBlockedMessagesModeHide">隐藏</string>
+    <string name="InuBlockedMessagesExtra">同时隐藏来自以下用户的消息</string>
+    <string name="InuBlockedMessagesExtraCount">%1$d 位用户</string>
+    <string name="InuHideMessages">隐藏消息</string>
+    <string name="InuShowHiddenMessages">显示消息</string>
     <string name="InuSpoilers">剧透</string>
     <string name="InuDisableVolumePlayVideo">禁用音量键播放视频</string>
     <string name="InuDisableVolumePlayVideoInfo">在聊天中按音量键时不让可见视频开始有声播放</string>
@@ -498,6 +571,7 @@
     <string name="InuNotificationIconTelegram">Telegram</string>
     <string name="InuNotificationIconInugram">Inugram</string>
     <string name="InuNothingToTranslate">没有可翻译的消息。</string>
+    <string name="InuAlreadyInTargetLanguage">此消息已是 %1$s。</string>
     <string name="InuVoiceRecorder">语音 / 圆形录制</string>
     <string name="InuSummarize">总结</string>
     <string name="InuHiddenSendersAndCaptionDescription">发送者名和说明已移除</string>
@@ -526,9 +600,9 @@
     <string name="InuCrashNotifTitle">Inugram 崩溃了</string>
     <string name="InuCrashNotifText">点击重启</string>
 
-    <string name="InuLogs">日志</string>
-    <string name="InuLogsEnabled">启用日志</string>
-    <string name="InuLogsSize">大小: %1$s</string>
+    <string name="InuLogs">调试</string>
+    <string name="InuLogsEnabled">调试模式</string>
+    <string name="InuLogsSize">日志大小: %1$s</string>
     <string name="InuLogsShare">分享日志</string>
     <string name="InuLogsShareZip">全部日志 (.zip)</string>
     <string name="InuLogsShareCurrent">当前日志 (.txt)</string>
@@ -537,10 +611,15 @@
     <string name="InuLogsShareError">打包日志失败</string>
     <string name="InuLogsCopySystemInfo">复制系统信息</string>
     <string name="InuLogsSystemInfoCopied">系统信息已复制到剪贴板</string>
+    <string name="InuLogsHeapUsage">堆内存: %1$s / %2$s</string>
+    <string name="InuLogsMakeHeapDump">生成堆转储</string>
+    <string name="InuLogsMakingHeapDump">正在生成堆转储…</string>
+    <string name="InuLogsHeapDumpWarning">**切勿**与任何人分享生成的 .hprof 文件 —— 它是应用内存的快照，**包含敏感信息**（消息、令牌等）。\n\n**仅**自行查看。\n\n应用将会冻结一段时间。</string>
 
     <string name="InuLookAndFeel">外观与样式</string>
     <string name="InuMaterial3Fabs">悬浮按钮</string>
     <string name="InuMaterial3Sections">列表项</string>
+    <string name="InuMaterial3Avatars">头像</string>
     <string name="InuTypographyAndIcons">字体与图标</string>
     <string name="InuMotion">动画</string>
     <string name="InuFormatting">格式化</string>
@@ -562,9 +641,10 @@
     <string name="InuStripTrackingParamsSourceRow">过滤器源</string>
 
     <string name="InuSimulateOom">模拟 OOM 崩溃</string>
-    <string name="InuCrashTitleError">Inugram 崩溃了: %1$s</string>
     <string name="InuCrashTitleOom">Inugram 内存不足</string>
+    <string name="InuCrashDescOom">抱歉。崩溃日志对内存不足问题帮助不大 —— 堆转储才有用。</string>
     <string name="InuCrashDescHeapDump">同时保存了堆转储。请勿分享！里面包含隐私数据！如果愿意，可以自己查看一下，并把你的发现告诉开发者——会非常有帮助。</string>
+    <string name="InuCrashOomEnableLogs">在 Inugram 设置 > 关于 中启用调试模式，以便在今后每次内存不足时生成堆转储。</string>
     <string name="InuCrashShareHeapDump">保存堆转储</string>
 
     <string name="InuDeleteOwnMessages">删除我的消息</string>
@@ -578,4 +658,12 @@
     <string name="InuDeleteOwnMessagesDone_other">已删除 %d 条消息</string>
     <string name="InuDeleteOwnMessagesError">错误: %1$s</string>
     <string name="InuDeleteOwnMessagesFloodWait">速率受限，等待 %d 秒…</string>
+    <string name="InuBiometricConfirm">生物识别确认</string>
+    <string name="InuBiometricConfirmTitle">确认你的身份</string>
+    <string name="InuBiometricConfirmDeleteChat">确认删除聊天</string>
+    <string name="InuBiometricConfirmDeleteChatInfo">删除或清空聊天前要求生物识别确认。</string>
+    <string name="InuBiometricConfirmLogout">确认登出</string>
+    <string name="InuBiometricConfirmLogoutInfo">登出账号前要求生物识别确认。</string>
+    <string name="InuBiometricAllowDeviceCredential">允许设备 PIN/图案</string>
+    <string name="InuBiometricAllowDeviceCredentialInfo">当未录入生物识别时，回退使用设备 PIN、图案或密码。</string>
 </resources>

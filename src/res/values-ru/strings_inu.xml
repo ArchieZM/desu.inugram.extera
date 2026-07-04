@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="InuOpenInDiscussion">Открыть в обсуждении</string>
+    <string name="InuBanUserConfirm">Заблокировать %1$s в этой группе?</string>
     <string name="InuSettings">Настройки Inugram</string>
     <string name="InuSettingsInfo">Что делает эта собачонка?</string>
     <string name="InuExperimental">Экспериментальное</string>
@@ -116,6 +117,7 @@
     <string name="InuChatAlwaysShowDownInfo">Даже при прокрутке вверх</string>
     <string name="InuChatTwoFingerSelect">Выделение свайпом двумя пальцами</string>
     <string name="InuChatTwoFingerSelectInfo">Проведите двумя пальцами по сообщениям, чтобы выделить/снять выделение (как в iOS)</string>
+    <string name="InuDisableBotDraftTop">Держать черновики ботов внизу</string>
     <string name="InuChatRememberAllReplies">Запоминать все нажатые ответы</string>
     <string name="InuSaveToSavedMessages">Сохранить</string>
     <string name="InuHideSuggestions">Скрыть предложения</string>
@@ -148,6 +150,8 @@
     <string name="InuInPlaceTranslation">Перевод на месте</string>
     <string name="InuTranslateWebPreviews">Переводить превью ссылок</string>
     <string name="InuKeepOriginalAfterTranslation">Показывать оригинал</string>
+    <string name="InuTranslateAutoDetectLang">Учитывать DNT в меню сообщения</string>
+    <string name="InuTranslateAutoDetectLangInfo">Если язык сообщения есть в списке "Не переводить", он определяется автоматически, а пункт меню скрывается.\nЭто может немного замедлить открытие меню.</string>
     <string name="InuTranslateInstantView">Перевести страницу</string>
     <string name="InuInstantViewShowOriginal">Показать оригинал</string>
     <string name="InuTranslating">Перевод…</string>
@@ -169,6 +173,49 @@
     <string name="InuFontDefault">По умолчанию</string>
     <string name="InuFontSystem">Системный</string>
     <string name="InuFontImportFailed">Не удалось импортировать шрифт. Убедитесь, что это файл TTF/OTF/TTC.</string>
+    <string name="InuFonts">Шрифты</string>
+    <string name="InuAppFont">Шрифт приложения</string>
+    <string name="InuAppFontInfo">Шрифт, используемый по всему интерфейсу приложения.</string>
+    <string name="InuAvailableFonts">Доступные шрифты</string>
+    <string name="InuFontsInfo">Видимые шрифты доступны в инструменте текста медиа-редактора. Перетаскивай, чтобы изменить порядок, нажми на глаз, чтобы скрыть; нажми на импортированный шрифт, чтобы удалить его.</string>
+    <string name="InuFontAdd">Добавить шрифт</string>
+    <string name="InuFontResetOrder">Сбросить порядок</string>
+    <string name="InuFontRemove">Удалить</string>
+    <string name="InuFontSetAsApp">Сделать шрифтом приложения</string>
+    <string name="InuFontHide">Скрыть</string>
+    <string name="InuFontShow">Показать</string>
+    <string name="InuFontInstall">Установить</string>
+    <string name="InuFontReinstall">Переустановить</string>
+    <string name="InuFontAddToFamily">Добавить в %1$s</string>
+    <string name="InuFontInstalled">Шрифт установлен</string>
+    <string name="InuFontOpenIn">Открыть в…</string>
+    <string name="InuFontOpenInFailed">Ни одно приложение не может открыть этот файл</string>
+    <string name="InuFontPreviewSample">Съешь ещё этих мягких французских булок, да выпей же чаю</string>
+    <string name="InuFontVariableSlant">Вариативный шрифт (%1$s)</string>
+    <string name="InuFontStyleRegular">Обычный</string>
+    <string name="InuFontStyleItalic">Курсив</string>
+    <string name="InuFontStyleItalicSuffix">%1$s Italic</string>
+    <string name="InuFontIncludeSystem">Включить системные шрифты</string>
+    <string name="InuFontIncludeSystemInfo">Показывать в списке ниже шрифты, предоставленные системой</string>
+    <string name="InuFontTagStock">Стандартный</string>
+    <string name="InuFontTagSystem">Системный</string>
+    <string name="InuFontTagCustom">Свой</string>
+    <string name="InuMonoFont">Моноширинный шрифт</string>
+    <string name="InuMonoFontInfo">Шрифт для моноширинных блоков — инлайн-кода и блоков кода.</string>
+    <string name="InuAppFontStack">Стек шрифтов</string>
+    <string name="InuAppFontStackInfo">Верхний шрифт — основной шрифт интерфейса; шрифты ниже — запасные, используются для символов (CJK и т. д.), которых нет в основном. Перетаскивай, чтобы изменить порядок.</string>
+    <string name="InuFontStackAdd">Добавить шрифт</string>
+    <string name="InuFontStackChoose">Выбрать шрифт</string>
+    <string name="InuFontStackApply">Применить и перезапустить</string>
+    <string name="InuFontStackMakePrimary">Сделать основным</string>
+    <string name="InuFontStackPrimary">Основной</string>
+    <string name="InuFontStackFallback">Запасной</string>
+    <string name="InuFontStackWarnBold">В стеке нет жирного начертания — жирный текст будет синтезирован.</string>
+    <string name="InuFontStackWarnItalic">В стеке нет курсивного начертания — курсив будет синтезирован.</string>
+    <string name="InuFontStackWarnBoldOnly">В стеке нет обычного начертания — обычный текст будет выглядеть жирным.</string>
+    <string name="InuFontStackWarnItalicOnly">В стеке нет прямого начертания — обычный текст будет выглядеть курсивом.</string>
+    <string name="InuFontStackWarnScript">Текст на %1$s не покрывается этим стеком и будет отображаться другим шрифтом.</string>
+    <string name="InuFontScriptLatin">Латиница</string>
     <string name="InuProfileIdMode">Показывать ID в профиле</string>
     <string name="InuProfileIdModeOff">Выкл.</string>
     <string name="InuProfileIdModeTelegram">Telegram ID</string>
@@ -205,6 +252,7 @@
     <string name="InuMsgDetailDate">Дата</string>
     <string name="InuMsgDetailWhenOnline">Когда онлайн</string>
     <string name="InuMsgDetailEdited">Изменено</string>
+    <string name="InuMsgDetailAutoDelete">Автоудаление</string>
     <string name="InuMsgDetailForwardFrom">Переслано от</string>
     <string name="InuMsgDetailRestrictionReason">Причина ограничения</string>
     <string name="InuMsgDetailFileName">Имя файла</string>
@@ -234,7 +282,7 @@
 
     <string name="InuProfilePhotoGradientFade">Отключить размытие фото профиля</string>
 
-    <string name="InuNonIslandUI">Не-«островной» интерфейс</string>
+    <string name="InuNonIslandUI">Классический интерфейс</string>
     <string name="InuAnimationSpeed">Скорость анимаций</string>
     <string name="InuAnimationSpeedInstant">Мгновенно</string>
     <string name="InuAnimationSpeedInfo">Примечание: пружинные анимации (нижние шторки, всплывающие окна, некоторые переходы) и часть других анимаций не затрагиваются.</string>
@@ -242,7 +290,7 @@
     <string name="InuNonIslandSharedMediaTabs">Вкладки медиа</string>
     <string name="InuNonIslandGlobalSearch">Глобальный поиск</string>
     <string name="InuNonIslandChatElements">Элементы чата</string>
-    <string name="InuNonIslandHint">«Островной» интерфейс (он же «Liquid Glass») — это новый дизайн (>12.6), явно вдохновлённый iOS. Здесь можно откатить часть этих изменений (по мере возможности).\nВероятно, остались визуальные баги — имейте в виду.</string>
+    <string name="InuNonIslandHint">Классический интерфейс откатывает часть новых (>12.6) изменений «Liquid Glass» назад к старому плоскому дизайну (по мере возможности).\nВероятно, остались визуальные баги — имейте в виду.</string>
 
     <string name="InuHideFadeView">Скрыть градиенты затухания</string>
 
@@ -282,6 +330,8 @@
     <string name="InuOldMentionIndicator">Старый индикатор упоминаний</string>
 
     <string name="InuShowForwardTime">Показывать время пересылки</string>
+    <string name="InuCompactEdited">Компактный индикатор изменения</string>
+    <string name="InuCompactEditedInfo">Показывать значок карандаша вместо надписи «изменено»</string>
 
     <string name="InuAddToStickersGifs">Добавить в стикеры/GIF</string>
     <string name="InuLongTapAction">Действие по долгому тапу</string>
@@ -290,6 +340,7 @@
     <string name="InuForwardLongTapOff">Выкл.</string>
     <string name="InuLongTapChooseMode">Спрашивать каждый раз</string>
     <string name="InuForwardNoQuote">Переслать без цитаты</string>
+    <string name="InuRepeat">Повторить</string>
     <string name="InuReplyInDms">Ответить в ЛС</string>
     <string name="InuHiddenCaptionDescription">Подписи удалены</string>
 
@@ -311,6 +362,7 @@
     <string name="InuFormattingPopupReset">Сбросить по умолчанию</string>
     <string name="InuFormattingPopupDivider">——————</string>
     <string name="InuCut">Вырезать</string>
+    <string name="InuCodeLanguage">Язык кода</string>
     <string name="InuVersion">Inugram v%1$s (на основе %2$s, сборка %3$s)</string>
 
     <string name="InuSearchFilter">Фильтр по медиа</string>
@@ -325,6 +377,7 @@
     <string name="InuSearchFilterOnlyMatches">Только совпадения</string>
     <string name="InuShowInChat">Показать в чате</string>
     <string name="InuSelectRange">Выделить диапазон</string>
+    <string name="InuPinMessagesAlert">Закрепить %1$d сообщений?</string>
     <string name="InuEventLogMediaBeforeEdit">Медиа до изменения:</string>
     <string name="InuEventLogBanConfirm">Заблокировать **%1$s**?</string>
     <string name="InuEventLogShowDiff">Показать как diff</string>
@@ -365,6 +418,10 @@
     <string name="InuBackupImportSheetChanges_few">Будет применено **%1$d** изменения к текущим настройкам.</string>
     <string name="InuBackupImportSheetChanges_many">Будет применено **%1$d** изменений к текущим настройкам.</string>
     <string name="InuBackupImportSheetChanges_other">Будет применено **%1$d** изменений к текущим настройкам.</string>
+    <string name="InuFontStyles_one">%1$d стиль</string>
+    <string name="InuFontStyles_few">%1$d стиля</string>
+    <string name="InuFontStyles_many">%1$d стилей</string>
+    <string name="InuFontStyles_other">%1$d стиля</string>
     <string name="InuBackupImportSheetApply">Да, применить</string>
     <string name="InuBackupImportSheetCancel">Нет, оставить как есть</string>
     <string name="InuCloudSync">Синхронизация настроек</string>
@@ -396,6 +453,7 @@
     <string name="InuCopyCallbackData">Копировать Callback-данные</string>
     <string name="InuCallbackDataCopied">Callback-данные скопированы</string>
     <string name="InuNetwork">Сеть</string>
+    <string name="InuAutoDisableProxyOnVpn">Отключать прокси при активном VPN</string>
     <string name="InuFasterDownloads">Ускорение скачивания</string>
     <string name="InuFasterUploads">Ускорение выгрузки</string>
     <string name="InuFasterTransfersInfo">Увеличивает размер чанка и количество параллельных запросов. Может улучшить скорость, но может и навредить (особенно для пользователей без Premium)</string>
@@ -427,7 +485,19 @@
     <string name="InuPasscodePanicInfo">Когда введён на экране блокировки, паник-код разлогинивает все согласившиеся аккаунты и оставляет приложение заблокированным.</string>
     <string name="InuMessageMenuOrder">Меню сообщения</string>
     <string name="InuMessageMenuItems">Пункты</string>
-    <string name="InuMessageMenuOrderInfo">Переставь или скрой пункты в контекстном меню сообщения. Перетаскивай ручку для перестановки, используй переключатель чтобы скрыть.</string>
+    <string name="InuMessageMenuBottomGroup">Строка быстрых действий</string>
+    <string name="InuMessageMenuBottomRow">Показывать строку быстрых действий</string>
+    <string name="InuMessageMenuBottomRowInfo">Легкодоступная строка быстрых действий в меню сообщения.</string>
+    <string name="InuMessageMenuQuickActionsPlacement">Расположение</string>
+    <string name="InuPlacementTop">Сверху</string>
+    <string name="InuPlacementBottom">Снизу</string>
+    <string name="InuMessageMenuOrderInfo">Переставь или скрой пункты в контекстном меню сообщения. Перетаскивай ручку для перестановки, нажми чтобы показать/скрыть.</string>
+    <string name="InuMessageMenuOrderInfoBottom">Зажми пункт, чтобы переместить его в строку быстрых действий</string>
+    <string name="InuMenuSlotDelete">Удалить / Копировать ссылку</string>
+    <string name="InuMenuSlotEditForward">Изменить / Переслать</string>
+    <string name="InuMenuMoveToBottomRow">Переместить в строку быстрых действий</string>
+    <string name="InuMenuMoveFromBottomRow">Вернуть в меню</string>
+    <string name="InuMenuBottomRowFull">Строка быстрых действий заполнена (макс. 4)</string>
     <string name="InuMessageMenuReset">Сбросить по умолчанию</string>
     <string name="InuPrivacySecurity">Конфиденциальность и безопасность</string>
     <string name="InuPerAccountPasscode">Код-пароль для каждого аккаунта</string>
@@ -438,6 +508,8 @@
     <string name="InuParanoiaDisguiseInfo">Меняются только иконка и имя в лаунчере. Из-за ограничений Android уведомления и имя внутри приложения по-прежнему показывают «Inugram».</string>
     <string name="InuParanoiaMode">Режим паранойи</string>
     <string name="InuParanoiaModeInfo">Режим паранойи позволяет «подготовиться» к тому, что кто-то заглянет в ваш телефон: он скрывает любые «опасные» чаты и при желании маскирует приложение под стандартное.</string>
+    <string name="InuParanoiaLauncherShortcut">Ярлык на иконке лаунчера</string>
+    <string name="InuParanoiaLauncherShortcutInfo">Добавляет ярлык по долгому нажатию на иконку приложения для быстрого входа в режим паранойи. Скрыт, пока режим активен.</string>
     <string name="InuParanoiaSelect">Чаты для скрытия</string>
     <string name="InuParanoiaSelectInfo">Секретные чаты скрываются всегда. Служебные чаты остаются видимыми.</string>
     <string name="InuParanoiaCount">%1$d чатов</string>
@@ -459,6 +531,7 @@
     <string name="InuNavigationDrawerInfo">Заменяет нижнюю панель вкладок на боковое меню, как в старых версиях. Требуется перезапуск.</string>
     <string name="InuMaterial3">Material Design 3</string>
     <string name="InuMaterial3Switches">Переключатели</string>
+    <string name="InuMaterial3Avatars">Аватары</string>
     <string name="InuMonetTheme">Monet тема</string>
     <string name="InuMonetThemeDisabled">Отключено</string>
     <string name="InuMonetThemeLight">Светлая</string>
@@ -489,6 +562,10 @@
     <string name="InuBlockedMessagesModeOff">Выкл.</string>
     <string name="InuBlockedMessagesModeSpoiler">Спойлер</string>
     <string name="InuBlockedMessagesModeHide">Скрывать</string>
+    <string name="InuBlockedMessagesExtra">Также скрывать сообщения от</string>
+    <string name="InuBlockedMessagesExtraCount">%1$d собес-в</string>
+    <string name="InuHideMessages">Скрыть сообщения</string>
+    <string name="InuShowHiddenMessages">Показать сообщения</string>
     <string name="InuSpoilers">Спойлеры</string>
     <string name="InuDisableVolumePlayVideo">Отключить запуск видео клавишами громкости</string>
     <string name="InuDisableVolumePlayVideoInfo">Не запускать видимое видео со звуком при нажатии клавиш громкости в чате</string>
@@ -502,6 +579,7 @@
     <string name="InuNotificationIconTelegram">Telegram</string>
     <string name="InuNotificationIconInugram">Inugram</string>
     <string name="InuNothingToTranslate">Нет сообщений для перевода.</string>
+    <string name="InuAlreadyInTargetLanguage">Это сообщение уже на %1$s.</string>
     <string name="InuVoiceRecorder">Запись голоса / кружочков</string>
     <string name="InuSummarize">Пересказ</string>
     <string name="InuHiddenSendersAndCaptionDescription">Имена отправителей и подписи удалены</string>
@@ -530,9 +608,9 @@
     <string name="InuCrashNotifTitle">Inugram упал</string>
     <string name="InuCrashNotifText">Нажмите для перезапуска</string>
 
-    <string name="InuLogs">Логи</string>
-    <string name="InuLogsEnabled">Включить логи</string>
-    <string name="InuLogsSize">Размер: %1$s</string>
+    <string name="InuLogs">Отладка</string>
+    <string name="InuLogsEnabled">Режим отладки</string>
+    <string name="InuLogsSize">Размер логов: %1$s</string>
     <string name="InuLogsShare">Поделиться логами</string>
     <string name="InuLogsShareZip">Все логи (.zip)</string>
     <string name="InuLogsShareCurrent">Текущий лог (.txt)</string>
@@ -541,6 +619,10 @@
     <string name="InuLogsShareError">Не удалось упаковать логи</string>
     <string name="InuLogsCopySystemInfo">Копировать системную информацию</string>
     <string name="InuLogsSystemInfoCopied">Системная информация скопирована в буфер обмена</string>
+    <string name="InuLogsHeapUsage">Куча: %1$s / %2$s</string>
+    <string name="InuLogsMakeHeapDump">Сделать хипдамп</string>
+    <string name="InuLogsMakingHeapDump">Создание хипдампа…</string>
+    <string name="InuLogsHeapDumpWarning">**НИКОГДА** не делись полученным файлом .hprof ни с кем — это снимок памяти приложения, и он **содержит чувствительную информацию** (сообщения, токены и т. д.).\n\nИзучай его **ТОЛЬКО** сам.\n\nПриложение ненадолго зависнет.</string>
 
     <string name="InuLookAndFeel">Внешний вид и стиль</string>
     <string name="InuMaterial3Fabs">Плавающие кнопки</string>
@@ -566,8 +648,9 @@
     <string name="InuStripTrackingParamsSourceRow">Источник фильтра</string>
 
     <string name="InuSimulateOom">Симулировать OOM-краш</string>
-    <string name="InuCrashTitleError">Inugram упал: %1$s</string>
     <string name="InuCrashTitleOom">Inugram исчерпал память</string>
+    <string name="InuCrashDescOom">Извиняемся. Логи краша не очень полезны при нехватке памяти — тут помогает хипдамп.</string>
+    <string name="InuCrashOomEnableLogs">Включи режим отладки в Настройках Inugram > О приложении, чтобы создавать хипдамп при каждом будущем OOM.</string>
     <string name="InuCrashDescHeapDump">Также сохранён дамп кучи. НЕ ОТПРАВЛЯЙТЕ ЕГО! Он содержит личные данные! Можете посмотреть его сами и поделиться находками — это сильно поможет.</string>
     <string name="InuCrashShareHeapDump">Сохранить дамп кучи</string>
 
@@ -586,4 +669,12 @@
     <string name="InuDeleteOwnMessagesDone_other">Удалено %d сообщений</string>
     <string name="InuDeleteOwnMessagesError">Ошибка: %1$s</string>
     <string name="InuDeleteOwnMessagesFloodWait">Лимит запросов, ожидаем %d с…</string>
+    <string name="InuBiometricConfirm">Биометрическое подтверждение</string>
+    <string name="InuBiometricConfirmTitle">Подтверди личность</string>
+    <string name="InuBiometricConfirmDeleteChat">Подтверждать удаление чатов</string>
+    <string name="InuBiometricConfirmDeleteChatInfo">Запрашивать биометрическое подтверждение перед удалением или очисткой чата.</string>
+    <string name="InuBiometricConfirmLogout">Подтверждать выход из аккаунта</string>
+    <string name="InuBiometricConfirmLogoutInfo">Запрашивать биометрическое подтверждение перед выходом из аккаунта.</string>
+    <string name="InuBiometricAllowDeviceCredential">Разрешить PIN/графический ключ устройства</string>
+    <string name="InuBiometricAllowDeviceCredentialInfo">Использовать PIN, графический ключ или пароль устройства, если биометрия не настроена.</string>
 </resources>
