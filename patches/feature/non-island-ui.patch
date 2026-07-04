@@ -6,7 +6,7 @@ Subject: non-island ui in various parts of the app
 ---
  .../org/telegram/ui/ActionBar/ActionBar.java  |  38 +++--
  .../telegram/ui/ChannelAdminLogActivity.java  |  21 ++-
- .../java/org/telegram/ui/ChatActivity.java    |  92 +++++++----
+ .../java/org/telegram/ui/ChatActivity.java    |  96 +++++++-----
  .../ui/Components/ChatActivityEnterView.java  |  27 ++--
  ...ChatActivityEnterViewAnimatedIconView.java |  17 +-
  .../ChatActivityTopPanelLayout.java           |  16 +-
@@ -35,7 +35,7 @@ Subject: non-island ui in various parts of the app
  .../java/org/telegram/ui/bots/BotAdView.java  |   2 +-
  .../ui/bots/BotCommandsMenuContainer.java     |   4 +-
  .../bots/ChatAttachAlertBotWebViewLayout.java |   5 +-
- 31 files changed, 569 insertions(+), 209 deletions(-)
+ 31 files changed, 571 insertions(+), 211 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBar.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBar.java
 index 0000000..0000000 100644
@@ -214,6 +214,15 @@ index 0000000..0000000 100644
                          int left = dp(noAvatar ? 3 : 51);
                          if (isSideMenued()) {
                              left = lerp(left, dp(SIDE_MENU_WIDTH), getSideMenuAlpha());
+@@ -6386,7 +6388,7 @@ public class ChatActivity extends BaseFragment implements
+             chatListView.setClipChildren(false);
+         }
+         chatListView.setAnimateEmptyView(true, RecyclerListView.EMPTY_VIEW_ANIMATION_TYPE_ALPHA_SCALE);
+-        chatListView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
++        chatListView.setScrollBarStyle(NonIslandHelper.chatElements() ? View.SCROLLBARS_INSIDE_OVERLAY : View.SCROLLBARS_OUTSIDE_OVERLAY);
+         chatListViewPaddingsAnimator = new ChatListViewPaddingsAnimator(chatListView);
+         chatListViewPaddingTop = 0;
+         paddingTopHeight = 0;
 @@ -7742,7 +7744,7 @@ public class ChatActivity extends BaseFragment implements
                  .setColorProvider(BlurredBackgroundProviderImpl.topPanelChatActivity(resourceProvider))
                  .setRadius(dp(18)).setPadding(dp(7f)));
@@ -361,7 +370,7 @@ index 0000000..0000000 100644
              paddingBottom = AndroidUtilities.navigationBarHeight;
          } else {
 -            paddingBottom = blurredViewBottomOffset + dp(9 + 7)
-+            paddingBottom = blurredViewBottomOffset + dp(9 + (NonIslandHelper.chatElements() ? 0 : 7))
++            paddingBottom = blurredViewBottomOffset + dp(NonIslandHelper.chatElements() ? 3 : 9 + 7)
                  + inputIslandHeightCurrent
                  + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
                  + windowInsetsStateHolder.getAnimatedMaxBottomInset();
@@ -457,6 +466,15 @@ index 0000000..0000000 100644
              }
          } else {
              int size = selectedMessagesIds[0].size() + selectedMessagesIds[1].size();
+@@ -19947,7 +19960,7 @@ public class ChatActivity extends BaseFragment implements
+                 }
+                 object.clipTopAddition = (int) (chatListViewPaddingTop - chatListViewPaddingVisibleOffset - AndroidUtilities.dp(4));
+                 object.clipBottomAddition = (int) (blurredViewBottomOffset
+-                    + dp(9)
++                    + dp(NonIslandHelper.chatElements() ? 0 : 9)
+                     + windowInsetsStateHolder.getAnimatedMaxBottomInset()
+                     + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
+                     + inputIslandHeightCurrent);
 @@ -29652,7 +29665,7 @@ public class ChatActivity extends BaseFragment implements
  
                  return Math.round(windowInsetsStateHolder.getAnimatedMaxBottomInset()

@@ -379,9 +379,7 @@ object MonetHelper {
 
     @JvmStatic
     fun getAvatarTextColor(fallback: Int, background: Int, background2: Int): Int {
-        if (!InuConfig.MATERIAL3_AVATARS.value) return fallback
-        val isMonet = Theme.getActiveTheme()?.inu_isMonet() == true
-        if (!isMonet && !Theme.isCurrentThemeDark()) return fallback
+        if (!InuConfig.MATERIAL3_AVATARS.value || !(Theme.getActiveTheme()?.inu_isMonetNight() ?: false)) return fallback
         val cacheKey = (background.toLong() shl 32) or (background2.toLong() and 0xFFFFFFFFL)
         return avatarTextColorCache.getOrPut(cacheKey) {
             try {

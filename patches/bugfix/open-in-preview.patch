@@ -22,7 +22,7 @@ index 0000000..0000000 100644
          if (getParentActivity() == null || getContext() == null) {
              return;
          }
-@@ -20289,6 +20289,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -20291,6 +20291,7 @@ public class ChatActivity extends BaseFragment implements
                  }
                  currentPicturePath = null;
              } else if (requestCode == 1) {

@@ -4,9 +4,9 @@ Date: Fri, 10 Apr 2026 01:21:49 +0300
 Subject: disable channel bottom bar (mute and join buttons)
 
 ---
- .../java/org/telegram/ui/ChatActivity.java    | 28 +++++++++++++++----
+ .../java/org/telegram/ui/ChatActivity.java    | 36 ++++++++++++++-----
  .../chat/ChatInputViewsContainer.java         |  4 ++-
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ 2 files changed, 30 insertions(+), 10 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
 index 0000000..0000000 100644
@@ -82,7 +82,30 @@ index 0000000..0000000 100644
  
                          float clipTop = 0, clipBottom = 0;
                          if (mentionContainer != null) {
-@@ -21907,7 +21915,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -19984,6 +19992,9 @@ public class ChatActivity extends BaseFragment implements
+                     + windowInsetsStateHolder.getAnimatedMaxBottomInset()
+                     + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
+                     + inputIslandHeightCurrent);
++                if (ChatHelper.shouldForceHideBottomBar(ChatActivity.this)) {
++                    object.clipBottomAddition -= windowInsetsStateHolder.getAnimatedMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 0 : 9);
++                }
+                 return object;
+             }
+         }
+@@ -20177,10 +20188,9 @@ public class ChatActivity extends BaseFragment implements
+                 object.radius = imageReceiver.getRoundRadius(true);
+                 object.clipTopAddition = (int) (chatListViewPaddingTop - chatListViewPaddingVisibleOffset - AndroidUtilities.dp(4));
+                 object.clipBottomAddition = (int) (blurredViewBottomOffset
+-                    + dp(9)
+-                    + windowInsetsStateHolder.getAnimatedMaxBottomInset()
+                     + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
+-                    + inputIslandHeightCurrent);
++                    + inputIslandHeightCurrent
++                    + (ChatHelper.shouldForceHideBottomBar(ChatActivity.this) ? 0 : windowInsetsStateHolder.getAnimatedMaxBottomInset() + dp(NonIslandHelper.chatElements() ? 0 : 9)));
+                 return object;
+             }
+             return null;
+@@ -21907,7 +21917,7 @@ public class ChatActivity extends BaseFragment implements
                  updateTopPanel(true);
              }
              if (headerItem != null) {
@@ -91,7 +114,7 @@ index 0000000..0000000 100644
              }
          } else if (id == NotificationCenter.didReceiveNewMessages) {
              FileLog.d("ChatActivity didReceiveNewMessages start");
-@@ -27588,7 +27596,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -27588,7 +27598,10 @@ public class ChatActivity extends BaseFragment implements
  
          boolean accentTextButton = false;
          boolean forceVisible = false;
@@ -103,7 +126,7 @@ index 0000000..0000000 100644
          boolean showGiftButton = false;
          boolean showSuggestButton = false;
          boolean showSearchButton = chatMode == MODE_DEFAULT && ChatObject.isChannelOrGiga(currentChat);
-@@ -27664,6 +27675,11 @@ public class ChatActivity extends BaseFragment implements
+@@ -27664,6 +27677,11 @@ public class ChatActivity extends BaseFragment implements
                  bottomOverlayChatText.setTag(null);
                  bottomOverlayChatText.setText(LocaleController.getString(R.string.HidePinnedMessagesNoCaps));
              }
@@ -115,7 +138,7 @@ index 0000000..0000000 100644
              showBottomOverlayProgress(false, false);
          } else if (currentUser != null && currentUser.id == UserObject.VERIFY) {
              if (!getMessagesController().isDialogMuted(dialog_id, getTopicId())) {
-@@ -46068,7 +46084,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -46068,7 +46086,7 @@ public class ChatActivity extends BaseFragment implements
              pollAddVisibility = animatorPollAddAnswerVisibility.getFloatValue();
          }
  
