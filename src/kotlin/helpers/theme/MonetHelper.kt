@@ -194,11 +194,11 @@ object MonetHelper {
         init {
             put("monetAvatarRed", -0x7ba2)
             put("monetAvatarOrange", -0x158d6)
-            put("monetAvatarViolet", -0x496b07)
-            put("monetAvatarGreen", -0x652e9c)
-            put("monetAvatarCyan", -0xa4341d)
-            put("monetAvatarBlue", -0xa35006)
-            put("monetAvatarPink", -0x7554)
+            put("monetAvatarViolet", -0x3e5f01)
+            put("monetAvatarGreen", -0x7b3ebc)
+            put("monetAvatarCyan", -0xff3e22)
+            put("monetAvatarBlue", -0x974901)
+            put("monetAvatarPink", -0x7152)
             put("monetAvatarNameRed", -0x33afb7)
             put("monetAvatarNameOrange", -0x2988de)
             put("monetAvatarNameViolet", -0x6aa325)
@@ -220,6 +220,9 @@ object MonetHelper {
     }
     private var lastMonetColor = 0
     private val peerColorCache = java.util.concurrent.ConcurrentHashMap<Int, Int>()
+    private val avatarTextColorCache = java.util.concurrent.ConcurrentHashMap<Long, Int>()
+    private const val AVATAR_TEXT_DARK_TONE = 15.0
+    private const val AVATAR_TEXT_MIN_CHROMA = 40.0
     private var overlayReceiverRegistered = false
 
     private val overlayChangeReceiver = object : BroadcastReceiver() {
@@ -370,6 +373,22 @@ object MonetHelper {
                 harmonize(color)
             } catch (_: Exception) {
                 color
+            }
+        }
+    }
+
+    @JvmStatic
+    fun getAvatarTextColor(fallback: Int, background: Int, background2: Int): Int {
+        if (!InuConfig.MATERIAL3_AVATARS.value) return fallback
+        val isMonet = Theme.getActiveTheme()?.inu_isMonet() == true
+        if (!isMonet && !Theme.isCurrentThemeDark()) return fallback
+        val cacheKey = (background.toLong() shl 32) or (background2.toLong() and 0xFFFFFFFFL)
+        return avatarTextColorCache.getOrPut(cacheKey) {
+            try {
+                val hct = Hct.fromInt(ColorUtils.blendARGB(background, background2, 0.5f))
+                Hct.from(hct.hue, max(hct.chroma, AVATAR_TEXT_MIN_CHROMA), AVATAR_TEXT_DARK_TONE).toInt()
+            } catch (_: Exception) {
+                fallback
             }
         }
     }

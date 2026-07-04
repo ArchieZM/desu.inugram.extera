@@ -33,6 +33,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
   - fabs
   - predictive back
   - lists & sections
+  - avatars (tonal on-container initials instead of white)
 - 🐶 toggle to replace profile photo bottom blur with a plain gradient fade
 - disable number rounding
 - export/import settings to/from json file
@@ -217,6 +218,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - recyclerlistview double-tap requires same view
 - dialogs list pull-to-reveal-archive glitches
 - shared media player visual glitches
+- shared media pager: fling mid-animation to chain tabs or reverse (was ignored until settled); at the edge tab the fling falls through to swipe-to-close
 - attach panel: better perf, safe close before fully open
 - paid reaction animation respects litemode
 - reaction counter shift during long-tap menu

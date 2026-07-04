@@ -6,8 +6,9 @@ Subject: monet theme, almost directly ported from NagramX
 ---
  .../messenger/MessagesController.java         | 24 +++----
  .../java/org/telegram/ui/ActionBar/Theme.java | 63 ++++++++++++++++++-
+ .../ui/Components/AvatarDrawable.java         |  2 +-
  .../java/org/telegram/ui/DialogsActivity.java |  4 ++
- 3 files changed, 77 insertions(+), 14 deletions(-)
+ 4 files changed, 78 insertions(+), 15 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 index 0000000..0000000 100644
@@ -176,6 +177,19 @@ index 0000000..0000000 100644
                                  } else {
                                      value = Utilities.parseInt(param);
                                  }
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/AvatarDrawable.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/AvatarDrawable.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/AvatarDrawable.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/AvatarDrawable.java
+@@ -563,7 +563,7 @@ public class AvatarDrawable extends Drawable {
+             return;
+         }
+         int size = bounds.width();
+-        namePaint.setColor(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_avatar_text), alpha));
++        namePaint.setColor(ColorUtils.setAlphaComponent(desu.inugram.helpers.theme.MonetHelper.getAvatarTextColor(getThemedColor(Theme.key_avatar_text), getColor(), getColor2()), alpha));
+         Paint backgroundPaint = Theme.avatar_backgroundPaint;
+         if (hasAdvancedGradient && advancedGradient != null) {
+             advancedGradient.setBounds(bounds.left, bounds.top, bounds.left + size, bounds.top + size);
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java

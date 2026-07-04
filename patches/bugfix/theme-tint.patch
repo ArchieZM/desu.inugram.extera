@@ -4,11 +4,25 @@ Date: Sat, 30 May 2026 18:26:42 +0400
 Subject: fix hardcoded usage of white color instead of theme colors
 
 ---
+ .../telegram/ui/Cells/ProfileSearchCell.java  |  2 +-
  .../Components/Premium/LimitPreviewView.java  | 31 ++++++++++++-------
  .../org/telegram/ui/ManageLinksActivity.java  |  2 ++
  .../org/telegram/ui/SettingsActivity.java     |  1 +
- 3 files changed, 23 insertions(+), 11 deletions(-)
+ 4 files changed, 24 insertions(+), 12 deletions(-)
 
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ProfileSearchCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ProfileSearchCell.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ProfileSearchCell.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ProfileSearchCell.java
+@@ -1103,7 +1103,7 @@ public class ProfileSearchCell extends BaseCell implements NotificationCenter.No
+             final float s = openButtonBounce.getScale(.06f);
+             canvas.scale(s, s, openButtonRect.centerX(), openButtonRect.centerY());
+             canvas.drawRoundRect(openButtonRect, openButtonRect.height() / 2.0f, openButtonRect.height() / 2.0f, openButtonBackgroundPaint);
+-            openButtonText.draw(canvas, x + dp(14), getHeight() / 2.0f, 0xFFFFFFFF, 1.0f);
++            openButtonText.draw(canvas, x + dp(14), getHeight() / 2.0f, Theme.getColor(Theme.key_featuredStickers_buttonText), 1.0f);
+             canvas.restore();
+         }
+     }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/Premium/LimitPreviewView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/Premium/LimitPreviewView.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/Premium/LimitPreviewView.java

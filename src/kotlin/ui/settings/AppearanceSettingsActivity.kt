@@ -67,6 +67,12 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 LocaleController.getString(R.string.InuMaterial3Sections)
             ).setChecked(InuConfig.M3_SECTIONS_STYLE.value)
         )
+        items.add(
+            UItem.asCheck(
+                TOGGLE_MATERIAL3_AVATARS,
+                LocaleController.getString(R.string.InuMaterial3Avatars)
+            ).setChecked(InuConfig.MATERIAL3_AVATARS.value)
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             items.add(
                 UItem.asButton(
@@ -241,6 +247,11 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 inu_rebuildSelf()
             }
 
+            TOGGLE_MATERIAL3_AVATARS -> {
+                val new = InuConfig.MATERIAL3_AVATARS.toggle()
+                (view as? TextCheckCell)?.isChecked = new
+            }
+
             TOGGLE_NAVIGATION_DRAWER -> {
                 val new = InuConfig.NAVIGATION_DRAWER.toggle()
                 (view as? NotificationsCheckCell)?.isChecked = new
@@ -314,6 +325,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_MATERIAL3_SWITCHES = InuUtils.generateId()
         private val TOGGLE_MATERIAL3_FABS = InuUtils.generateId()
         private val TOGGLE_M3_SECTIONS_STYLE = InuUtils.generateId()
+        private val TOGGLE_MATERIAL3_AVATARS = InuUtils.generateId()
         private val BUTTON_ICON_REPLACEMENT = InuUtils.generateId()
         private val BUTTON_NOTIFICATION_ICON = InuUtils.generateId()
         private val BUTTON_PREDICTIVE_BACK_MODE = InuUtils.generateId()
@@ -348,6 +360,7 @@ class AppearanceSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("material3-switches", R.string.InuMaterial3Switches, TOGGLE_MATERIAL3_SWITCHES),
                 SearchRegistry.Entry("material3-fabs", R.string.InuMaterial3Fabs, TOGGLE_MATERIAL3_FABS),
                 SearchRegistry.Entry("material3-sections", R.string.InuMaterial3Sections, TOGGLE_M3_SECTIONS_STYLE),
+                SearchRegistry.Entry("material3-avatars", R.string.InuMaterial3Avatars, TOGGLE_MATERIAL3_AVATARS),
                 SearchRegistry.Entry("monet-theme", R.string.InuMonetTheme, BUTTON_MONET_THEME),
                 SearchRegistry.Entry("icon-replacement", R.string.InuIconReplacement, BUTTON_ICON_REPLACEMENT),
                 SearchRegistry.Entry("notification-icon", R.string.InuNotificationIcon, BUTTON_NOTIFICATION_ICON),
