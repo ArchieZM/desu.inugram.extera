@@ -216,3 +216,4 @@ bugfix/image-filter-downsample.patch
 feature/hq-sticker-previews.patch
 bugfix/lingering-media-session.patch
 bugfix/catch-shared-media-swipe.patch
+bugfix/recyclerlist-ripple.patch
