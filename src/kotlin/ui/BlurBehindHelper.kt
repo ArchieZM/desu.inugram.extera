@@ -71,11 +71,7 @@ class BlurBehindHelper(
             contentView.drawBlurRect(canvas, y, rect, paint, isTop)
         }
         if (drawBottomDivider) {
-            val paint = Theme.dividerPaint
-            val oldAlpha = paint.alpha
-            if (!Theme.isCurrentThemeDark()) paint.alpha = 80
-            canvas.drawRect(0f, (h - AndroidUtilities.dp(1f)).toFloat(), w.toFloat(), h.toFloat(), paint)
-            if (!Theme.isCurrentThemeDark()) paint.alpha = oldAlpha
+            canvas.drawRect(0f, (h - 1).toFloat(), w.toFloat(), h.toFloat(), Theme.dividerPaint)
         }
     }
 
