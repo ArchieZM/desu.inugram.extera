@@ -148,6 +148,14 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 InuConfig.SPOILER_EXTEND_TO_LINE_END.value,
             )
         )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_LINK_PREVIEW_SPOILER,
+                R.string.InuLinkPreviewSpoiler,
+                R.string.InuLinkPreviewSpoilerInfo,
+                InuConfig.LINK_PREVIEW_SPOILER.value,
+            )
+        )
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
@@ -291,6 +299,11 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 (view as? NotificationsCheckCell)?.isChecked = new
             }
 
+            TOGGLE_LINK_PREVIEW_SPOILER -> {
+                val new = InuConfig.LINK_PREVIEW_SPOILER.toggle()
+                (view as? NotificationsCheckCell)?.isChecked = new
+            }
+
             BUTTON_MEDIA_SPOILER_MODE -> RadioItemOptions.show(
                 this, view,
                 listOf(
@@ -386,6 +399,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
         private val BUTTON_DOUBLE_TAP_OUTGOING = InuUtils.generateId()
         private val BUTTON_TEXT_SPOILER_MODE = InuUtils.generateId()
         private val TOGGLE_SPOILER_EXTEND_TO_LINE_END = InuUtils.generateId()
+        private val TOGGLE_LINK_PREVIEW_SPOILER = InuUtils.generateId()
         private val BUTTON_MEDIA_SPOILER_MODE = InuUtils.generateId()
         private val BUTTON_BLOCKED_MESSAGES_MODE = InuUtils.generateId()
         private val BUTTON_BLOCKED_MESSAGES_EXTRA = InuUtils.generateId()
@@ -430,6 +444,7 @@ class MessagesSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("double-tap-outgoing", R.string.InuOutgoingMessages, BUTTON_DOUBLE_TAP_OUTGOING),
                 SearchRegistry.Entry("text-spoiler-mode", R.string.InuTextSpoilerMode, BUTTON_TEXT_SPOILER_MODE),
                 SearchRegistry.Entry("spoiler-extend-to-line-end", R.string.InuSpoilerExtendToLineEnd, TOGGLE_SPOILER_EXTEND_TO_LINE_END),
+                SearchRegistry.Entry("link-preview-spoiler", R.string.InuLinkPreviewSpoiler, TOGGLE_LINK_PREVIEW_SPOILER),
                 SearchRegistry.Entry("media-spoiler-mode", R.string.InuMediaSpoilerMode, BUTTON_MEDIA_SPOILER_MODE),
                 SearchRegistry.Entry("blocked-messages-mode", R.string.InuBlockedMessagesMode, BUTTON_BLOCKED_MESSAGES_MODE),
                 SearchRegistry.Entry("blocked-messages-extra", R.string.InuBlockedMessagesExtra, BUTTON_BLOCKED_MESSAGES_EXTRA),

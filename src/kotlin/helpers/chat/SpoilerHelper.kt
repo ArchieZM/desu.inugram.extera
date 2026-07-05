@@ -107,24 +107,33 @@ object SpoilerHelper {
         val mode = InuConfig.MEDIA_SPOILER_MODE.value
         if (mode == InuConfig.MediaSpoilerModeItem.TELEGRAM) return false
         val photoImage = cell.photoImage
-        val left = photoImage.imageX
-        val top = photoImage.imageY
-        val right = photoImage.imageX2
-        val bottom = photoImage.imageY2
-        val clampedAlpha = photoImage.alpha.coerceIn(0f, 1f)
-        val resourcesProvider = cell.resourcesProvider
-
-        solidPaint.color = Color.BLACK
-        solidPaint.alpha = (110 * clampedAlpha).toInt().coerceIn(0, 255)
-        canvas.drawRect(left, top, right, bottom, solidPaint)
-
         // Self-destruct media (view-once / timed) carries its own stock indicator, and
         // not-yet-downloaded media draws a centered download/loading button — in both cases
         // our indicator would collide, so keep just the overlay.
         val msg = cell.messageObject
         val isSelfDestruct = msg != null && msg.needDrawBluredPreview()
         val isNotLoaded = cell.buttonState == 0 || cell.buttonState == 1
-        if (isSelfDestruct || isNotLoaded) return true
+        drawMediaSpoilerStyle(
+            canvas, mode,
+            photoImage.imageX, photoImage.imageY, photoImage.imageX2, photoImage.imageY2,
+            photoImage.alpha.coerceIn(0f, 1f), cell.resourcesProvider,
+            !isSelfDestruct && !isNotLoaded,
+        )
+        return true
+    }
+
+    @JvmStatic
+    fun drawMediaSpoilerStyle(
+        canvas: Canvas, mode: Int,
+        left: Float, top: Float, right: Float, bottom: Float,
+        clampedAlpha: Float, resourcesProvider: Theme.ResourcesProvider?,
+        drawIndicator: Boolean, scrimColor: Int = Color.BLACK,
+    ) {
+        solidPaint.color = scrimColor
+        solidPaint.alpha = (110 * clampedAlpha).toInt().coerceIn(0, 255)
+        canvas.drawRect(left, top, right, bottom, solidPaint)
+
+        if (!drawIndicator) return
 
         // Both styles borrow the stock media preloader's palette.
         val loaderColor = Theme.getColor(Theme.key_chat_mediaLoaderPhoto, resourcesProvider)
@@ -134,13 +143,12 @@ object SpoilerHelper {
         val pad = dp(8f).toFloat()
 
         if (mode == InuConfig.MediaSpoilerModeItem.CIRCLE) {
-            // Light translucent disc with a white icon: both take the (white) icon color, the disc
-            // at a low translucent alpha so the dark overlay reads through it as a light scrim, the
-            // icon fully opaque so it stays brighter than the disc.
+            // Mirror the media download button so it themes correctly (incl. Monet, where the icon
+            // color can be dark): disc in the loader background color, eye in the loader icon color.
             val radius = dp(22f).toFloat()
             if (right - left >= radius * 2 + pad && bottom - top >= radius * 2 + pad) {
-                solidPaint.color = iconColor
-                solidPaint.alpha = (24 * clampedAlpha).toInt().coerceIn(0, 255)
+                solidPaint.color = loaderColor
+                solidPaint.alpha = (Color.alpha(loaderColor) * clampedAlpha).toInt().coerceIn(0, 255)
                 canvas.drawCircle(cx, cy, radius, solidPaint)
                 eyeDrawable.let { eye ->
                     val s = dp(24f)
@@ -150,7 +158,7 @@ object SpoilerHelper {
                     eye.draw(canvas)
                 }
             }
-            return true
+            return
         }
 
         // PILL (discord-style): label inside a rounded pill.
@@ -171,7 +179,6 @@ object SpoilerHelper {
             labelPaint.alpha = (Color.alpha(iconColor) * clampedAlpha).toInt().coerceIn(0, 255)
             canvas.drawText(label, cx, cy - (fm.ascent + fm.descent) / 2f, labelPaint)
         }
-        return true
     }
 
     private val eyeDrawable: Drawable by lazy {

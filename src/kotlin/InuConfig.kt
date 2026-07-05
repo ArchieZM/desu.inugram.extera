@@ -149,6 +149,9 @@ object InuConfig {
     @JvmField
     val SPOILER_EXTEND_TO_LINE_END = BoolItem("spoiler_extend_to_line_end", false)
 
+    @JvmField
+    val LINK_PREVIEW_SPOILER = BoolItem("link_preview_spoiler", true)
+
     class MediaSpoilerModeItem : IntItem("media_spoiler_mode", PILL) {
         // Migrate the old `simple_media_spoilers` boolean toggle: on → pill, off → telegram.
         override fun read(prefs: SharedPreferences): Int {

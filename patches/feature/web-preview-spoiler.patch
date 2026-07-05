@@ -1,0 +1,103 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: alina sireneva <alina@tei.su>
+Date: Sun, 5 Jul 2026 21:15:49 +0400
+Subject: spoilers for web previews (when the link is covered with a spoiler)
+
+---
+ .../java/org/telegram/ui/Cells/ChatMessageCell.java | 13 ++++++++++++-
+ .../ui/Components/spoilers/SpoilerEffect2.java      |  2 +-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java
+@@ -1467,7 +1467,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+     private boolean drawContinueBotTopic;
+     private int pressedBotButton;
+ 
+-    private SpoilerEffect spoilerPressed;
++    public SpoilerEffect spoilerPressed;
+     private boolean isSpoilerRevealing;
+ 
+     private boolean checkFileLoad;
+@@ -1713,6 +1713,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+     private float mediaSpoilerRevealMaxRadius;
+     private SpoilerEffect2 mediaSpoilerEffect2;
+     private Integer mediaSpoilerEffect2Index;
++    public boolean inu_capturingLinkPreviewBlur;
+ 
+ //    private Drawable startsAtDrawable;
+ //    private Text startsAtText, startsAtTextShorter;
+@@ -3146,6 +3147,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+                 }
+             } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                 if (instantPressed) {
++                    if (desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.revealFromCardTap(this, lastTouchX, lastTouchY)) {} else
+                     if (documentAttachType == DOCUMENT_ATTACH_TYPE_ROUND) {
+                         if (!MediaController.getInstance().isPlayingMessage(currentMessageObject) || MediaController.getInstance().isMessagePaused()) {
+                             delegate.needPlayMessage(this, currentMessageObject, false);
+@@ -4602,6 +4604,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+                 }
+             }
+ 
++            desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.startCardReveal(this, x, y);
+             spoilerPressed = null;
+             return true;
+         }
+@@ -6414,6 +6417,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+         if (mediaSpoilerEffect2 != null) {
+             mediaSpoilerEffect2.detach(this);
+         }
++        desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.onDetached(this);
+         if (channelRecommendationsCell != null) {
+             channelRecommendationsCell.onDetachedFromWindow();
+         }
+@@ -6541,6 +6545,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+                 mediaSpoilerEffect2.attach(this);
+             }
+         }
++        desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.onAttached(this);
+         if (channelRecommendationsCell != null) {
+             channelRecommendationsCell.onAttachedToWindow();
+         }
+@@ -11268,6 +11273,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+ 
+         highlightCaptionToSetStart = highlightCaptionToSetEnd = -1;
+ 
++        desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.onMessageContent(this, hasLinkPreview);
++
+         updateFlagSecure();
+     }
+ 
+@@ -15508,6 +15515,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+                 .offsetEmoji(0, drawPhotoImageBefore ? (1f - isSmallImage()) * (dp(18) + photoImage.getImageHeight() + (siteNameLayout != null ? siteNameLayout.getLineBottom(siteNameLayout.getLineCount() - 1) : 0)) : 0)
+                 .drawBackground(canvas, AndroidUtilities.rectTmp, rad, rad, rad, alpha);
+ 
++            desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.setCardBounds(this, AndroidUtilities.rectTmp.left, AndroidUtilities.rectTmp.top, AndroidUtilities.rectTmp.right, AndroidUtilities.rectTmp.bottom, AndroidUtilities.dp(rad));
++
+             int rippleColor = linkLine.getBackgroundColor();
+             if (linkPreviewSelector == null) {
+                 linkPreviewSelector = Theme.createRadSelectorDrawable(linkPreviewSelectorColor = rippleColor, 0, 0);
+@@ -16141,6 +16150,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
+             }
+         }
+ 
++        desu.inugram.helpers.chat.LinkPreviewSpoilerHelper.drawOverlay(canvas, this);
++
+         canvas.restoreToCount(restoreCount);
+     }
+ 
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/spoilers/SpoilerEffect2.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/spoilers/SpoilerEffect2.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/spoilers/SpoilerEffect2.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/spoilers/SpoilerEffect2.java
+@@ -129,7 +129,7 @@ public class SpoilerEffect2 {
+     private final ViewGroup textureViewContainer;
+     private final TextureView textureView;
+     private SpoilerThread thread;
+-    private int width, height;
++    public int width, height;
+     public boolean destroyed;
+ 
+     private final ArrayList<View> holders = new ArrayList<>();
