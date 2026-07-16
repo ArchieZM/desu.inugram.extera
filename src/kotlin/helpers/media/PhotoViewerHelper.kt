@@ -15,6 +15,7 @@ import org.telegram.messenger.ImageLocation
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MediaController
 import org.telegram.messenger.MessageObject
+import org.telegram.messenger.MessagesController
 import org.telegram.messenger.R
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.ActionBar.ActionBarMenuItem
@@ -49,6 +50,26 @@ object PhotoViewerHelper {
             FileLoader.getInstance(msg.currentAccount).getPathToMessage(msg.messageOwner)
         }.getOrNull()
         applyFooter(dc, detectPlatform(file, isPfp = false))
+    }
+
+    @JvmStatic
+    fun getAvatarSubtitle(location: ImageLocation?, dialogId: Long, account: Int): CharSequence? {
+        if (location == null) return null
+        val userFull = if (dialogId > 0) MessagesController.getInstance(account).getUserFull(dialogId) else null
+        val photo = location.photo ?: findUserPhotoById(userFull, location.photoId) ?: return null
+        val date = LocaleController.formatDateTime(photo.date.toLong(), true)
+        val markRes = when (photo.id) {
+            (userFull?.fallback_photo as? TLRPC.TL_photo)?.id -> R.string.InuPublicPhotoMark
+            (userFull?.personal_photo as? TLRPC.TL_photo)?.id -> R.string.InuPersonalPhotoMark
+            else -> return date
+        }
+        return "$date • ${LocaleController.getString(markRes)}"
+    }
+
+    private fun findUserPhotoById(userFull: TLRPC.UserFull?, photoId: Long): TLRPC.Photo? {
+        if (userFull == null || photoId == 0L) return null
+        return listOf(userFull.profile_photo, userFull.personal_photo, userFull.fallback_photo)
+            .firstOrNull { it is TLRPC.TL_photo && it.id == photoId }
     }
 
     @JvmStatic

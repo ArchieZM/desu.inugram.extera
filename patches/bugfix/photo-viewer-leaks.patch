@@ -43,7 +43,7 @@ index 0000000..0000000 100644
                  photoPaintView.shutdown();
                  animators.add(animatorY);
                  animators.add(animatorX);
-@@ -18442,6 +18449,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -18443,6 +18450,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                  editorDoneLayout.setVisibility(View.GONE);
                  photoCropView.setVisibility(View.GONE);
              } else if (currentEditMode == EDIT_MODE_PAINT) {
@@ -57,7 +57,7 @@ index 0000000..0000000 100644
                  photoPaintView.shutdown();
                  containerView.removeView(photoPaintView.getView());
                  photoPaintView = null;
-@@ -18972,6 +18986,12 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -18973,6 +18987,12 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
              currentThumb = null;
          }
          animatingImageView.setImageBitmap(null);

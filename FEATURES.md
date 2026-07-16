@@ -142,6 +142,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - "copy photo" / "copy frame" menu actions
 - show dc + platform of the photo in menu
 - seek bar for mp4 gifs
+- mark public (fallback) / personal profile photos next to the date
 
 ## admin / event log
 
@@ -235,6 +236,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - stale video seekbar leaking onto photos in photo viewer
 - fix photo zoom/video progress resetting on message edit
 - photo viewer no longer dismissing the keyboard / jumping at end of close animation (12.8 regression)
+- missing action bar title/date and open/close animation when viewing a photo of a user who hid theirs from you (stock bug: profile photo locations carried no dc id)
 - text spoilers jittering/blinking while scrolling on high-refresh displays (12.8 regression)
 - round video recorder cancel crash when leaving chat
 - missing `Emoji.replaceEmoji` calls

@@ -4,8 +4,8 @@ Date: Sat, 11 Apr 2026 03:35:42 +0300
 Subject: "copy photo" in photo viewer
 
 ---
- .../java/org/telegram/ui/PhotoViewer.java     | 36 +++++++++++++++++--
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ .../java/org/telegram/ui/PhotoViewer.java     | 41 ++++++++++++++++---
+ 1 file changed, 36 insertions(+), 5 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java b/TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java
 index 0000000..0000000 100644
@@ -87,7 +87,15 @@ index 0000000..0000000 100644
                  if (newMessageObject.isNewGif() && allowShare && !DialogObject.isEncryptedDialog(newMessageObject.getDialogId())) {
                      menuItem.showSubItem(gallery_menu_savegif);
                  }
-@@ -15053,6 +15060,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -15048,11 +15055,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+             if (avatarsDialogId != 0) {
+                 title = DialogObject.getName(avatarsDialogId);
+                 ImageLocation imageLocation = imagesArrLocations.get(index);
+-                if (imageLocation != null && imageLocation.photo != null) {
+-                    actionBarContainer.setSubtitle(LocaleController.formatDateTime(imageLocation.photo.date, true), animated);
++                CharSequence avatarSubtitle = desu.inugram.helpers.media.PhotoViewerHelper.getAvatarSubtitle(imageLocation, avatarsDialogId, currentAccount);
++                if (avatarSubtitle != null) {
++                    actionBarContainer.setSubtitle(avatarSubtitle, animated);
                  } else {
                      actionBarContainer.setSubtitle("", animated);
                  }
@@ -95,7 +103,7 @@ index 0000000..0000000 100644
                  menuItem.showSubItem(gallery_menu_report);
              }
  
-@@ -15077,6 +15085,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -15077,6 +15086,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                  galleryGap.setVisibility(View.VISIBLE);
              }
              allowShare = !noforwards;
@@ -103,7 +111,7 @@ index 0000000..0000000 100644
              menuItem.showSubItem(gallery_menu_share);
              menuItem.checkHideMenuItem();
              groupedPhotosListView.fillList();
-@@ -15363,6 +15372,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -15363,6 +15373,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
              TL_iv.PageBlock pageBlock = pageBlocksAdapter.get(switchingToIndex);
              caption = pageBlocksAdapter.getCaption(switchingToIndex);
              isVideo = pageBlocksAdapter.isVideo(switchingToIndex);
@@ -111,7 +119,7 @@ index 0000000..0000000 100644
              if (isVideo) {
                  if (allowShare) {
                      menuItem.showSubItem(gallery_menu_openin);
-@@ -23664,6 +23674,26 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
+@@ -23664,6 +23675,26 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
          return pipItem != null && pipItem.isEnabled() && isPlaying;
      }
  
