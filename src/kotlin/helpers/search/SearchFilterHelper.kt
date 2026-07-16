@@ -3,7 +3,6 @@ package desu.inugram.helpers.search
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -57,16 +56,8 @@ class SearchFilterHelper(
             fragment.getThemedColor(Theme.key_chat_searchPanelIcons),
             PorterDuff.Mode.MULTIPLY,
         )
-        val bgCircle = GradientDrawable().apply {
-            shape = GradientDrawable.OVAL
-            setColor(fragment.getThemedColor(Theme.key_chat_messagePanelBackground))
-        }
-        b.background = LayerDrawable(
-            arrayOf(
-                bgCircle,
-                Theme.createSelectorDrawable(fragment.getThemedColor(Theme.key_actionBarActionModeDefaultSelector), 1),
-            )
-        )
+        b.background =
+            Theme.createSelectorDrawable(fragment.getThemedColor(Theme.key_actionBarActionModeDefaultSelector), 1)
         b.contentDescription = LocaleController.getString(R.string.InuSearchFilter)
         b.setOnClickListener { showMenu(b) }
         if (fragment.chatMode == ChatActivity.MODE_SEARCH) {
@@ -205,6 +196,10 @@ class SearchFilterHelper(
     private fun showMenu(anchor: View) {
         val options = ItemOptions
             .makeOptions(fragment, anchor)
+            .setScrimViewBackground(GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(fragment.getThemedColor(Theme.key_chat_messagePanelBackground))
+            })
             .setDismissWithButtons(false)
             .setMinWidth(180)
             .setGravity(Gravity.LEFT)
