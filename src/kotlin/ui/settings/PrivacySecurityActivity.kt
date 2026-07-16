@@ -6,6 +6,7 @@ import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.security.BiometricHelper
 import desu.inugram.helpers.security.ParanoiaHelper
+import desu.inugram.helpers.security.PasscodeHelper
 import desu.inugram.helpers.UrlCleanerHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
@@ -25,14 +26,21 @@ class PrivacySecurityActivity : SettingsPageActivity() {
 
     private var sourceRow: TextDetailSettingsCell? = null
 
+    override fun onResume() {
+        super.onResume()
+        listView?.adapter?.update(true)
+    }
+
     override fun fillItems(items: ArrayList<UItem>, adapter: UniversalAdapter) {
-        items.add(
-            UItem.asButton(
-                BUTTON_PASSCODE,
-                R.drawable.msg_permissions,
-                LocaleController.getString(R.string.InuPerAccountPasscode)
+        if (!PasscodeHelper.isSettingsHidden()) {
+            items.add(
+                UItem.asButton(
+                    BUTTON_PASSCODE,
+                    R.drawable.msg_permissions,
+                    LocaleController.getString(R.string.InuPerAccountPasscode)
+                )
             )
-        )
+        }
         if (!ParanoiaHelper.isParanoia()) {
             items.add(
                 UItem.asButton(
@@ -42,7 +50,7 @@ class PrivacySecurityActivity : SettingsPageActivity() {
                 )
             )
         }
-        items.add(UItem.asShadow(null))
+        if (items.isNotEmpty()) items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.PrivacyTitle)))
         items.add(

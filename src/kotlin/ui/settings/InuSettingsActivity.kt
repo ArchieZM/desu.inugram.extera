@@ -8,7 +8,6 @@ import androidx.collection.LongSparseArray
 import desu.inugram.SearchRegistry
 import desu.inugram.helpers.InuUtils
 import desu.inugram.helpers.cloud.SettingsBackupHelper
-import desu.inugram.helpers.security.PasscodeHelper
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.LocaleController
@@ -90,15 +89,13 @@ class InuSettingsActivity : SettingsPageActivity() {
                 LocaleController.getString(R.string.InuTranslator)
             )
         )
-        if (!PasscodeHelper.isSettingsHidden()) {
-            items.add(
-                UItem.asButton(
-                    BUTTON_PRIVACY,
-                    R.drawable.msg_permissions,
-                    LocaleController.getString(R.string.InuPrivacySecurity)
-                )
+        items.add(
+            UItem.asButton(
+                BUTTON_PRIVACY,
+                R.drawable.msg_permissions,
+                LocaleController.getString(R.string.InuPrivacySecurity)
             )
-        }
+        )
         items.add(UItem.asShadow(null))
 
         items.add(
