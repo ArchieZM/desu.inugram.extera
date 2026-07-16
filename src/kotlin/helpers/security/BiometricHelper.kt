@@ -37,7 +37,7 @@ object BiometricHelper {
     }
 
     @JvmStatic
-    fun gate(context: Context, enabled: Boolean, onSuccess: Runnable) {
+    fun gate(context: Context?, enabled: Boolean, onSuccess: Runnable) {
         val activity = context as? Activity
         if (!enabled || activity !is FragmentActivity || !canAuthenticate()) {
             onSuccess.run()
