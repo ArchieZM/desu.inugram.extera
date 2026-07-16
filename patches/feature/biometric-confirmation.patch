@@ -4,12 +4,63 @@ Date: Wed, 1 Jul 2026 18:07:39 +0400
 Subject: client-side biometric confirmation in various places
 
 ---
- .../java/org/telegram/ui/Components/AlertsCreator.java    | 4 ++--
- .../src/main/java/org/telegram/ui/DialogsActivity.java    | 8 ++++----
- .../src/main/java/org/telegram/ui/LogoutActivity.java     | 2 +-
- .../src/main/java/org/telegram/ui/ProfileActivity.java    | 8 ++++----
- 4 files changed, 11 insertions(+), 11 deletions(-)
+ .../src/main/java/org/telegram/ui/ChatActivity.java    | 10 ++++++----
+ .../java/org/telegram/ui/Components/AlertsCreator.java |  4 ++--
+ .../src/main/java/org/telegram/ui/DialogsActivity.java |  8 ++++----
+ .../src/main/java/org/telegram/ui/LogoutActivity.java  |  2 +-
+ .../src/main/java/org/telegram/ui/ProfileActivity.java |  8 ++++----
+ 5 files changed, 17 insertions(+), 15 deletions(-)
 
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java
+@@ -3822,12 +3822,12 @@ public class ChatActivity extends BaseFragment implements
+                         if (getThreadId() != 0) {
+                             final TLRPC.User user = getMessagesController().getUser(getThreadId());
+                             if (user != null) {
+-                                AlertsCreator.createClearDaysDialogAlert(ChatActivity.this, -1, user, currentChat, true, revoke -> {
++                                AlertsCreator.createClearDaysDialogAlert(ChatActivity.this, -1, user, currentChat, true, revoke -> desu.inugram.helpers.security.BiometricHelper.gate(getParentActivity(), desu.inugram.InuConfig.BIOMETRIC_CONFIRM_DELETE_CHAT.getValue(), () -> {
+                                     if (user.id != getThreadId()) {
+                                         return;
+                                     }
+                                     performHistoryClear(false, true);
+-                                }, getResourceProvider());
++                                }), getResourceProvider());
+                             }
+                         }
+                         return;
+@@ -3838,6 +3838,7 @@ public class ChatActivity extends BaseFragment implements
+                         AlertsCreator.createClearDaysDialogAlert(ChatActivity.this, -1, currentUser, currentChat, canDeleteHistory, new MessagesStorage.BooleanCallback() {
+                             @Override
+                             public void run(boolean revoke) {
++                                desu.inugram.helpers.security.BiometricHelper.gate(getParentActivity(), desu.inugram.InuConfig.BIOMETRIC_CONFIRM_DELETE_CHAT.getValue(), () -> {
+                                 if (revoke && (currentUser != null || canDeleteHistory)) {
+                                     getMessagesStorage().getMessagesCount(dialog_id, (count) -> {
+                                         if (count >= 50) {
+@@ -3849,11 +3850,12 @@ public class ChatActivity extends BaseFragment implements
+                                 } else {
+                                     performHistoryClear(revoke, canDeleteHistory);
+                                 }
++                                });
+                             }
+                         }, getResourceProvider());
+                         return;
+                     }
+-                    AlertsCreator.createClearOrDeleteDialogAlert(ChatActivity.this, id == clear_history, currentChat, currentUser, currentEncryptedChat != null, true, false, canDeleteHistory, (param) -> {
++                    AlertsCreator.createClearOrDeleteDialogAlert(ChatActivity.this, id == clear_history, currentChat, currentUser, currentEncryptedChat != null, true, false, canDeleteHistory, (param) -> desu.inugram.helpers.security.BiometricHelper.gate(getParentActivity(), desu.inugram.InuConfig.BIOMETRIC_CONFIRM_DELETE_CHAT.getValue(), () -> {
+                         if (id == clear_history && ChatObject.isChannel(currentChat) && (!currentChat.megagroup || ChatObject.isPublic(currentChat))) {
+                             getMessagesController().deleteDialog(dialog_id, 2, param);
+                         } else {
+@@ -3866,7 +3868,7 @@ public class ChatActivity extends BaseFragment implements
+                                 performHistoryClear(param, canDeleteHistory);
+                             }
+                         }
+-                    });
++                    }));
+                 } else if (id == share_contact) {
+                     if (currentUser == null || getParentActivity() == null) {
+                         return;
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/AlertsCreator.java
