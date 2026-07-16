@@ -40,7 +40,7 @@ index 0000000..0000000 100644
      public boolean isDocument() {
 -        return getDocument() != null && !isVideo() && !isMusic() && !isVoice() && !isAnyKindOfSticker();
 +        return getDocument() != null && !isVideo() && !isMusic() && !isVoice() && !isAnyKindOfSticker()
-+            && !(desu.inugram.InuConfig.DISABLE_MOTION_PHOTOS.getValue() && getMedia(this).live_photo);
++            && !(desu.inugram.InuConfig.DISABLE_MOTION_PHOTOS.getValue() && getMedia(this) != null && getMedia(this).live_photo);
      }
  
      public boolean isVoice() {
