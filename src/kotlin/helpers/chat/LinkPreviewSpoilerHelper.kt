@@ -1,5 +1,7 @@
 package desu.inugram.helpers.chat
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -9,7 +11,6 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Region
 import android.view.MotionEvent
-import android.view.SoundEffectConstants
 import androidx.core.graphics.ColorUtils
 import desu.inugram.InuConfig
 import org.telegram.messenger.AndroidUtilities.dpf2
@@ -32,6 +33,8 @@ object LinkPreviewSpoilerHelper {
     private class State {
         var spoilered = false
         var revealProgress = 0f
+        var revealAnimator: ValueAnimator? = null
+        var rebinding = false
         var revealX = 0f
         var revealY = 0f
         var revealMaxRadius = 0f
@@ -57,18 +60,54 @@ object LinkPreviewSpoilerHelper {
     private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val clipPath = Path()
 
+    /** whether the cover is currently painted over the card — nothing stock draws may show through it. */
     @JvmStatic
-    fun isSpoilered(cell: ChatMessageCell): Boolean =
-        InuConfig.LINK_PREVIEW_SPOILER.value && states[cell]?.spoilered == true
+    fun isCardCovered(cell: ChatMessageCell): Boolean {
+        val state = states[cell] ?: return false
+        if (!InuConfig.LINK_PREVIEW_SPOILER.value || !state.spoilered) return false
+        if (state.revealAnimator != null) return true
+        return state.revealProgress < 1f && cell.messageObject?.isSpoilersRevealed != true
+    }
+
+    /**
+     * media overlays (play button, duration, menu) outlive the cover: they stay suppressed until the
+     * reveal is committed, i.e. until the rebind re-decided autoplay. isSpoilersRevealed stands in for
+     * that — both reveal paths rebind right after setting it — and the cover animation may well end
+     * first, which would flash a play button that autoplay is about to take away.
+     */
+    @JvmStatic
+    fun shouldHideMediaOverlays(cell: ChatMessageCell): Boolean {
+        val state = states[cell] ?: return false
+        if (!InuConfig.LINK_PREVIEW_SPOILER.value || !state.spoilered) return false
+        return state.revealAnimator != null || cell.messageObject?.isSpoilersRevealed != true
+    }
+
+    /**
+     * whether the message's preview is spoilered at all, regardless of it having been revealed in the
+     * chat — list surfaces keep covering it either way, like stock does with hasMediaSpoilers().
+     */
+    @JvmStatic
+    fun hasLinkPreviewSpoiler(msg: MessageObject?): Boolean {
+        if (!InuConfig.LINK_PREVIEW_SPOILER.value || msg == null) return false
+        return isLinkCoveredBySpoiler(msg)
+    }
+
+    /** message-level gate for stock autoplay decisions, which run before the cell state is bound. */
+    @JvmStatic
+    fun isMediaCovered(msg: MessageObject?): Boolean {
+        if (msg == null || msg.isSpoilersRevealed) return false
+        return hasLinkPreviewSpoiler(msg)
+    }
 
     @JvmStatic
     fun onMessageContent(cell: ChatMessageCell, hasLinkPreview: Boolean) {
         val state = stateOf(cell)
+        if (state.rebinding) return
         val msg = cell.messageObject
-        val spoilered = InuConfig.LINK_PREVIEW_SPOILER.value && hasLinkPreview &&
-            msg != null && isLinkCoveredBySpoiler(msg)
-        state.spoilered = spoilered
-        if (!spoilered) {
+        state.spoilered = hasLinkPreview && hasLinkPreviewSpoiler(msg)
+        state.revealAnimator?.cancel()
+        state.revealAnimator = null
+        if (!state.spoilered) {
             state.revealProgress = 0f
             detachEffect2(cell, state)
             state.blurBitmap?.recycle()
@@ -77,17 +116,19 @@ object LinkPreviewSpoilerHelper {
             state.blurSrc = null
             return
         }
-        if (!msg!!.isSpoilersRevealed) {
-            state.revealProgress = 0f
+        state.revealProgress = if (msg!!.isSpoilersRevealed) 1f else 0f
+        if (state.revealProgress == 0f) {
             state.blurDirty = true
             if (cell.isAttachedToWindow) ensureEffect2(cell, state)
+        } else {
+            detachEffect2(cell, state)
         }
     }
 
     @JvmStatic
     fun onAttached(cell: ChatMessageCell) {
         val state = states[cell] ?: return
-        if (!state.spoilered || cell.messageObject?.isSpoilersRevealed != false) return
+        if (!state.spoilered || state.revealProgress >= 1f) return
         ensureEffect2(cell, state)
     }
 
@@ -110,7 +151,7 @@ object LinkPreviewSpoilerHelper {
     @JvmStatic
     fun startCardReveal(cell: ChatMessageCell, x: Float, y: Float) {
         val state = states[cell] ?: return
-        if (!state.spoilered || state.revealProgress != 0f || state.cardRect.isEmpty) return
+        if (!state.spoilered || state.revealProgress != 0f || state.revealAnimator != null || state.cardRect.isEmpty) return
         state.revealX = x
         state.revealY = y
         state.revealMaxRadius = maxReachFromPoint(state.cardRect, x, y)
@@ -121,15 +162,55 @@ object LinkPreviewSpoilerHelper {
             state.revealProgress = it.animatedValue as Float
             cell.invalidate()
         }
+        animator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                if (state.revealAnimator !== animation) return
+                state.revealAnimator = null
+                state.revealProgress = 1f
+                detachEffect2(cell, state)
+                cell.invalidate()
+            }
+        })
+        state.revealAnimator = animator
         animator.start()
+    }
+
+    /**
+     * re-runs the bind so stock re-decides autoplay for a message that is no longer covered.
+     * only safe once the text spoiler's ripple is done: the rebind rebuilds the text layout blocks,
+     * dropping the SpoilerEffect instances the ripple (and its reveal callback) is attached to.
+     */
+    private fun rebindForReveal(cell: ChatMessageCell, state: State) {
+        val msg = cell.messageObject ?: return
+        state.rebinding = true
+        try {
+            msg.forceUpdate = true
+            // the pinned/chat flags are read as fields, like stock does when revealing media spoilers:
+            // the getters answer for the pending message while a deferred bind is queued up
+            cell.setMessageContent(msg, cell.currentMessagesGroup, cell.pinnedBottom, cell.pinnedTop, cell.firstInChat, cell.lastInChatList)
+            msg.forceUpdate = false
+            // the buttons were left in their pre-autoplay state (play + download) while the card was
+            // covered, and the rebind above animates them away over the now-revealed video — snap instead
+            cell.updateButtonState(false, false, true)
+            cell.animatingDrawVideoImageButton = 0
+            cell.animatingDrawVideoImageButtonProgress = if (cell.drawVideoImageButton) 1f else 0f
+        } finally {
+            state.rebinding = false
+        }
+    }
+
+    @JvmStatic
+    fun onTextSpoilerRevealed(cell: ChatMessageCell) {
+        val state = states[cell] ?: return
+        if (!state.spoilered) return
+        rebindForReveal(cell, state)
     }
 
     @JvmStatic
     fun revealFromCardTap(cell: ChatMessageCell, x: Float, y: Float): Boolean {
         val state = states[cell] ?: return false
-        if (!isSpoilered(cell) || state.revealProgress > 0f) return false
+        if (!isCardCovered(cell) || state.revealProgress > 0f || state.revealAnimator != null) return false
         val msg = cell.messageObject ?: return false
-        if (msg.isSpoilersRevealed) return false
         val trigger = findFirstTextSpoiler(cell, msg)
         if (trigger != null) {
             cell.spoilerPressed = trigger
@@ -141,7 +222,7 @@ object LinkPreviewSpoilerHelper {
         } else {
             msg.isSpoilersRevealed = true
             startCardReveal(cell, x, y)
-            cell.playSoundEffect(SoundEffectConstants.CLICK)
+            rebindForReveal(cell, state)
             cell.invalidate()
         }
         return true
@@ -167,11 +248,8 @@ object LinkPreviewSpoilerHelper {
     @JvmStatic
     fun drawOverlay(canvas: Canvas, cell: ChatMessageCell) {
         if (cell.inu_capturingLinkPreviewBlur) return
+        if (!isCardCovered(cell)) return
         val state = states[cell] ?: return
-        if (!state.spoilered || !InuConfig.LINK_PREVIEW_SPOILER.value) return
-        val msg = cell.messageObject ?: return
-        if (msg.isSpoilersRevealed && state.revealProgress >= 1f) return
-        if (msg.isSpoilersRevealed && state.revealProgress == 0f) return
         val r = state.cardRect
         if (r.isEmpty) return
 
@@ -302,33 +380,50 @@ object LinkPreviewSpoilerHelper {
     private fun isLinkCoveredBySpoiler(msg: MessageObject): Boolean {
         val media = MessageObject.getMedia(msg.messageOwner)
         val webpage = media?.webpage as? TLRPC.TL_webPage ?: return false
-        val target = normalizeUrl(webpage.url) ?: return false
         val entities = msg.messageOwner?.entities ?: return false
         val text = msg.messageOwner?.message ?: return false
         val spoilers = entities.filterIsInstance<TLRPC.TL_messageEntitySpoiler>()
         if (spoilers.isEmpty()) return false
+        val targets = setOfNotNull(normalizeUrl(webpage.url), normalizeUrl(webpage.display_url))
+
+        var matchedTarget = false
+        var anyUrl = false
+        var allCovered = true
         for (e in entities) {
-            val url = when (e) {
-                is TLRPC.TL_messageEntityTextUrl -> e.url
-                is TLRPC.TL_messageEntityUrl -> {
-                    val end = e.offset + e.length
-                    if (e.offset < 0 || end > text.length) null else text.substring(e.offset, end)
-                }
-                else -> null
-            } ?: continue
-            if (normalizeUrl(url) != target) continue
-            val end = e.offset + e.length
-            for (s in spoilers) {
-                if (e.offset >= s.offset && end <= s.offset + s.length) return true
+            val url = getEntityUrl(e, text) ?: continue
+            anyUrl = true
+            val covered = isEntityCovered(e, spoilers)
+            if (normalizeUrl(url) in targets) {
+                matchedTarget = true
+                if (covered) return true
             }
+            if (!covered) allCovered = false
         }
-        return false
+        // the preview is often generated from a url that isn't the one in the text (web preview
+        // replacements rewrite it, and media/redirect canonicalization changes it server-side),
+        // so when nothing matches it, fall back to every link in the message being spoilered
+        return !matchedTarget && anyUrl && allCovered
+    }
+
+    private fun getEntityUrl(entity: TLRPC.MessageEntity, text: String): String? = when (entity) {
+        is TLRPC.TL_messageEntityTextUrl -> entity.url
+        is TLRPC.TL_messageEntityUrl -> {
+            val end = entity.offset + entity.length
+            if (entity.offset < 0 || end > text.length) null else text.substring(entity.offset, end)
+        }
+        else -> null
+    }
+
+    private fun isEntityCovered(entity: TLRPC.MessageEntity, spoilers: List<TLRPC.TL_messageEntitySpoiler>): Boolean {
+        val end = entity.offset + entity.length
+        return spoilers.any { entity.offset >= it.offset && end <= it.offset + it.length }
     }
 
     private fun normalizeUrl(url: String?): String? {
         if (url.isNullOrEmpty()) return null
         var u = url.trim().lowercase()
         u = u.removePrefix("https://").removePrefix("http://")
+        u = u.removePrefix("www.")
         u = u.removeSuffix("/")
         return u.ifEmpty { null }
     }
