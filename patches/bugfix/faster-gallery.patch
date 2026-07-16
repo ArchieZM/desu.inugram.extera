@@ -4,8 +4,8 @@ Date: Sat, 16 May 2026 17:07:55 +0400
 Subject: faster gallery handling in attach sheet
 
 ---
- .../telegram/messenger/MediaController.java   | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ .../telegram/messenger/MediaController.java   | 40 ++++++++++++++++---
+ 1 file changed, 34 insertions(+), 6 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MediaController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MediaController.java
 index 0000000..0000000 100644
@@ -41,20 +41,26 @@ index 0000000..0000000 100644
          }
  
          @Override
-@@ -1258,6 +1259,12 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
+@@ -1258,6 +1259,18 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
              }
              scheduleReloadRunnable();
          }
 +
 +        @Override
 +        public void onChange(boolean selfChange, Uri uri, int flags) {
++            // ContentObserver.onChange(boolean, Uri, int) only exists since API 30, but some older
++            // frameworks still dispatch to this signature — super.onChange would NoSuchMethodError there.
++            if (Build.VERSION.SDK_INT < 30) {
++                onChange(selfChange);
++                return;
++            }
 +            desu.inugram.helpers.media.GalleryHelper.recordEvent(uri, flags);
 +            super.onChange(selfChange, uri, flags);
 +        }
      }
  
      private static class GalleryObserverExternal extends ContentObserver {
-@@ -1273,8 +1280,16 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
+@@ -1273,8 +1286,22 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
              }
              AndroidUtilities.runOnUIThread(refreshGalleryRunnable = () -> {
                  refreshGalleryRunnable = null;
@@ -68,12 +74,18 @@ index 0000000..0000000 100644
 +
 +        @Override
 +        public void onChange(boolean selfChange, Uri uri, int flags) {
++            // ContentObserver.onChange(boolean, Uri, int) only exists since API 30, but some older
++            // frameworks still dispatch to this signature — super.onChange would NoSuchMethodError there.
++            if (Build.VERSION.SDK_INT < 30) {
++                onChange(selfChange);
++                return;
++            }
 +            desu.inugram.helpers.media.GalleryHelper.recordEvent(uri, flags);
 +            super.onChange(selfChange, uri, flags);
          }
      }
  
-@@ -6369,6 +6384,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
+@@ -6369,6 +6396,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
              allPhotosAlbumEntry = allPhotosAlbumFinal;
              allMediaAlbumEntry = allMediaAlbumFinal;
              allVideosAlbumEntry = allVideosAlbumFinal;
