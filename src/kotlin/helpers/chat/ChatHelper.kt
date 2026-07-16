@@ -86,6 +86,8 @@ object ChatHelper {
     const val OPTION_REMOVE_FROM_CACHE = 512
     const val OPTION_COPY_MEDIA = 513
     const val OPTION_REPEAT = 514
+    const val OPTION_REPEAT_COPY = 515
+    const val OPTION_REPEAT_FORWARD = 516
 
     @JvmStatic
     fun timeAdditionsHash(msg: MessageObject?): Int {
@@ -249,7 +251,7 @@ object ChatHelper {
         }
 
         if (isMenuItemEnabled(MessageMenuConfig.Item.REPEAT) &&
-            canRepeatMessage(activity, selectedObject, selectedObjectGroup, noforwards)
+            canRepeatMessage(activity, selectedObject, selectedObjectGroup)
         ) {
             items.add(LocaleController.getString(R.string.InuRepeat))
             options.add(OPTION_REPEAT)
@@ -452,7 +454,11 @@ object ChatHelper {
                     alpha = 0.4f
                 } else {
                     ScaleStateListAnimator.apply(this, .1f, 1.5f)
-                    setOnClickListener { activity.processSelectedOption(option) }
+                    setOnClickListener {
+                        if (!onMenuOptionClick(activity, popupLayout, it, option, selectedObject, selectedObjectGroup)) {
+                            activity.processSelectedOption(option)
+                        }
+                    }
                     setOnLongClickListener {
                         onMenuOptionLongClick(activity, popupLayout, it, options, index, selectedObject, selectedObjectGroup)
                     }
@@ -566,7 +572,16 @@ object ChatHelper {
 
             OPTION_SHOW_IN_CHAT -> openInNewChat(activity, activity.dialogId, selectedObject.id)
 
-            OPTION_REPEAT -> repeatMessage(activity, selectedObject, selectedObjectGroup)
+            OPTION_REPEAT -> {
+                val available = availableRepeatModes(activity, selectedObject, selectedObjectGroup)
+                val preferred = InuConfig.REPEAT_MODE.value
+                val mode = if (preferred in available) preferred else available.firstOrNull() ?: return true
+                repeatMessage(activity, selectedObject, selectedObjectGroup, mode == InuConfig.RepeatModeItem.COPY)
+            }
+
+            OPTION_REPEAT_COPY -> repeatMessage(activity, selectedObject, selectedObjectGroup, true)
+
+            OPTION_REPEAT_FORWARD -> repeatMessage(activity, selectedObject, selectedObjectGroup, false)
 
             OPTION_COPY_MEDIA -> {
                 val file = mediaFileForCopy(activity.currentAccount, selectedObject)
@@ -587,15 +602,33 @@ object ChatHelper {
         activity: ChatActivity,
         selected: MessageObject,
         group: MessageObject.GroupedMessages?,
-        noforwards: Boolean,
     ): Boolean {
         if (activity.chatMode != ChatActivity.MODE_DEFAULT) return false
         if (activity.currentEncryptedChat != null) return false
         val chat = activity.currentChat
         if (chat != null && !ChatObject.canSendMessages(chat)) return false
         if (selected.id <= 0 || selected.isSponsored || selected.isExpiredStory) return false
-        if (noforwards) return repeatCopyTarget(activity, selected, group) != null
-        return selected.canForwardMessage()
+        return availableRepeatModes(activity, selected, group).isNotEmpty()
+    }
+
+    /** [InuConfig.RepeatModeItem] COPY/FORWARD values usable for this message, in menu order */
+    private fun availableRepeatModes(
+        activity: ChatActivity,
+        selected: MessageObject,
+        group: MessageObject.GroupedMessages?,
+    ): List<Int> {
+        val canForward = canForwardRepeat(activity, selected)
+        val modes = ArrayList<Int>(2)
+        if (canForward || repeatCopyTarget(activity, selected, group) != null) {
+            modes.add(InuConfig.RepeatModeItem.COPY)
+        }
+        if (canForward) modes.add(InuConfig.RepeatModeItem.FORWARD)
+        return modes
+    }
+
+    private fun canForwardRepeat(activity: ChatActivity, selected: MessageObject): Boolean {
+        val noforwards = activity.isPeerNoForwards || selected.messageOwner?.noforwards == true
+        return !noforwards && selected.canForwardMessage()
     }
 
     private fun repeatCopyTarget(
@@ -620,9 +653,9 @@ object ChatHelper {
         activity: ChatActivity,
         selected: MessageObject,
         group: MessageObject.GroupedMessages?,
+        copy: Boolean,
     ) {
-        val noforwards = activity.isPeerNoForwards || selected.messageOwner?.noforwards == true
-        if (noforwards) {
+        if (copy && !canForwardRepeat(activity, selected)) {
             val target = repeatCopyTarget(activity, selected, group) ?: return
             val helper = SendMessagesHelper.getInstance(activity.currentAccount)
             if (target.isAnyKindOfSticker) {
@@ -643,7 +676,7 @@ object ChatHelper {
             return
         }
         val messages = group?.messages?.let { ArrayList<MessageObject>(it) } ?: arrayListOf(selected)
-        activity.forwardMessages(messages, true, false, true, 0, 0L)
+        activity.forwardMessages(messages, copy, false, true, 0, 0L)
     }
 
     // photo → full cached photo file; video/gif/round → cached poster thumb (matches photo viewer's "copy frame" intent).
@@ -1091,6 +1124,31 @@ object ChatHelper {
         return LocaleController.getString(res)
     }
 
+    /** @return true if the fork consumed the click (stock must not process the option) */
+    @JvmStatic
+    fun onMenuOptionClick(
+        activity: ChatActivity,
+        popupLayout: ActionBarPopupWindow.ActionBarPopupWindowLayout,
+        cell: View,
+        option: Int,
+        message: MessageObject?,
+        group: MessageObject.GroupedMessages?,
+    ): Boolean {
+        if (message == null) return false
+        if (option != OPTION_REPEAT) return false
+        if (InuConfig.REPEAT_MODE.value != InuConfig.RepeatModeItem.ASK) return false
+        // with a single mode available there's nothing to ask about
+        if (availableRepeatModes(activity, message, group).size < 2) return false
+        return openLongTapSubmenu(activity, popupLayout, cell) { swb ->
+            swb.add(R.drawable.msg_copy, LocaleController.getString(R.string.Copy)) {
+                activity.processSelectedOption(OPTION_REPEAT_COPY)
+            }
+            swb.add(R.drawable.msg_forward, LocaleController.getString(R.string.Forward)) {
+                activity.processSelectedOption(OPTION_REPEAT_FORWARD)
+            }
+        }
+    }
+
     @JvmStatic
     fun onMenuOptionLongClick(
         activity: ChatActivity,
@@ -1134,6 +1192,22 @@ object ChatHelper {
                 }
 
                 else -> false
+            }
+
+            // tap repeats in the configured mode, long-tap in the other one (ask mode already offers both)
+            OPTION_REPEAT -> {
+                val preferred = InuConfig.REPEAT_MODE.value
+                if (preferred == InuConfig.RepeatModeItem.ASK) return false
+                val opposite = if (preferred == InuConfig.RepeatModeItem.COPY) {
+                    InuConfig.RepeatModeItem.FORWARD
+                } else {
+                    InuConfig.RepeatModeItem.COPY
+                }
+                if (opposite !in availableRepeatModes(activity, message, group)) return false
+                activity.processSelectedOption(
+                    if (opposite == InuConfig.RepeatModeItem.COPY) OPTION_REPEAT_COPY else OPTION_REPEAT_FORWARD
+                )
+                true
             }
 
             ChatActivity.OPTION_REPLY -> {

@@ -35,7 +35,12 @@ abstract class MenuOrderActivity<I : MenuOrderItem> : SettingsPageActivity() {
     protected abstract val headerStringRes: Int
     protected abstract val resetStringRes: Int
 
-    data class SubCell(val label: CharSequence, val value: CharSequence, val onClick: (MenuOrderRow) -> Unit)
+    data class SubCell(
+        val label: CharSequence,
+        val value: CharSequence,
+        val note: CharSequence? = null,
+        val onClick: (MenuOrderRow) -> Unit,
+    )
 
     /** override to attach a long-tap sub-cell to a row (e.g. Reply / Forward long-tap pickers) */
     protected open fun subCell(item: I): SubCell? = null
@@ -127,7 +132,7 @@ abstract class MenuOrderActivity<I : MenuOrderItem> : SettingsPageActivity() {
         row.setChecked(entry.enabled)
         val sub = subCell(entry.item)
         val heightDp = if (sub != null) {
-            row.setSubCell(sub.label, sub.value)
+            row.setSubCell(sub.label, sub.value, sub.note)
             row.mainHeightDp + row.subHeightDp
         } else {
             row.clearSubCell()
@@ -272,7 +277,7 @@ class MenuOrderRow(context: Context) : LinearLayout(context) {
         handle.setOnTouchListener(listener)
     }
 
-    fun setSubCell(label: CharSequence, value: CharSequence): TextCell {
+    fun setSubCell(label: CharSequence, value: CharSequence, note: CharSequence? = null): TextCell {
         val cell = sub ?: TextCell(context).also {
             sub = it
             it.setPrioritizeTitleOverValue(true)
@@ -285,6 +290,7 @@ class MenuOrderRow(context: Context) : LinearLayout(context) {
             addView(wrapper, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, subHeightDp))
         }
         cell.setTextAndValue(label, value, false, false)
+        cell.setSubtitle(note)
         return cell
     }
 

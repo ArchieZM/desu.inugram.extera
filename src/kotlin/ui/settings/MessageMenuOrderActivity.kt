@@ -125,17 +125,18 @@ class MessageMenuOrderActivity : MenuOrderActivity<MessageMenuConfig.Item>() {
     }
 
     override fun subCell(item: MessageMenuConfig.Item): SubCell? {
-        val cfg = LONG_TAP_CONFIGS[item] ?: return null
+        val cfg = SUB_PICKERS[item] ?: return null
         val labelRes = cfg.options.firstOrNull { it.first == cfg.getter() }?.second
             ?: cfg.options.first().second
         return SubCell(
-            label = LocaleController.getString(R.string.InuLongTapAction),
+            label = LocaleController.getString(cfg.labelRes),
             value = LocaleController.getString(labelRes),
-            onClick = { row -> showLongTapPicker(cfg, row) },
+            note = cfg.note?.invoke(),
+            onClick = { row -> showSubPicker(cfg, row) },
         )
     }
 
-    private fun showLongTapPicker(cfg: LongTapConfig, row: MenuOrderRow) {
+    private fun showSubPicker(cfg: SubPickerConfig, row: MenuOrderRow) {
         val current = cfg.options.indexOfFirst { it.first == cfg.getter() }.coerceAtLeast(0)
         val anchor = row.getSubAnchor() ?: row
         RadioItemOptions.show(
@@ -146,8 +147,9 @@ class MessageMenuOrderActivity : MenuOrderActivity<MessageMenuConfig.Item>() {
             val (value, labelRes) = cfg.options.getOrNull(which) ?: return@show
             cfg.setter(value)
             row.setSubCell(
-                LocaleController.getString(R.string.InuLongTapAction),
-                LocaleController.getString(labelRes)
+                LocaleController.getString(cfg.labelRes),
+                LocaleController.getString(labelRes),
+                cfg.note?.invoke(),
             )
         }
     }
@@ -192,14 +194,18 @@ class MessageMenuOrderActivity : MenuOrderActivity<MessageMenuConfig.Item>() {
         private val HEADER_BOTTOM = InuUtils.generateId()
         private const val MAX_BOTTOM = 4
 
-        private class LongTapConfig(
+        private class SubPickerConfig(
+            val labelRes: Int,
             val options: List<Pair<Int, Int>>,
             val getter: () -> Int,
             val setter: (Int) -> Unit,
+            /** subtitle under the sub-cell; re-evaluated whenever the value changes */
+            val note: (() -> CharSequence?)? = null,
         )
 
-        private val LONG_TAP_CONFIGS: Map<MessageMenuConfig.Item, LongTapConfig> = mapOf(
-            MessageMenuConfig.Item.FORWARD to LongTapConfig(
+        private val SUB_PICKERS: Map<MessageMenuConfig.Item, SubPickerConfig> = mapOf(
+            MessageMenuConfig.Item.FORWARD to SubPickerConfig(
+                R.string.InuLongTapAction,
                 listOf(
                     InuConfig.ForwardLongTapItem.OFF to R.string.InuForwardLongTapOff,
                     InuConfig.ForwardLongTapItem.CHOOSE_MODE to R.string.InuLongTapChooseMode,
@@ -209,7 +215,8 @@ class MessageMenuOrderActivity : MenuOrderActivity<MessageMenuConfig.Item>() {
                 { InuConfig.FORWARD_LONG_TAP_ACTION.value },
                 { InuConfig.FORWARD_LONG_TAP_ACTION.value = it },
             ),
-            MessageMenuConfig.Item.REPLY to LongTapConfig(
+            MessageMenuConfig.Item.REPLY to SubPickerConfig(
+                R.string.InuLongTapAction,
                 listOf(
                     InuConfig.ReplyLongTapItem.OFF to R.string.InuForwardLongTapOff,
                     InuConfig.ReplyLongTapItem.CHOOSE_MODE to R.string.InuLongTapChooseMode,
@@ -219,6 +226,23 @@ class MessageMenuOrderActivity : MenuOrderActivity<MessageMenuConfig.Item>() {
                 { InuConfig.REPLY_LONG_TAP_ACTION.value },
                 { InuConfig.REPLY_LONG_TAP_ACTION.value = it },
             ),
+            MessageMenuConfig.Item.REPEAT to SubPickerConfig(
+                R.string.InuMenuMode,
+                listOf(
+                    InuConfig.RepeatModeItem.COPY to R.string.Copy,
+                    InuConfig.RepeatModeItem.FORWARD to R.string.Forward,
+                    InuConfig.RepeatModeItem.ASK to R.string.InuLongTapChooseMode,
+                ),
+                { InuConfig.REPEAT_MODE.value },
+                { InuConfig.REPEAT_MODE.value = it },
+                { repeatLongTapHint() },
+            ),
         )
+
+        private fun repeatLongTapHint(): CharSequence? = when (InuConfig.REPEAT_MODE.value) {
+            InuConfig.RepeatModeItem.COPY -> LocaleController.getString(R.string.InuRepeatLongTapForward)
+            InuConfig.RepeatModeItem.FORWARD -> LocaleController.getString(R.string.InuRepeatLongTapCopy)
+            else -> null
+        }
     }
 }

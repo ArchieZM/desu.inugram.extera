@@ -37,7 +37,7 @@ index 0000000..0000000 100644
          }
      }
  
-@@ -46937,4 +46947,4 @@ public class ChatActivity extends BaseFragment implements
+@@ -46940,4 +46950,4 @@ public class ChatActivity extends BaseFragment implements
          abstract void drawChatBackgroundElements(Canvas canvas, @Nullable RectF position);
          abstract void drawChatForegroundElements(Canvas canvas, @Nullable RectF position);
      }

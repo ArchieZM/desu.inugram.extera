@@ -628,6 +628,17 @@ object InuConfig {
     @JvmField
     val REPLY_LONG_TAP_ACTION = ReplyLongTapItem()
 
+    class RepeatModeItem : IntItem("repeat_mode", COPY) {
+        companion object {
+            const val COPY = 0
+            const val FORWARD = 1
+            const val ASK = 2
+        }
+    }
+
+    @JvmField
+    val REPEAT_MODE = RepeatModeItem()
+
     @JvmField
     val ANIMATION_SPEED = FloatItem("animation_speed", 1.0f)
 

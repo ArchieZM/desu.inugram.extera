@@ -57,7 +57,7 @@ index 0000000..0000000 100644
          }
  
          sideControlsButtonsLayout.showButton(ChatActivitySideControlsButtonsLayout.BUTTON_PAGE_DOWN, show, animated);
-@@ -46539,6 +46550,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -46542,6 +46553,7 @@ public class ChatActivity extends BaseFragment implements
      }
  
      private void goToNextOrPrevSearchMessage(boolean searchUp) {
@@ -65,7 +65,7 @@ index 0000000..0000000 100644
          if (chatMode == MODE_SEARCH) {
              HashtagSearchController.getInstance(currentAccount).jumpToMessage(classGuid, hashtagSearchSelectedIndex + (searchUp ? 1 : -1), searchType);
          } else {
-@@ -46599,6 +46611,12 @@ public class ChatActivity extends BaseFragment implements
+@@ -46602,6 +46614,12 @@ public class ChatActivity extends BaseFragment implements
      }
  
      private boolean onSideControlButtonOnLongClick(int buttonId, View view) {
