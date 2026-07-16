@@ -220,3 +220,4 @@ feature/web-preview-spoiler.patch
 bugfix/edit-cover-null-frame.patch
 bugfix/profile-note-npe.patch
 bugfix/webm-sticker-precache-centering.patch
+bugfix/stale-notifications.patch
