@@ -230,3 +230,4 @@ feature/profile-copy-name.patch
 feature/join-request-member-count.patch
 bugfix/folder-pins-missing-dialogs.patch
 feature/select-all-dialogs.patch
+bugfix/forward-bar-stale-count.patch

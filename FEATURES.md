@@ -260,6 +260,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - persist crop when rotating photo in photo editor
 - chat preview no longer marks visible reactions/poll votes as read
 - fix camera2api a/v sync issue in round messages
+- forward bar showing stale message count/senders after deselecting messages in the forward options sheet
 - cross-peer reply: clear stale quote so a leftover quote-reply target doesn't override the new one at send
 - phantom empty dialog rows after peeking a non-joined channel / discuss group
 - expand emoji tabs when there's enough space to fit without scrolling
