@@ -137,6 +137,12 @@
     <string name="InuFoldersUnreadCounterRegular">常规</string>
     <string name="InuFoldersUnreadCounterExcludeMuted">不含静音</string>
     <string name="InuFoldersUnreadCounterExcludeMutedNonDms">不含静音的非私聊</string>
+    <string name="InuCommunityDisplayMode">社区</string>
+    <string name="InuCommunityDisplayModeRegular">常规</string>
+    <string name="InuCommunityDisplayModeLongTap">长按打开</string>
+    <string name="InuCommunityDisplayModeLongTapInfo">点按头像的行为与普通聊天相同,长按打开社区(注意:这会替代此类聊天的聊天预览)</string>
+    <string name="InuCommunityDisplayModeInvisible">不可见</string>
+    <string name="InuCommunityDisplayModeInvisibleInfo">社区聊天显示为普通聊天,没有箭头标识和头像点按操作</string>
     <string name="InuCopyPhoto">复制照片</string>
     <string name="InuPhotoCopied">照片已复制到剪贴板</string>
     <string name="InuCopyFrame">复制帧</string>
@@ -262,6 +268,8 @@
     <string name="InuMsgDetailFileSize">文件大小</string>
     <string name="InuMsgDetailMimeType">MIME 类型</string>
     <string name="InuMsgDetailMedia">媒体</string>
+    <string name="InuMsgDetailStickerPackCreator">贴纸包创建者</string>
+    <string name="InuMsgDetailEmojiPackCreators">表情符号包创建者</string>
     <string name="InuShowJson">显示 JSON</string>
     <string name="InuRegDate">注册于: %s</string>
 

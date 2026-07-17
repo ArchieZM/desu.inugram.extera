@@ -137,6 +137,12 @@
     <string name="InuFoldersUnreadCounterRegular">Обычный</string>
     <string name="InuFoldersUnreadCounterExcludeMuted">Кроме мутов</string>
     <string name="InuFoldersUnreadCounterExcludeMutedNonDms">Кроме мутов и не из ЛС</string>
+    <string name="InuCommunityDisplayMode">Сообщества</string>
+    <string name="InuCommunityDisplayModeRegular">Обычный</string>
+    <string name="InuCommunityDisplayModeLongTap">Открывать по долгому нажатию</string>
+    <string name="InuCommunityDisplayModeLongTapInfo">Нажатие на аватар работает как в обычных чатах, долгое нажатие открывает сообщество (примечание: заменяет предпросмотр чата для таких чатов)</string>
+    <string name="InuCommunityDisplayModeInvisible">Невидимый</string>
+    <string name="InuCommunityDisplayModeInvisibleInfo">Чаты сообществ выглядят как обычные чаты, без значка со стрелкой и действия по нажатию на аватар</string>
     <string name="InuCopyPhoto">Копировать фото</string>
     <string name="InuPhotoCopied">Фото скопировано в буфер обмена</string>
     <string name="InuCopyFrame">Копировать кадр</string>
@@ -262,6 +268,8 @@
     <string name="InuMsgDetailFileSize">Размер файла</string>
     <string name="InuMsgDetailMimeType">MIME-тип</string>
     <string name="InuMsgDetailMedia">Медиа</string>
+    <string name="InuMsgDetailStickerPackCreator">Создатель набора стикеров</string>
+    <string name="InuMsgDetailEmojiPackCreators">Создатели наборов эмодзи</string>
     <string name="InuShowJson">Показать JSON</string>
     <string name="InuRegDate">Зарегистрирован: %s</string>
 

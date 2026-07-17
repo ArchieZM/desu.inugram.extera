@@ -137,6 +137,12 @@
     <string name="InuFoldersUnreadCounterRegular">通常</string>
     <string name="InuFoldersUnreadCounterExcludeMuted">ミュート除く</string>
     <string name="InuFoldersUnreadCounterExcludeMutedNonDms">ミュートと DM 以外を除く</string>
+    <string name="InuCommunityDisplayMode">コミュニティ</string>
+    <string name="InuCommunityDisplayModeRegular">通常</string>
+    <string name="InuCommunityDisplayModeLongTap">長押しで開く</string>
+    <string name="InuCommunityDisplayModeLongTapInfo">アバターのタップは通常のチャットと同様に動作し、長押しでコミュニティを開きます(注: 対象のチャットではチャットプレビューが置き換えられます)</string>
+    <string name="InuCommunityDisplayModeInvisible">非表示</string>
+    <string name="InuCommunityDisplayModeInvisibleInfo">コミュニティのチャットを、矢印バッジやアバターのタップ動作のない通常のチャットとして表示します</string>
     <string name="InuCopyPhoto">写真をコピー</string>
     <string name="InuPhotoCopied">写真をクリップボードにコピーしました</string>
     <string name="InuCopyFrame">フレームをコピー</string>
@@ -263,6 +269,8 @@
     <string name="InuMsgDetailFileSize">ファイルサイズ</string>
     <string name="InuMsgDetailMimeType">MIME タイプ</string>
     <string name="InuMsgDetailMedia">メディア</string>
+    <string name="InuMsgDetailStickerPackCreator">ステッカーパックの作成者</string>
+    <string name="InuMsgDetailEmojiPackCreators">絵文字パックの作成者</string>
     <string name="InuShowJson">JSON を表示</string>
     <string name="InuRegDate">登録日: %s</string>
 
