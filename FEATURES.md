@@ -59,6 +59,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - mutual contact icon in contacts list
 - open archive directly on pull-down (🐶 done right, without revealing the cell)
 - interactive chat preview (long-tap avatar): tappable bubbles, no tap-to-expand
+- 🐶 community display modes: regular / open on avatar long-tap / invisible
 
 ## chats
 

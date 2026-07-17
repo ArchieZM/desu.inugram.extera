@@ -187,6 +187,12 @@
     <string name="InuFoldersUnreadCounterExcludeMuted">Exclude muted</string>
     <string name="InuFoldersUnreadCounterExcludeMutedNonDms">Exclude muted non-DMs</string>
     <string name="InuHideAllChatsTab">Hide \"All Chats\" tab</string>
+    <string name="InuCommunityDisplayMode">Communities</string>
+    <string name="InuCommunityDisplayModeRegular">Regular</string>
+    <string name="InuCommunityDisplayModeLongTap">Open on long tap</string>
+    <string name="InuCommunityDisplayModeLongTapInfo">Tapping the avatar behaves like for normal chats, long tap opens the community (note: this replaces chat preview for such chats)</string>
+    <string name="InuCommunityDisplayModeInvisible">Invisible</string>
+    <string name="InuCommunityDisplayModeInvisibleInfo">Community chats look like normal chats, without the arrow badge or avatar tap action</string>
     <string name="InuCopyPhoto">Copy Photo</string>
     <string name="InuPhotoCopied">Photo copied to clipboard</string>
     <string name="InuCopyFrame">Copy Frame</string>

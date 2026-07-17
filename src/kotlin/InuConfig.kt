@@ -407,6 +407,17 @@ object InuConfig {
     @JvmField
     val HIDE_ALL_CHATS_TAB = BoolItem("hide_all_chats_tab", false)
 
+    class CommunityDisplayModeItem : IntItem("community_display_mode", REGULAR) {
+        companion object {
+            const val REGULAR = 1
+            const val LONG_TAP = 2
+            const val INVISIBLE = 3
+        }
+    }
+
+    @JvmField
+    val COMMUNITY_DISPLAY_MODE = CommunityDisplayModeItem()
+
     class StickerTimeModeItem : IntItem("sticker_time_mode", SHOW) {
         companion object {
             const val SHOW = 1;

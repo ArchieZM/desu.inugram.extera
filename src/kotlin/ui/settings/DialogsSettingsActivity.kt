@@ -84,6 +84,13 @@ class DialogsSettingsActivity : SettingsPageActivity() {
                 InuConfig.INTERACTIVE_CHAT_PREVIEW.value
             )
         )
+        items.add(
+            UItem.asButton(
+                BUTTON_COMMUNITY_DISPLAY_MODE,
+                LocaleController.getString(R.string.InuCommunityDisplayMode),
+                communityDisplayModeLabel(InuConfig.COMMUNITY_DISPLAY_MODE.value),
+            )
+        )
         items.add(UItem.asShadow(null))
         // end chat list section
 
@@ -247,6 +254,8 @@ class DialogsSettingsActivity : SettingsPageActivity() {
                 softRebuild()
             }
 
+            BUTTON_COMMUNITY_DISPLAY_MODE -> showCommunityDisplayModeSelector()
+
             BUTTON_FAB_MAIN_ACTION -> showFabActionDialog(view, InuConfig.DIALOGS_FAB_MAIN_ACTION)
             BUTTON_FAB_SECONDARY_ACTION -> showFabActionDialog(view, InuConfig.DIALOGS_FAB_SECONDARY_ACTION)
 
@@ -267,6 +276,37 @@ class DialogsSettingsActivity : SettingsPageActivity() {
                 softRebuild()
             }
         }
+    }
+
+    private fun showCommunityDisplayModeSelector() {
+        val context = context ?: return
+        val values = intArrayOf(
+            InuConfig.CommunityDisplayModeItem.REGULAR,
+            InuConfig.CommunityDisplayModeItem.LONG_TAP,
+            InuConfig.CommunityDisplayModeItem.INVISIBLE,
+        )
+        val items = listOf(
+            RadioDialogBuilder.Item(LocaleController.getString(R.string.InuCommunityDisplayModeRegular)),
+            RadioDialogBuilder.Item(
+                LocaleController.getString(R.string.InuCommunityDisplayModeLongTap),
+                LocaleController.getString(R.string.InuCommunityDisplayModeLongTapInfo),
+            ),
+            RadioDialogBuilder.Item(
+                LocaleController.getString(R.string.InuCommunityDisplayModeInvisible),
+                LocaleController.getString(R.string.InuCommunityDisplayModeInvisibleInfo),
+            ),
+        )
+        showDialog(
+            RadioDialogBuilder(context, getResourceProvider())
+                .setTitle(LocaleController.getString(R.string.InuCommunityDisplayMode))
+                .setItems(items, values.indexOf(InuConfig.COMMUNITY_DISPLAY_MODE.value).coerceAtLeast(0)) { _, which ->
+                    val newValue = values[which]
+                    if (InuConfig.COMMUNITY_DISPLAY_MODE.value == newValue) return@setItems
+                    InuConfig.COMMUNITY_DISPLAY_MODE.value = newValue
+                    listView.adapter.update(true)
+                    softRebuild()
+                }.create()
+        )
     }
 
     private fun showFabActionDialog(anchor: View, item: InuConfig.IntItem) {
@@ -299,6 +339,13 @@ class DialogsSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_FAB_LEFT_SIDE = InuUtils.generateId()
         private val TOGGLE_INTERACTIVE_CHAT_PREVIEW = InuUtils.generateId()
         private val TOGGLE_HIDE_ALL_CHATS_TAB = InuUtils.generateId()
+        private val BUTTON_COMMUNITY_DISPLAY_MODE = InuUtils.generateId()
+
+        private fun communityDisplayModeLabel(value: Int): String = when (value) {
+            InuConfig.CommunityDisplayModeItem.LONG_TAP -> LocaleController.getString(R.string.InuCommunityDisplayModeLongTap)
+            InuConfig.CommunityDisplayModeItem.INVISIBLE -> LocaleController.getString(R.string.InuCommunityDisplayModeInvisible)
+            else -> LocaleController.getString(R.string.InuCommunityDisplayModeRegular)
+        }
 
         @JvmField
         val PAGE = SearchRegistry.Page(
@@ -315,6 +362,7 @@ class DialogsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("disable-swipe-to-unarchive", R.string.InuDisableSwipeToUnarchive, TOGGLE_DISABLE_SWIPE_TO_UNARCHIVE),
                 SearchRegistry.Entry("hide-bot-webview-dialogs", R.string.InuHideBotWebView, TOGGLE_BOT_WEBVIEW_BUTTON),
                 SearchRegistry.Entry("disable-chat-preview-expand", R.string.InuDisableChatPreviewExpand, TOGGLE_INTERACTIVE_CHAT_PREVIEW),
+                SearchRegistry.Entry("community-display-mode", R.string.InuCommunityDisplayMode, BUTTON_COMMUNITY_DISPLAY_MODE),
                 SearchRegistry.Entry("bottom-tabs-hide", R.string.InuBottomTabsHide, TOGGLE_BOTTOM_TABS_HIDE),
                 SearchRegistry.Entry("hide-contacts-tab", R.string.InuHideContactsTab, TOGGLE_HIDE_CONTACTS_TAB),
                 SearchRegistry.Entry("compact-mode", R.string.InuCompactMode, TOGGLE_COMPACT_MODE),
