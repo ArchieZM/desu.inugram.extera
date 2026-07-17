@@ -226,3 +226,4 @@ bugfix/chat-activity-scroll.patch
 bugfix/universal-adapter-reorder-npe.patch
 bugfix/sticker-maker-recycled-bitmap.patch
 debloat/community-dialogs.patch
+feature/profile-copy-name.patch

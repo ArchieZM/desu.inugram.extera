@@ -108,6 +108,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - read-only chat "admin" page for non-admins
 - split media restriction toggles for stickers / gifs / games / inline
 - show id in profile, show user json
+- long-tap the name in profile to copy it
 - long-tap inline callback button to copy text or callback data
 - "select between messages" (🐶 done right)
 - 🐶 lift 100-message selection cap (forwards/saves/deletes are auto-chunked)
