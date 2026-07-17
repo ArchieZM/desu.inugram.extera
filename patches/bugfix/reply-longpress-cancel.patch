@@ -15,7 +15,7 @@ index 0000000..0000000 100644
                  }
              }
          } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-+            cancelCheckLongPress();
++            if (replyPressed) cancelCheckLongPress();
              replyPressed = false;
              replySelectorPressed = false;
              if (replySelector != null) {
@@ -23,7 +23,7 @@ index 0000000..0000000 100644
              }
          } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
              if (!(x >= replyStartX && x <= replyEnd && y >= replyStartY && y <= replyStartY + replyHeight)) {
-+                cancelCheckLongPress();
++                if (replyPressed) cancelCheckLongPress();
                  replyPressed = false;
                  replySelectorPressed = false;
                  replySelectorCanBePressed = false;
