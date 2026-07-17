@@ -225,6 +225,7 @@ most things are toggleable in `Settings → Inugram`, with sensible opinionated 
 - recyclerlistview double-tap requires same view
 - dialogs list pull-to-reveal-archive glitches
 - pinned dialog reorder scrolling/glitching mid-drag in the archive (stock bug: async list diffing dispatched the move after the drag swap)
+- forwards from users with hidden forward privacy: the optimistic message shows the anonymized name right away (when their profile is cached), and the server-confirmed hidden header is applied in place instead of showing the linked author until chat reopen
 - shared media player visual glitches
 - shared media pager: fling mid-animation to chain tabs or reverse (was ignored until settled); at the edge tab the fling falls through to swipe-to-close
 - attach panel: better perf, safe close before fully open
