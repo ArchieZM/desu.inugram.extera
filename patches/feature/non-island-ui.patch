@@ -7,7 +7,7 @@ Subject: non-island ui in various parts of the app
  .../org/telegram/ui/ActionBar/ActionBar.java  |  45 +++---
  .../ui/ActionBar/ActionBarLayout.java         |   2 +-
  .../telegram/ui/ChannelAdminLogActivity.java  |  21 ++-
- .../java/org/telegram/ui/ChatActivity.java    |  98 +++++++-----
+ .../java/org/telegram/ui/ChatActivity.java    | 100 +++++++-----
  .../ui/Components/ChatActivityEnterView.java  |  27 ++--
  ...ChatActivityEnterViewAnimatedIconView.java |  17 +-
  .../ChatActivityTopPanelLayout.java           |  16 +-
@@ -36,7 +36,7 @@ Subject: non-island ui in various parts of the app
  .../java/org/telegram/ui/bots/BotAdView.java  |   2 +-
  .../ui/bots/BotCommandsMenuContainer.java     |   4 +-
  .../bots/ChatAttachAlertBotWebViewLayout.java |   5 +-
- 32 files changed, 595 insertions(+), 218 deletions(-)
+ 32 files changed, 597 insertions(+), 218 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBar.java b/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/ActionBar.java
 index 0000000..0000000 100644
@@ -539,7 +539,16 @@ index 0000000..0000000 100644
          }
          updateVisibleRows();
          if (chatActivityEnterView != null) {
-@@ -46110,7 +46123,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -44087,6 +44100,8 @@ public class ChatActivity extends BaseFragment implements
+             }
+             return ColorUtils.calculateLuminance(color) > 0.7f;
+         }
++        Boolean inu_override = NonIslandHelper.needChatLightStatusBar(themeDelegate);
++        if (inu_override != null) return inu_override;
+         if (actionBar == null) {
+             return !Theme.isCurrentThemeDark();
+         }
+@@ -46110,7 +46125,7 @@ public class ChatActivity extends BaseFragment implements
          }
  
          final float margin = windowInsetsStateHolder.getAnimatedMaxBottomInset() +
@@ -548,7 +557,7 @@ index 0000000..0000000 100644
  
          topicsTabs.setSideMenuBackgroundMarginBottom(margin);
      }
-@@ -46118,13 +46131,13 @@ public class ChatActivity extends BaseFragment implements
+@@ -46118,13 +46133,13 @@ public class ChatActivity extends BaseFragment implements
      private void checkUi_botMenuPosition() {
          final float margin = windowInsetsStateHolder.getAnimatedMaxBottomInset()
              + getTopicTabsSideSize(TopicsTabsView.Position.BOTTOM)
@@ -564,7 +573,7 @@ index 0000000..0000000 100644
          }
      }
  
-@@ -46178,10 +46191,15 @@ public class ChatActivity extends BaseFragment implements
+@@ -46178,10 +46193,15 @@ public class ChatActivity extends BaseFragment implements
              return;
          }
  
@@ -580,7 +589,7 @@ index 0000000..0000000 100644
          updatePagedownButtonsPosition();
          updateBotforumTabsBottomMargin();
          checkUi_botMenuPosition();
-@@ -46222,6 +46240,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -46222,6 +46242,10 @@ public class ChatActivity extends BaseFragment implements
          if (parentChatActivity != null) {
              parentChatActivity.checkUi_topFade();
          }
@@ -591,7 +600,7 @@ index 0000000..0000000 100644
  
          float fadeHeight = actionBar.getMeasuredHeight();
          fadeHeight += dp(7 - 6);
-@@ -46283,6 +46305,10 @@ public class ChatActivity extends BaseFragment implements
+@@ -46283,6 +46307,10 @@ public class ChatActivity extends BaseFragment implements
                  * (1f - animatorSearchResultAsListVisibility.getFloatValue())
                  * (1f - getHashtagTabsShownT());
  
@@ -602,7 +611,7 @@ index 0000000..0000000 100644
              topPanelLayout.setPadding(dp(7) + (int) sideMenu, dp(7), dp(7), dp(7));
          }
      }
-@@ -46880,7 +46906,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -46880,7 +46908,7 @@ public class ChatActivity extends BaseFragment implements
      }
  
      private float getTopicTabsSideSize(TopicsTabsView.Position position) {

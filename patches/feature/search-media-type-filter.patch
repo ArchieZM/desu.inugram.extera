@@ -219,7 +219,7 @@ index 0000000..0000000 100644
                  } else {
                      if (option_id != null) {
                          highlightPollOptionId = option_id;
-@@ -44136,7 +44153,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -44138,7 +44155,7 @@ public class ChatActivity extends BaseFragment implements
          int lastBottom;
      }
  
@@ -228,7 +228,7 @@ index 0000000..0000000 100644
          public RecyclerListViewInternal(Context context, ThemeDelegate themeDelegate) {
              super(context, themeDelegate);
          }
-@@ -47068,7 +47085,7 @@ public class ChatActivity extends BaseFragment implements
+@@ -47070,7 +47087,7 @@ public class ChatActivity extends BaseFragment implements
          );
      }
  

@@ -48,6 +48,13 @@ object NonIslandHelper {
         return AndroidUtilities.computePerceivedBrightness(color) <= 0.9f
     }
 
+    @JvmStatic
+    fun needChatLightStatusBar(resourcesProvider: Theme.ResourcesProvider?): Boolean? {
+        if (!chatElements()) return null
+        val color = Theme.getColor(Theme.key_chat_topPanelBackground, resourcesProvider)
+        return AndroidUtilities.computePerceivedBrightness(color) > 0.721f
+    }
+
     // ChatAttachAlert.java
     const val ATTACH_TAB_SHADOW_DP = 3f
 
