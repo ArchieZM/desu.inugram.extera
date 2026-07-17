@@ -15,8 +15,9 @@ Subject: md3-style sections redesign
  .../ui/Components/UniversalAdapter.java       | 15 ++++++++-
  .../telegram/ui/LiteModeSettingsActivity.java |  7 ++++
  .../org/telegram/ui/PeerColorActivity.java    |  9 +++--
+ .../org/telegram/ui/ProxyListActivity.java    |  5 ---
  .../org/telegram/ui/SettingsActivity.java     | 18 ++++++++++
- 12 files changed, 121 insertions(+), 19 deletions(-)
+ 13 files changed, 121 insertions(+), 24 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextCell.java b/TMessagesProj/src/main/java/org/telegram/ui/Cells/TextCell.java
 index 0000000..0000000 100644
@@ -432,6 +433,38 @@ index 0000000..0000000 100644
              buttonText.draw(canvas, textX, getMeasuredHeight() / 2f);
              if (lock != null) {
                  int x = (int) (textX + buttonText.getWidth() + dp(6));
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/ProxyListActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/ProxyListActivity.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/ProxyListActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/ProxyListActivity.java
+@@ -1008,27 +1008,22 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
+                     break;
+                 case VIEW_TYPE_TEXT_SETTING:
+                     view = new TextSettingsCell(mContext);
+-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                     break;
+                 case VIEW_TYPE_HEADER:
+                     view = new HeaderCell(mContext);
+-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                     break;
+                 case VIEW_TYPE_TEXT_CHECK:
+                     view = new TextCheckCell(mContext);
+-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                     break;
+                 case VIEW_TYPE_INFO:
+                     view = new TextInfoPrivacyCell(mContext);
+                     break;
+                 case VIEW_TYPE_SLIDE_CHOOSER:
+                     view = new SlideChooseView(mContext);
+-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                     break;
+                 case VIEW_TYPE_PROXY_DETAIL:
+                 default:
+                     view = new TextDetailProxyCell(mContext);
+-                    view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                     break;
+             }
+             view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java
