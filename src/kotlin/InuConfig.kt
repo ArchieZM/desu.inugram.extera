@@ -588,6 +588,9 @@ object InuConfig {
     @JvmField
     val EMOJI_PANEL_KEYWORD_SEARCH = BoolItem("emoji_panel_keyword_search", true)
 
+    @JvmField
+    val ALLOW_PREMIUM_EMOJI_FOR_ALL = BoolItem("allow_premium_emoji_for_all", true)
+
     class TextClassifierModeItem : IntItem("text_classifier_mode", IMPROVED) {
         companion object {
             const val NATIVE = 1

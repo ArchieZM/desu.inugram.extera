@@ -30,6 +30,7 @@ debloat/hide-bot-elements.patch
 feature/call-confirmation.patch
 feature/double-tap-delay.patch
 feature/mutual-contact-icon.patch
+hooks/emoji-view.patch
 hooks/chat-activity.patch
 feature/message-menu.patch
 debloat/disable-pull-to-next.patch
@@ -118,6 +119,7 @@ feature/forwarded-time-inline.patch
 debloat/profile-photo-blur.patch
 bugfix/reaction-sending-race.patch
 feature/custom-emoji-after-regular.patch
+feature/allow-premium-emoji-core.patch
 feature/custom-font.patch
 feature/profile-reduce-motion.patch
 bugfix/profile-black-bar.patch

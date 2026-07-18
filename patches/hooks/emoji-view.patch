@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: alina sireneva <alina@tei.su>
+Date: Sat, 18 Jul 2026 00:00:00 +0200
+Subject: hook to expose EmojiView internals for premium emoji bypass
+
+---
+ .../main/java/org/telegram/ui/Components/EmojiView.java | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
+@@ -68,6 +68,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
+     private boolean allowAnimatedEmoji;
+     private boolean allowWithoutSound;
+     private int currentAccount;
++    public boolean inu_allowPremiumEmojiForAll;
+     private ArrayList<TLRPC.TL_messages_stickerSet> stickerSets;
+     private ArrayList<TLRPC.TL_messages_stickerSet> trendingStickerSets;
+     private ArrayList<MediaDataController.KeywordResult> keywordResults;
+@@ -205,6 +206,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
+         this.currentAccount = account;
+         this.delegate = delegate;
+         this.themeDelegate = themeDelegate;
++        inu_allowPremiumEmojiForAll = desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium();
+         setClipToPadding(false);
+         setClipChildren(false);
+         setFocusable(true);
+@@ -1772,6 +1774,12 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
+         }
+     }
+
++    public void inu_reloadStickers() {
++        if (stickerSets != null) {
++            reloadStickers();
++        }
++    }
++
+     private void reloadStickers() {
+         if (currentAccount < 0) {
+             return;

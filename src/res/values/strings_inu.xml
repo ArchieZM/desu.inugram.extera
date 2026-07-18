@@ -682,4 +682,7 @@
     <string name="InuBiometricConfirmLogoutInfo">Ask for biometric confirmation before logging out of an account.</string>
     <string name="InuBiometricAllowDeviceCredential">Allow device PIN/pattern</string>
     <string name="InuBiometricAllowDeviceCredentialInfo">Fall back to the device PIN, pattern or password when no biometric is enrolled.</string>
+    <string name="InuAllowPremiumEmojiForAll">Allow premium emoji for all</string>
+    <string name="InuAllowPremiumEmojiForAllInfo">Send and view premium animated emoji and stickers without a Telegram Premium subscription. Only other inugram users will be able to see the custom emoji.</string>
+    <string name="InuLocalPremiumEmojiHint">You do not have a **Telegram Premium** subscription, so only **inugram** users will be able to see this emoji.</string>
 </resources>

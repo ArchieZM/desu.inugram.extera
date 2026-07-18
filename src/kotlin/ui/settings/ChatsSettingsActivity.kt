@@ -226,6 +226,14 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 InuConfig.EMOJI_PANEL_KEYWORD_SEARCH.value,
             )
         )
+        items.add(
+            mkTwoLineCheckItem(
+                TOGGLE_ALLOW_PREMIUM_EMOJI_FOR_ALL,
+                R.string.InuAllowPremiumEmojiForAll,
+                R.string.InuAllowPremiumEmojiForAllInfo,
+                InuConfig.ALLOW_PREMIUM_EMOJI_FOR_ALL.value,
+            )
+        )
         items.add(UItem.asShadow(null))
 
         items.add(UItem.asHeader(LocaleController.getString(R.string.InuMiscellaneous)))
@@ -298,6 +306,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 (view as? NotificationsCheckCell)?.isChecked = InuConfig.SEND_TO_DISCUSS_WITHOUT_JOIN.toggle()
             TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.SUGGEST_CUSTOM_EMOJI_AFTER.toggle()
             TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.EMOJI_PANEL_KEYWORD_SEARCH.toggle()
+            TOGGLE_ALLOW_PREMIUM_EMOJI_FOR_ALL -> (view as? NotificationsCheckCell)?.isChecked = InuConfig.ALLOW_PREMIUM_EMOJI_FOR_ALL.toggle()
 
             BUTTON_FORMATTING_POPUP -> {
                 val isSwitch = if (LocaleController.isRTL)
@@ -339,6 +348,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
         private val TOGGLE_SEND_TO_DISCUSS_WITHOUT_JOIN = InuUtils.generateId()
         private val TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER = InuUtils.generateId()
         private val TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH = InuUtils.generateId()
+        private val TOGGLE_ALLOW_PREMIUM_EMOJI_FOR_ALL = InuUtils.generateId()
         private val TOGGLE_SEARCH_FROM_GLOBAL = InuUtils.generateId()
         private val TOGGLE_HIDE_CALL_ACTION_BUTTON = InuUtils.generateId()
         private val BUTTON_CHAT_MENU_ORDER = InuUtils.generateId()
@@ -386,6 +396,7 @@ class ChatsSettingsActivity : SettingsPageActivity() {
                 SearchRegistry.Entry("show-all-recent-stickers", R.string.InuShowAllRecentStickers, TOGGLE_SHOW_ALL_RECENT_STICKERS),
                 SearchRegistry.Entry("suggest-custom-emoji-after", R.string.InuSuggestCustomEmojiAfter, TOGGLE_SUGGEST_CUSTOM_EMOJI_AFTER),
                 SearchRegistry.Entry("emoji-panel-keyword-search", R.string.InuEmojiPanelKeywordSearch, TOGGLE_EMOJI_PANEL_KEYWORD_SEARCH),
+                SearchRegistry.Entry("allow-premium-emoji-for-all", R.string.InuAllowPremiumEmojiForAll, TOGGLE_ALLOW_PREMIUM_EMOJI_FOR_ALL),
                 SearchRegistry.Entry("search-from-global", R.string.InuSearchFromGlobal, TOGGLE_SEARCH_FROM_GLOBAL),
                 SearchRegistry.Entry("hide-call-action-button", R.string.InuHideCallActionButton, TOGGLE_HIDE_CALL_ACTION_BUTTON),
                 SearchRegistry.Entry("chat-menu-order", R.string.InuChatMenuOrder, BUTTON_CHAT_MENU_ORDER),
