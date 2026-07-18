@@ -4,85 +4,34 @@ Date: Sat, 18 Jul 2026 00:00:00 +0200
 Subject: allow sending and viewing premium emoji without subscription
 
 ---
- .../messenger/MessagesController.java              |  3 +++
- .../telegram/ui/Components/EmojiView.java          | 26 ++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+ .../messenger/MessagesController.java              | 3 +++
+ .../telegram/ui/Components/EmojiView.java          | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-@@ -97370,6 +97370,9 @@ public class MessagesController extends BaseController implements NotificationCe
+@@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
+         return !starsLocked;
      }
-
-     private boolean premiumFeaturesBlocked() {
+     public boolean premiumFeaturesBlocked() {
 +        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
 +            return false;
 +        }
-         return premiumLocked && !UserConfig.getInstance(currentAccount).isPremium();
+         return premiumLocked && !getUserConfig().isPremium();
      }
-
+     public boolean premiumPurchaseBlocked() {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -4393,6 +4393,9 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
-                             return;
-                         }
-                         if (MessageObject.isPremiumSticker(document)) {
-+                            if (inu_allowPremiumEmojiForAll) {
-+                                // continue to sending
-+                            } else
-                             if (!UserConfig.getInstance(currentAccount).isPremium()) {
-                                 NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.showBulletin, BulletinFactory.PremiumStickerBulletinLayout);
-                                 return;
-@@ -4837,6 +4840,9 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
-                 return;
-             }
-             if (MessageObject.isPremiumSticker(document)) {
-+                if (inu_allowPremiumEmojiForAll) {
-+                    // continue to sending
-+                } else
-                 if (!UserConfig.getInstance(currentAccount).isPremium()) {
-                     openPremiumStickerFeature();
+@@ -2349,6 +2349,6 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
                      return;
-@@ -6817,6 +6823,9 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
-
-         for (int i = 0; i < recentStickers.size(); i++) {
-             TLRPC.Document document = recentStickers.get(i);
-+            if (inu_allowPremiumEmojiForAll) {
-+            } else
-             if (document != null && MessageObject.isPremiumSticker(document) && !UserConfig.getInstance(currentAccount).isPremium()) {
-                 recentStickers.remove(i);
-                 i--;
-@@ -8829,6 +8838,14 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
-                     }
                  }
-             }
-+            if (inu_allowPremiumEmojiForAll) {
-+                if (premiumStickerSetLoaded == 3 && stickerPreviewListView != null) {
-+                    stickerPreviewListView.setData(premiumStickers, allowAnimatedEmoji, currentAccount, EmojiView.this);
-+                    tabView.init(premiumStickerSet);
-+                }
-+                stickerTabNum = tabs.size() - 1;
-+                return;
-+            }
-             if (premiumStickers != null && !premiumStickers.isEmpty()) {
-                 boolean showTab = UserConfig.getInstance(currentAccount).isPremium() && !premiumFeaturesBlocked;
-                 if (!showTab) {
-@@ -9986,6 +10003,15 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
-
-             for (int i = 0; i < animatedEmojiDrawables.size(); i++) {
-                 AnimatedEmojiDrawable drawable = animatedEmojiDrawables.get(i);
-+                if (inu_allowPremiumEmojiForAll) {
-+                    if (drawable != null && drawable.getImageReceiver() != null) {
-+                        drawable.getImageReceiver().setVisible(true, true);
-+                    }
-+                    if (drawable != null) {
-+                        drawable.setAlpha(1f);
-+                    }
-+                    continue;
-+                }
-                 if (!UserConfig.getInstance(currentAccount).isPremium()) {
-                     if (drawable != null && drawable.getImageReceiver() != null) {
-                         drawable.getImageReceiver().setVisible(true, true);
+                 StickerEmojiCell cell = (StickerEmojiCell) view;
+-                if (cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
++                if (!inu_allowPremiumEmojiForAll && cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
+                     ContentPreviewViewer.getInstance().showMenuFor(cell);
+                     return;
+                 }
