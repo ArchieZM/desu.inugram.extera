@@ -11,10 +11,12 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoj
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java
-@@ -818,6 +818,6 @@
+@@ -818,7 +818,7 @@
          };
          emojiView.emojiCacheType = emojiViewCacheType;
 -        emojiView.allowEmojisForNonPremium(allowEmojisForNonPremium);
 +        emojiView.allowEmojisForNonPremium(allowEmojisForNonPremium || desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium());
          emojiView.setVisibility(GONE);
          emojiViewAlpha = 0.0f;
+         if (AndroidUtilities.isTablet()) {
+             emojiView.setForseMultiwindowLayout(true);
