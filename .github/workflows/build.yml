@@ -137,11 +137,11 @@ jobs:
         env:
           COMMIT_ID: ${{ github.sha }}
           INU_BUILD: ${{ steps.info.outputs.build-num }}
-          INU_BUILD_TYPE: debug
+          INU_BUILD_TYPE: release
           CCACHE_COMPILERCHECK: content
           CCACHE_SLOPPINESS: time_macros,file_macro,include_file_mtime,include_file_ctime,locale,system_headers
           CCACHE_BASEDIR: ${{ github.workspace }}/worktree
-        run: ./gradlew --no-daemon :TMessagesProj_App:assembleDebug
+        run: ./gradlew --no-daemon :TMessagesProj_App:assembleRelease
 
       - name: show ccache stats
         if: always()
@@ -154,7 +154,7 @@ jobs:
         run: |
           mkdir -p out
           apk='${{ steps.info.outputs.apk-name }}'
-          cp worktree/TMessagesProj_App/build/outputs/apk/debug/app.apk "out/$apk"
+          cp worktree/TMessagesProj_App/build/outputs/apk/release/app.apk "out/$apk"
 
           base="$LAST_UPLOADED_SHA"
           if [ -n "$base" ] && ! git cat-file -e "$base^{commit}" 2>/dev/null; then
