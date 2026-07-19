@@ -15,7 +15,7 @@ index 0ea94619..08600ea4 100644
 @@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
          return !starsLocked;
      }
-           public boolean premiumFeaturesBlocked() {
+    public boolean premiumFeaturesBlocked() {
 +        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
 +            return false;
 +        }
