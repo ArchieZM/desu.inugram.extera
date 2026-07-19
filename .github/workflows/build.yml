@@ -126,6 +126,7 @@ jobs:
           echo 'org.gradle.parallel=true' >> ~/.gradle/gradle.properties
           echo 'org.gradle.jvmargs=-Xmx8192m -Dfile.encoding=UTF-8 -XX:+UseParallelGC' >> ~/.gradle/gradle.properties
           echo 'android.native.buildOutput=verbose' >> ~/.gradle/gradle.properties
+          echo 'android.r8.maxWorkers=1' >> ~/.gradle/gradle.properties
 
       - name: reset ccache stats
         run: ccache -z
