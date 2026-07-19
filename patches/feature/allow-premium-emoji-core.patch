@@ -47,8 +47,11 @@ index edad09ef..f2a81872 100644
 -                                                }, 100);
 +                    if (allowEmojisForNonPremium && showLocalPremiumEmojiHint) {
 +                        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldShowHint(currentAccount)) {
++                            final TLRPC.Document fdoc = document;
++                            final String femoticon = emoticon;
++                            final ImageViewEmoji fview = imageViewEmoji;
 +                            factory.createEmojiBulletin(
-+                                    document,
++                                    fdoc,
 +                                    LocaleController.getString(R.string.InuLocalPremiumEmojiHint),
 +                                    LocaleController.getString("OK"),
 +                                    () -> {
@@ -56,7 +59,7 @@ index edad09ef..f2a81872 100644
 +                                        shownBottomTabAfterClick = SystemClock.elapsedRealtime();
 +                                        showBottomTab(true, true);
 +                                        addEmojiToRecent("animated_" + documentId);
-+                                        delegate.onCustomEmojiSelected(documentId, document, emoticon, imageViewEmoji.isRecent);
++                                        delegate.onCustomEmojiSelected(documentId, fdoc, femoticon, fview.isRecent);
 +                                    }
 +                            ).show();
 +                            return;
