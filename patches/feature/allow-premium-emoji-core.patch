@@ -5,14 +5,14 @@ Subject: bypass premium emoji/sticker checks and add local emoji hint
 
 ---
  .../messenger/MessagesController.java              | 3 +++
- .../telegram/ui/Components/EmojiView.java          | 6 +++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ .../telegram/ui/Components/EmojiView.java          | 10 ++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-index 0000000..0000000 100644
+index 399ba506..0ea94619 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-@@ -737,6 +737,9 @@
+@@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
          return !starsLocked;
      }
      public boolean premiumFeaturesBlocked() {
@@ -22,11 +22,12 @@ index 0000000..0000000 100644
          return premiumLocked && !getUserConfig().isPremium();
      }
      public boolean premiumPurchaseBlocked() {
+
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-index 0000000..0000000 100644
+index 7cd4fa2c..22d0ddc8 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -1426,6 +1426,12 @@
+@@ -1427,6 +1427,12 @@ public class EmojiView extends FrameLayout implements
                      premiumBulletin = !premiumBulletin;
                      return;
                  }
@@ -39,7 +40,7 @@ index 0000000..0000000 100644
                  shownBottomTabAfterClick = SystemClock.elapsedRealtime();
                  showBottomTab(true, true);
                  addEmojiToRecent("animated_" + documentId);
-@@ -2348,7 +2354,7 @@
+@@ -2348,7 +2355,7 @@ public class EmojiView extends FrameLayout implements
                      return;
                  }
                  StickerEmojiCell cell = (StickerEmojiCell) view;
@@ -48,7 +49,8 @@ index 0000000..0000000 100644
                      ContentPreviewViewer.getInstance().showMenuFor(cell);
                      return;
                  }
-@@ -6161,7 +6167,7 @@
+@@ -6161,7 +6168,7 @@ public class EmojiView extends FrameLayout implements
+             int previousCount2 = favouriteStickers.size();
              recentStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_IMAGE, true);
              favouriteStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_FAVE);
 -            if (UserConfig.getInstance(currentAccount).isPremium()) {
@@ -56,4 +58,3 @@ index 0000000..0000000 100644
                  premiumStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_PREMIUM_STICKERS);
              } else {
                  premiumStickers = new ArrayList<>();
-             }
