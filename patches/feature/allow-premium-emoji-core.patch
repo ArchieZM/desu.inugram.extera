@@ -15,13 +15,13 @@ index 0ea94619..08600ea4 100644
 @@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
          return !starsLocked;
      }
-     public boolean premiumFeaturesBlocked() {
+           public boolean premiumFeaturesBlocked() {
 +        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
 +            return false;
 +        }
-         if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
-             return false;
-         }
+         return premiumLocked && !getUserConfig().isPremium();
+     }
+     public boolean premiumPurchaseBlocked() {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 index edad09ef..f2a81872 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
