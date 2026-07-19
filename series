@@ -120,6 +120,7 @@ debloat/profile-photo-blur.patch
 bugfix/reaction-sending-race.patch
 feature/custom-emoji-after-regular.patch
 feature/allow-premium-emoji-core.patch
+feature/allow-premium-emoji-mc.patch
 feature/allow-premium-emoji-edittext.patch
 feature/custom-font.patch
 feature/profile-reduce-motion.patch

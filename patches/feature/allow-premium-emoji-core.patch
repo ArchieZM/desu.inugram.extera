@@ -4,24 +4,9 @@ Date: Sat, 18 Jul 2026 00:00:00 +0200
 Subject: core: exact exteraGram premium emoji bypass logic
 
 ---
- .../messenger/MessagesController.java              | 3 +++
  .../telegram/ui/Components/EmojiView.java          | 54+35 ++++++++++----------
- 2 files changed, 57 insertions(+), 35 deletions(-)
+ 1 file changed, 54 insertions(+), 35 deletions(-)
 
-diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-index 0ea94619..08600ea4 100644
---- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-+++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-@@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
-         return !starsLocked;
-     }
-    public boolean premiumFeaturesBlocked() {
-+        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
-+            return false;
-+        }
-         return premiumLocked && !getUserConfig().isPremium();
-     }
-     public boolean premiumPurchaseBlocked() {
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 index edad09ef..f2a81872 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java

@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: alina sireneva <alina@tei.su>
+Date: Sat, 18 Jul 2026 00:00:00 +0200
+Subject: bypass premiumFeaturesBlocked when allow-premium-emoji is enabled
+
+---
+ .../src/main/java/org/telegram/messenger/MessagesController.java | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
+index 0000000..0000000 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
+@@ -739,6 +739,9 @@ public class MessagesController extends BaseController implements NotificationCe
+     public boolean premiumFeaturesBlocked() {
++        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
++            return false;
++        }
+         return premiumLocked && !getUserConfig().isPremium();
+     }
+     public boolean premiumPurchaseBlocked() {
