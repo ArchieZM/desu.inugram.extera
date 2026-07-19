@@ -11,7 +11,7 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.ja
 index edad09ef..f2a81872 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -1398,43 +1398,62 @@ public class EmojiView extends FrameLayout implements
+@@ -1398,43 +1398,65 @@ public class EmojiView extends FrameLayout implements
                  if (emoticon == null && document != null) {
                      emoticon = MessageObject.findAnimatedEmojiEmoticon(document);
                  }
