@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: bypass premiumFeaturesBlocked and add local premium emoji hint
+Subject: bypass premium emoji/sticker checks and add local emoji hint
 
 ---
  .../messenger/MessagesController.java              | 3 +++
- .../telegram/ui/Components/EmojiView.java          | 6 ++++++
- 2 files changed, 9 insertions(+)
+ .../telegram/ui/Components/EmojiView.java          | 6 +++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 index 0000000..0000000 100644
@@ -39,3 +39,20 @@ index 0000000..0000000 100644
                  shownBottomTabAfterClick = SystemClock.elapsedRealtime();
                  showBottomTab(true, true);
                  addEmojiToRecent("animated_" + documentId);
+@@ -2348,7 +2354,7 @@
+                     return;
+                 }
+                 StickerEmojiCell cell = (StickerEmojiCell) view;
+-                if (cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
++                if (!allowEmojisForNonPremium && cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
+                     ContentPreviewViewer.getInstance().showMenuFor(cell);
+                     return;
+                 }
+@@ -6161,7 +6167,7 @@
+             recentStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_IMAGE, true);
+             favouriteStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_FAVE);
+-            if (UserConfig.getInstance(currentAccount).isPremium()) {
++            if (UserConfig.getInstance(currentAccount).isPremium() || allowEmojisForNonPremium) {
+                 premiumStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_PREMIUM_STICKERS);
+             } else {
+                 premiumStickers = new ArrayList<>();
