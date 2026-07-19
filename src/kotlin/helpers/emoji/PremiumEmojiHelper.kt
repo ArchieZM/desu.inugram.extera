@@ -44,7 +44,7 @@ object PremiumEmojiHelper {
     @JvmStatic
     fun isFreeEmoji(document: TLRPC.Document?): Boolean {
         if (document == null) return false
-        for (i in 0 until document.attributes.size()) {
+        for (i in 0 until document.attributes.size) {
             if (document.attributes[i] is TLRPC.TL_documentAttributeCustomEmoji) {
                 val attr = document.attributes[i] as TLRPC.TL_documentAttributeCustomEmoji
                 if (attr.free) return true
@@ -56,9 +56,9 @@ object PremiumEmojiHelper {
     @JvmStatic
     fun isPremiumSticker(document: TLRPC.Document?): Boolean {
         if (document == null) return false
-        for (i in 0 until document.attributes.size()) {
+        for (i in 0 until document.attributes.size) {
             if (document.attributes[i] is TLRPC.TL_documentAttributeSticker) {
-                for (j in 0 until document.video_thumbs.size()) {
+                for (j in 0 until document.video_thumbs.size) {
                     val thumb = document.video_thumbs[j]
                     if (thumb is TLRPC.TL_videoSize && "f" == thumb.type) {
                         return true
