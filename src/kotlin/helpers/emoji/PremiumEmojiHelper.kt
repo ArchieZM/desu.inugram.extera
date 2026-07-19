@@ -12,7 +12,7 @@ object PremiumEmojiHelper {
     private const val HINT_PREFS = "premium_emoji_hint"
 
     @JvmStatic
-    fun shouldAllowNonPremium(): Boolean = InuConfig.ALLOW_PREMIUM_EMOJI_FOR_ALL.getValue()
+    fun shouldAllowNonPremium(): Boolean = InuConfig.ALLOW_PREMIUM_EMOJI_FOR_ALL.value
 
     @JvmStatic
     fun shouldShowHint(account: Int): Boolean {
