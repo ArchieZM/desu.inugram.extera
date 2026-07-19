@@ -1,18 +1,18 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: allow sending and viewing premium emoji without subscription
+Subject: bypass premiumFeaturesBlocked and add local premium emoji hint
 
 ---
  .../messenger/MessagesController.java              | 3 +++
- .../telegram/ui/Components/EmojiView.java          | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../telegram/ui/Components/EmojiView.java          | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-@@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
+@@ -737,6 +737,9 @@
          return !starsLocked;
      }
      public boolean premiumFeaturesBlocked() {
@@ -26,12 +26,16 @@ diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.ja
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -2349,6 +2349,6 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
+@@ -1426,6 +1426,12 @@
+                     premiumBulletin = !premiumBulletin;
                      return;
                  }
-                 StickerEmojiCell cell = (StickerEmojiCell) view;
--                if (cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
-+                if (!inu_allowPremiumEmojiForAll && cell.getSticker() != null && MessageObject.isPremiumSticker(cell.getSticker()) && !AccountInstance.getInstance(currentAccount).getUserConfig().isPremium()) {
-                     ContentPreviewViewer.getInstance().showMenuFor(cell);
-                     return;
-                 }
++                if (allowEmojisForNonPremium && !UserConfig.getInstance(currentAccount).isPremium()) {
++                    if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldShowHint(currentAccount)) {
++                        desu.inugram.helpers.emoji.PremiumEmojiHelper.markHintShown(currentAccount);
++                        desu.inugram.helpers.emoji.PremiumEmojiHelper.showHintBulletin(fragment);
++                    }
++                }
+                 shownBottomTabAfterClick = SystemClock.elapsedRealtime();
+                 showBottomTab(true, true);
+                 addEmojiToRecent("animated_" + documentId);

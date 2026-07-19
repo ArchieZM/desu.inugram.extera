@@ -1,29 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: hook to expose EmojiView internals for premium emoji bypass
+Subject: hook to enable allowEmojisForNonPremium via config
 
 ---
- .../main/java/org/telegram/ui/Components/EmojiView.java | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../main/java/org/telegram/ui/Components/EmojiView.java | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -416,6 +416,7 @@
-     private final Theme.ResourcesProvider resourcesProvider;
-     private Drawable searchIconDrawable;
-     private Drawable searchIconDotDrawable;
-     private boolean allowAnimatedEmoji;
-+    public boolean inu_allowPremiumEmojiForAll;
- 
-     private Long emojiScrollToStickerId;
-@@ -1566,6 +1567,7 @@
+@@ -1564,6 +1564,7 @@
+     public EmojiView(BaseFragment fragment, boolean needAnimatedEmoji, boolean needStickers, boolean needGif, final Context context, boolean needSearch, final TLRPC.ChatFull chatFull, ViewGroup parentView, boolean shouldDrawBackground, Theme.ResourcesProvider resourcesProvider, boolean frozenAtStart, boolean glassDesign) {
+         super(context);
          this.shouldDrawBackground = shouldDrawBackground;
++        this.allowEmojisForNonPremium(desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium());
          this.fragment = fragment;
          this.allowAnimatedEmoji = needAnimatedEmoji;
-+        this.inu_allowPremiumEmojiForAll = desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium();
          this.resourcesProvider = resourcesProvider;
          this.glassDesign = glassDesign;
- 
