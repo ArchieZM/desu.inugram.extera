@@ -1,17 +1,33 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: hook to enable allowEmojisForNonPremium via config
+Subject: hook: add showLocalPremiumEmojiHint and two-param setter to EmojiView
 
 ---
- .../main/java/org/telegram/ui/Components/EmojiView.java | 1 +
- 1 file changed, 1 insertion(+)
+ .../main/java/org/telegram/ui/Components/EmojiView.java | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-index 0000000..0000000 100644
+index 324d4eba..edad09ef 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -1564,6 +1564,7 @@
+@@ -312,8 +312,14 @@ public class EmojiView extends FrameLayout implements
+     }
+ 
+     private boolean allowEmojisForNonPremium;
++    private boolean showLocalPremiumEmojiHint;
+     public void allowEmojisForNonPremium(boolean allow) {
+-        allowEmojisForNonPremium = allow;
++        allowEmojisForNonPremium(allow, allow);
++    }
++
++    public void allowEmojisForNonPremium(boolean allow, boolean showHint) {
++        this.allowEmojisForNonPremium = allow;
++        this.showLocalPremiumEmojiHint = showHint;
+     }
+ 
+     public void setShouldDrawBackground(boolean shouldDrawBackground) {
+@@ -1562,6 +1568,7 @@ public class EmojiView extends FrameLayout implements
      public EmojiView(BaseFragment fragment, boolean needAnimatedEmoji, boolean needStickers, boolean needGif, final Context context, boolean needSearch, final TLRPC.ChatFull chatFull, ViewGroup parentView, boolean shouldDrawBackground, Theme.ResourcesProvider resourcesProvider, boolean frozenAtStart, boolean glassDesign) {
          super(context);
          this.shouldDrawBackground = shouldDrawBackground;
@@ -19,4 +35,3 @@ index 0000000..0000000 100644
          this.fragment = fragment;
          this.allowAnimatedEmoji = needAnimatedEmoji;
          this.resourcesProvider = resourcesProvider;
-         this.glassDesign = glassDesign;

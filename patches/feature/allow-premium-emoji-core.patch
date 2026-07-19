@@ -1,15 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: bypass premium emoji/sticker checks and add local emoji hint
+Subject: core: exact exteraGram premium emoji bypass logic
 
 ---
  .../messenger/MessagesController.java              | 3 +++
- .../telegram/ui/Components/EmojiView.java          | 10 ++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ .../telegram/ui/Components/EmojiView.java          | 54+35 ++++++++++----------
+ 2 files changed, 57 insertions(+), 35 deletions(-)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
-index 399ba506..0ea94619 100644
+index 0ea94619..08600ea4 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java
 @@ -737,6 +737,9 @@ public class MessagesController extends BaseController implements NotificationCe
@@ -19,28 +19,110 @@ index 399ba506..0ea94619 100644
 +        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
 +            return false;
 +        }
-         return premiumLocked && !getUserConfig().isPremium();
-     }
-     public boolean premiumPurchaseBlocked() {
-
+         if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
+             return false;
+         }
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-index 7cd4fa2c..22d0ddc8 100644
+index edad09ef..f2a81872 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EmojiView.java
-@@ -1427,6 +1427,12 @@ public class EmojiView extends FrameLayout implements
-                     premiumBulletin = !premiumBulletin;
-                     return;
+@@ -1394,43 +1394,62 @@ public class EmojiView extends FrameLayout implements
+                 if (emoticon == null && document != null) {
+                     emoticon = MessageObject.findAnimatedEmojiEmoticon(document);
                  }
-+                if (allowEmojisForNonPremium && !UserConfig.getInstance(currentAccount).isPremium()) {
-+                    if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldShowHint(currentAccount)) {
-+                        desu.inugram.helpers.emoji.PremiumEmojiHelper.markHintShown(currentAccount);
-+                        desu.inugram.helpers.emoji.PremiumEmojiHelper.showHintBulletin(fragment);
+-                if (!MessageObject.isFreeEmoji(document) && !UserConfig.getInstance(currentAccount).isPremium() && !(delegate != null && delegate.isUserSelf()) && !allowEmojisForNonPremium && !isGroupEmojis) {
++                if (!MessageObject.isFreeEmoji(document) && !UserConfig.getInstance(currentAccount).isPremium() && (delegate == null || !delegate.isUserSelf())) {
+                     showBottomTab(false, true);
+                     BulletinFactory factory = fragment != null ? BulletinFactory.of(fragment) : BulletinFactory.of(bulletinContainer, resourcesProvider);
+-                    if (premiumBulletin || fragment == null) {
+-                        factory.createEmojiBulletin(
+-                                document,
+-                                AndroidUtilities.replaceTags(getString(R.string.UnlockPremiumEmojiHint)),
+-                                getString(R.string.PremiumMore),
+-                                EmojiView.this::openPremiumAnimatedEmojiFeature
+-                        ).show();
+-                    } else {
+-                        factory.createSimpleBulletin(
+-                                R.raw.saved_messages,
+-                                AndroidUtilities.replaceTags(getString(R.string.UnlockPremiumEmojiHint2)),
+-                                getString(R.string.Open),
+-                                () -> {
+-                                    Bundle args = new Bundle();
+-                                    args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
+-                                    fragment.presentFragment(new ChatActivity(args) {
+-                                        @Override
+-                                        public void onTransitionAnimationEnd(boolean isOpen, boolean backward) {
+-                                            super.onTransitionAnimationEnd(isOpen, backward);
+-                                            if (isOpen && chatActivityEnterView != null) {
+-                                                chatActivityEnterView.showEmojiView();
+-                                                chatActivityEnterView.postDelayed(() -> {
+-                                                    if (chatActivityEnterView.getEmojiView() != null) {
+-                                                        chatActivityEnterView.getEmojiView().scrollEmojisToAnimated();
+-                                                    }
+-                                                }, 100);
++                    if (allowEmojisForNonPremium && showLocalPremiumEmojiHint) {
++                        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldShowHint(currentAccount)) {
++                            factory.createEmojiBulletin(
++                                    document,
++                                    LocaleController.getString(R.string.InuLocalPremiumEmojiHint),
++                                    LocaleController.getString("OK"),
++                                    () -> {
++                                        desu.inugram.helpers.emoji.PremiumEmojiHelper.markHintShown(currentAccount);
++                                        shownBottomTabAfterClick = SystemClock.elapsedRealtime();
++                                        showBottomTab(true, true);
++                                        addEmojiToRecent("animated_" + documentId);
++                                        delegate.onCustomEmojiSelected(documentId, document, emoticon, imageViewEmoji.isRecent);
++                                    }
++                            ).show();
++                            return;
++                        }
 +                    }
-+                }
++                    if (!allowEmojisForNonPremium) {
++                        if (premiumBulletin || fragment == null) {
++                            factory.createEmojiBulletin(
++                                    document,
++                                    AndroidUtilities.replaceTags(getString(R.string.UnlockPremiumEmojiHint)),
++                                    getString(R.string.PremiumMore),
++                                    EmojiView.this::openPremiumAnimatedEmojiFeature
++                            ).show();
++                        } else {
++                            factory.createSimpleBulletin(
++                                    R.raw.saved_messages,
++                                    AndroidUtilities.replaceTags(getString(R.string.UnlockPremiumEmojiHint2)),
++                                    getString(R.string.Open),
++                                    () -> {
++                                        Bundle args = new Bundle();
++                                        args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
++                                        fragment.presentFragment(new ChatActivity(args) {
++                                            @Override
++                                            public void onTransitionAnimationEnd(boolean isOpen, boolean backward) {
++                                                super.onTransitionAnimationEnd(isOpen, backward);
++                                                if (isOpen && chatActivityEnterView != null) {
++                                                    chatActivityEnterView.showEmojiView();
++                                                    chatActivityEnterView.postDelayed(() -> {
++                                                        if (chatActivityEnterView.getEmojiView() != null) {
++                                                            chatActivityEnterView.getEmojiView().scrollEmojisToAnimated();
++                                                        }
++                                                    }, 100);
++                                                }
+                                             }
+-                                        }
+-                                    });
+-                                }
+-                        ).show();
++                                        });
++                                    }
++                            ).show();
++                        }
++                        premiumBulletin = !premiumBulletin;
++                        return;
+                     }
+-                    premiumBulletin = !premiumBulletin;
+-                    return;
+                 }
                  shownBottomTabAfterClick = SystemClock.elapsedRealtime();
                  showBottomTab(true, true);
-                 addEmojiToRecent("animated_" + documentId);
-@@ -2348,7 +2355,7 @@ public class EmojiView extends FrameLayout implements
+@@ -2354,7 +2373,7 @@ public class EmojiView extends FrameLayout implements
                      return;
                  }
                  StickerEmojiCell cell = (StickerEmojiCell) view;
@@ -49,7 +131,7 @@ index 7cd4fa2c..22d0ddc8 100644
                      ContentPreviewViewer.getInstance().showMenuFor(cell);
                      return;
                  }
-@@ -6161,7 +6168,7 @@ public class EmojiView extends FrameLayout implements
+@@ -6167,7 +6186,7 @@ public class EmojiView extends FrameLayout implements
              int previousCount2 = favouriteStickers.size();
              recentStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_IMAGE, true);
              favouriteStickers = MediaDataController.getInstance(currentAccount).getRecentStickers(MediaDataController.TYPE_FAVE);

@@ -1,22 +1,31 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: alina sireneva <alina@tei.su>
 Date: Sat, 18 Jul 2026 00:00:00 +0200
-Subject: enable allowEmojisForNonPremium in EditTextEmoji
+Subject: add two-param allowEmojisForNonPremium to EditTextEmoji
 
 ---
- .../main/java/org/telegram/ui/Components/EditTextEmoji.java | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../main/java/org/telegram/ui/Components/EditTextEmoji.java | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java b/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java
 index 0000000..0000000 100644
 --- a/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java
 +++ b/TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextEmoji.java
-@@ -818,7 +818,7 @@
+@@ -454,6 +454,7 @@
+     }
+
+     private boolean allowEmojisForNonPremium;
++    private boolean showLocalPremiumEmojiHint;
+     public void allowEmojisForNonPremium(boolean allow) {
+         allowEmojisForNonPremium = allow;
+     }
+@@ -818,6 +819,9 @@
          };
          emojiView.emojiCacheType = emojiViewCacheType;
--        emojiView.allowEmojisForNonPremium(allowEmojisForNonPremium);
-+        emojiView.allowEmojisForNonPremium(allowEmojisForNonPremium || desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium());
+         emojiView.allowEmojisForNonPremium(allowEmojisForNonPremium);
++        if (desu.inugram.helpers.emoji.PremiumEmojiHelper.shouldAllowNonPremium()) {
++            emojiView.allowEmojisForNonPremium(true);
++        }
          emojiView.setVisibility(GONE);
          emojiViewAlpha = 0.0f;
          if (AndroidUtilities.isTablet()) {
-             emojiView.setForseMultiwindowLayout(true);
